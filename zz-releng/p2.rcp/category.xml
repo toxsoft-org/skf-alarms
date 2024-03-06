@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <category-def name="org.toxsoft.skf.alarms.releng.category" label="org.toxsoft.skf.alarms.releng Category">
+      <description>
+         ru.toxsoft.skt.vetrol.releng Category
+      </description>
+   </category-def>
+   <!-- TODO: 
+   <bundle id="org.toxsoft.skf.alarms.???"/>
+   -->
+   
+   <!-- sources -->
+   <!-- TODO: 
+   <bundle id="org.toxsoft.skf.alarms.???.source"/>
+    -->
+
+</site>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <category-def name="ru.toxsoft.skt.vetrol.releng.category" label="ru.toxsoft.skt.vetrol.releng Category">
+      <description>
+         ru.toxsoft.skt.vetrol.releng Category
+      </description>
+   </category-def>
+   <!-- TODO: -->
+   <!-- <bundle id="ru.toxsoft.skt.vetrol.???"/> -->
+
+   <!-- sources -->
+   <!-- TODO: -->
+   <!-- <bundle id="ru.toxsoft.skt.vetrol.???.source"/> -->
+
+</site>

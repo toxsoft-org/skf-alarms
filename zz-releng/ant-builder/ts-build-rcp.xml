@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- rcp библиотеки и плагины -->
+<project name="ts4-build-rcp" default="build">
+
+  <!-- директория расположения общих сборочных скриптов -->
+  <property name="ts-scripts-dir" location="../../../ts4-targets/ts4-definitions/scripts" />
+
+  <!-- загрузка общих параметров -->
+  <loadproperties srcFile="${ts-scripts-dir}/ts-build-commons.properties" />
+
+  <!-- перед вызовом общих скриптов сборки следует задать директории назначения библиотек и плагинов -->
+  <property name="ts-dest-dir-libs" location="../${ts.target-skf-alarms-lib}" />
+  <property name="ts-dest-dir-plugins" location="../${ts.target-skf-alarms-rcp}" />
+
+  <!-- ЦЕЛЬ: lib.jar библиотек -->
+  <target name="build-lib-jar" depends="clean" description="Сборка общих плагинов">
+    <!-- TODO: -->
+  </target>
+
+  <!-- ЦЕЛЬ: сборка -->
+  <target name="build" depends="clean" description="Сборка общих плагинов">
+    <!-- сборка plugin-ов -->
+    <!-- TODO: 
+    <pde.exportPlugins destination="${ts-dest-dir-plugins}"
+                       exportSource="true"
+                       exportSourceBundle="false"
+                       exportType="directory"
+                       plugins="ru.toxsoft.skf.alarms.systools.gui,
+                                ru.toxsoft.skf.alarms.systools.skide"
+                       useworkspacecompiledclasses="true"
+                       useJARFormat="true" />
+    -->
+  </target>
+
+  <!-- ЦЕЛЬ: очистка -->
+  <target name="clean" description="Удаление старых версии">
+    <delete>
+      <fileset dir="${ts-dest-dir-plugins}/plugins" includes="org.toxsoft.skf.alarms.*" />   
+    </delete>
+  </target>
+
+</project>

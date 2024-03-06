@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_KKg_EFkaEe2ha568rOfS2w">
+  <imports xsi:type="commands:Category" xmi:id="_euyUYFkaEe2ha568rOfS2w" elementId="org.toxsoft.mws.cmdcategory.global"/>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_GeqsgFknEe2ha568rOfS2w" featurename="addons" parentElementId="org.toxsoft.mws.app.main">
+    <elements xsi:type="application:Addon" xmi:id="_W8z58FknEe2ha568rOfS2w" elementId="org.toxsoft.skf.alarms.gui.addon.mnemos" contributionURI="bundleclass://org.toxsoft.skf.alarms.gui/org.toxsoft.skf.alarms.gui.e4.addons.AddonSkAlarms"/>
+  </fragments>
+</fragment:ModelFragments>
