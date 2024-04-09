@@ -4,7 +4,7 @@ import org.toxsoft.core.tslib.utils.valobj.TsValobjUtils;
 import org.toxsoft.skf.alarms.lib.impl.*;
 
 /**
- * Регистрация хранителей данных подсистемы
+ * Регистрация хранителей данных подсистемы.
  *
  * @author mvk
  */
