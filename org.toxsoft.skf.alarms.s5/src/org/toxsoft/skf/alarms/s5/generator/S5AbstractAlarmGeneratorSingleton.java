@@ -22,9 +22,14 @@ import org.toxsoft.skf.alarms.lib.ISkAlarmService;
 import org.toxsoft.skf.alarms.s5.supports.S5AlarmDefEntity;
 import org.toxsoft.uskat.core.ISkCoreApi;
 import org.toxsoft.uskat.core.api.rtdserv.ISkReadCurrDataChannel;
+import org.toxsoft.uskat.core.connection.ISkConnection;
+import org.toxsoft.uskat.core.impl.SkThreadExecutorService;
+import org.toxsoft.uskat.s5.client.local.IS5LocalConnectionSingleton;
 import org.toxsoft.uskat.s5.legacy.ISkSystem;
 import org.toxsoft.uskat.s5.server.backend.IS5BackendCoreSingleton;
 import org.toxsoft.uskat.s5.server.singletons.S5SingletonBase;
+
+import core.tslib.bricks.threadexecutor.ITsThreadExecutor;
 
 /**
  * Абстрактная реализация синглтона генератора алармов службы {@link ISkAlarmService}.
@@ -46,6 +51,16 @@ public abstract class S5AbstractAlarmGeneratorSingleton
 
   @EJB
   private IS5BackendCoreSingleton coreSupport;
+
+  @EJB
+  private IS5LocalConnectionSingleton localConnectionSupport;
+
+  /**
+   * Локальное соединение с сервером для генерации алармов
+   * <p>
+   * Требуется отдельное соединение, чтобы в {@link #doInit()} проводить вызовы ITsThread.syncExec(...)
+   */
+  private ISkConnection connection;
 
   /**
    * Генератор алармов
@@ -74,8 +89,11 @@ public abstract class S5AbstractAlarmGeneratorSingleton
   //
   @Override
   protected void doInit() {
+    // Новое (!) локальное соединение
+    connection = localConnectionSupport.open( id() );
     // API соединения ядра
-    ISkCoreApi coreApi = coreSupport.getConnection().coreApi();
+    // ISkCoreApi coreApi = coreSupport.getConnection().coreApi();
+    ISkCoreApi coreApi = connection.coreApi();
     // Служба алармов
     ISkAlarmService alarmService = (ISkAlarmService)coreApi.services().findByKey( ISkAlarmService.SERVICE_ID );
     // Поставщик текущих данных для алармов
@@ -96,22 +114,28 @@ public abstract class S5AbstractAlarmGeneratorSingleton
       }
       // Запись в журнал
       logger().info( MSG_REGISTRY_ALARMS, Integer.valueOf( startCurrDataGwids.size() ) );
-      // Создаем необходимые каналы чтения текущих данных
-      IMap<Gwid, ISkReadCurrDataChannel> channels = null;
       try {
-        channels = coreApi.rtdService().createReadCurrDataChannels( startCurrDataGwids );
+        // 2024-04-07 mvk fix gateway local connection error
+        ITsThreadExecutor threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
+        // Синхронное выполнение с вызовом doJob исполнителя
+        threadExecutor.syncExec( () -> {
+          // Создаем необходимые каналы чтения текущих данных
+          IMap<Gwid, ISkReadCurrDataChannel> channels =
+              coreApi.rtdService().createReadCurrDataChannels( startCurrDataGwids );
+          // Все каналы которые необходимы уже используются профилями алармов. Закрываем дублирующие каналы
+          for( Gwid gwid : channels.keys() ) {
+            channels.getByKey( gwid ).close();
+          }
+        } );
       }
       catch( Throwable e ) {
         // Вероятно какие-то данные не существуют
+        logger().error( e, "Unexpected error %s", e.getLocalizedMessage() );
         throw new TsInternalErrorRtException( e );
       }
       // Проход по всем алармам заставляя проверить конфигурацию и инициализировать свое состояние
       for( IS5AlarmProfile profile : alarmGenerator.getAlarmProfiles() ) {
         profile.test();
-      }
-      // Все каналы которые необходимы уже используются профилями алармов. Закрываем дублирующие каналы
-      for( Gwid gwid : channels.keys() ) {
-        channels.getByKey( gwid ).close();
       }
     }
     finally {
@@ -122,6 +146,7 @@ public abstract class S5AbstractAlarmGeneratorSingleton
   @Override
   protected void doClose() {
     alarmGenerator.close();
+    connection.close();
   }
 
   // ------------------------------------------------------------------------------------
