@@ -11,7 +11,7 @@ import org.toxsoft.skf.alarms.lib.impl.*;
 public class S5AlarmValobjUtils {
 
   /**
-   * Регистрация известных хранителей
+   * Регистрация известных хранителей.
    */
   public static void registerS5Keepers() {
     TsValobjUtils.registerKeeperIfNone( SkAlarm.KEEPER_ID, SkAlarm.KEEPER );
