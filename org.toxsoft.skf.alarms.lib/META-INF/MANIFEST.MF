@@ -11,4 +11,7 @@ Require-Bundle: org.toxsoft.core.tslib,
 Export-Package: org.toxsoft.skf.alarms.lib,
  org.toxsoft.skf.alarms.lib.filters,
  org.toxsoft.skf.alarms.lib.flacon,
- org.toxsoft.skf.alarms.lib.impl
+ org.toxsoft.skf.alarms.lib.impl,
+ org.toxsoft.skf.alarms.lib2,
+ org.toxsoft.skf.alarms.lib2.impl,
+ org.toxsoft.skf.alarms.lib2.l10n
