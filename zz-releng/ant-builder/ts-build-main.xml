@@ -17,8 +17,6 @@
   <!-- TODO: -->
   <target name="build-lib-jar" depends="clean" description="Сборка общих плагинов">
     <ant dir="../../org.toxsoft.skf.alarms.lib" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
-    <ant dir="../../org.toxsoft.skf.alarms.s5" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
-    <ant dir="../../org.toxsoft.skf.alarms.gui" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
   </target>
 
   <!-- ЦЕЛЬ: сборка plugin-ов -->
@@ -29,9 +27,7 @@
                        exportSource="true"
                        exportSourceBundle="false"
                        exportType="directory"
-                       plugins="org.toxsoft.skf.alarms.lib,
-                                org.toxsoft.skf.alarms.s5,
-                                org.toxsoft.skf.alarms.gui"
+                       plugins="org.toxsoft.skf.alarms.lib"
                        useworkspacecompiledclasses="true"
                        useJARFormat="true" />
   </target>
