@@ -28,6 +28,14 @@ public interface ISkAlarmService
   IStridablesList<ISkAlarm> listAlarms();
 
   /**
+   * Finds the alarm object by ID.
+   *
+   * @param aAlarmId String the alarm ID
+   * @return {@link ISkAlarm} - the found alarm or null
+   */
+  ISkAlarm findAlarm( String aAlarmId );
+
+  /**
    * Creates new or updates the existing alarm object.
    *
    * @param aAlarmInfo {@link IDtoAlarm} - the alarm definition
@@ -70,10 +78,13 @@ public interface ISkAlarmService
    * <p>
    * The environment of the checkers is {@link ISkCoreApi}, that is
    * {@link ITsCheckerTopicManager#checkEnvironmentClass()} is {@link ISkCoreApi#getClass()}.
+   * <p>
+   * <b>Important</b>: registered checker types {@link ITsSingleCheckerType} are <b>not stored</b> permanently! The
+   * application must register all checkers every time the alarm service is created.
    *
    * @return {@link ITsCheckerTopicManager} - the alarm single checkers topic manager
    */
-  ITsCheckerTopicManager<ISkCoreApi> getAlarmCheckersTpoicManager();
+  ITsCheckerTopicManager<ISkCoreApi> getAlarmCheckersTopicManager();
 
   /**
    * Returns the service eventer.

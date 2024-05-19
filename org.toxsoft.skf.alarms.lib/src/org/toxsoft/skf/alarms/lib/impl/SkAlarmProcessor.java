@@ -98,9 +98,9 @@ public class SkAlarmProcessor
     GwidList llAlertGwids = new GwidList();
     GwidList llMuteGwids = new GwidList();
     for( ISkAlarm alarm : alarmService.listAlarms() ) {
-      Gwid alertGwid = Gwid.createRtdata( CLASS_ID_ALARM, alarm.strid(), RTDID_IS_ALERT );
+      Gwid alertGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_ALERT );
       llAlertGwids.add( alertGwid );
-      Gwid muteGwid = Gwid.createRtdata( CLASS_ID_ALARM, alarm.strid(), RTDID_IS_MUTED );
+      Gwid muteGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_MUTED );
       llMuteGwids.add( muteGwid );
     }
     IMap<Gwid, ISkReadCurrDataChannel> mmChRead = coreApi.rtdService().createReadCurrDataChannels( llAlertGwids );
@@ -108,17 +108,15 @@ public class SkAlarmProcessor
     IMap<Gwid, ISkReadCurrDataChannel> mmChMutes = coreApi.rtdService().createReadCurrDataChannels( llMuteGwids );
     // create items for alarmItems
     for( ISkAlarm alarm : alarmService.listAlarms() ) {
-      Gwid alarmObjGwid = Gwid.createObj( CLASS_ID_ALARM, alarm.strid() );
+      Gwid alarmObjGwid = Gwid.createObj( CLSID_ALARM, alarm.strid() );
       ITsChecker checker =
-          alarmService.getAlarmCheckersTpoicManager().createCombiChecker( alarm.alertCondition(), coreApi );
+          alarmService.getAlarmCheckersTopicManager().createCombiChecker( alarm.alertCondition(), coreApi );
       AlarmItem alit = new AlarmItem( mmChRead.getByKey( alarmObjGwid ), mmChWrite.getByKey( alarmObjGwid ),
           mmChMutes.getByKey( alarmObjGwid ), checker, alarm );
       alarmItems.put( alarm.strid(), alit );
-      // internally acknowledged alarm need to register command executor for it
-      if( !alarm.isExternalAckowledgement() ) {
-        Gwid acknowledgementCmdGwid = Gwid.createCmd( alarm.classId(), alarm.strid(), CMDID_ACKNOWLEDGE );
-        cmdGwidsToRegister.add( acknowledgementCmdGwid );
-      }
+      // alarm need to register command executor for it
+      Gwid acknowledgementCmdGwid = Gwid.createCmd( alarm.classId(), alarm.strid(), CMDID_ACKNOWLEDGE );
+      cmdGwidsToRegister.add( acknowledgementCmdGwid );
     }
     alarmService.serviceEventer().addListener( this );
     coreApi.cmdService().registerExecutor( this, cmdGwidsToRegister );
@@ -139,18 +137,7 @@ public class SkAlarmProcessor
   //
 
   @Override
-  public void onAlarmMuteStateChange( String aAlarmId, boolean aMuted ) {
-    /**
-     * Nothing to do, just log warning for unknown alarm.
-     */
-    AlarmItem alit = alarmItems.findByKey( aAlarmId );
-    if( alit == null ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_NOT_ALARM_FOR_MUTE, aAlarmId );
-    }
-  }
-
-  @Override
-  public void onAlarmDefinition( ECrudOp aOp, String aAlarmId ) {
+  public void onAlarmDefinition( ISkAlarmService aSource, ECrudOp aOp, String aAlarmId ) {
     // OPTIMIZE do we need to optimize - process each aOp individually?
     internalFinish();
     internalStart();
@@ -208,7 +195,7 @@ public class SkAlarmProcessor
         alit.chWriteAlert.setValue( AV_TRUE );
         IOptionSetEdit params = new OptionSet();
         String msg = alit.messageInfo.makeMessage( coreApi );
-        EVPRMDEF_ALERT_MESSAGE.setValue( params, avStr( msg ) );
+        params.setStr( EVPRMID_ALERT_MESSAGE, msg );
         SkEvent event = new SkEvent( time, alit.alertEventGwid, params );
         if( llEvents == null ) {
           llEvents = new ElemArrayList<>();
@@ -226,7 +213,7 @@ public class SkAlarmProcessor
 
   @Override
   public void executeCommand( IDtoCommand aCmd ) {
-    if( !aCmd.cmdGwid().classId().equals( CLASS_ID_ALARM ) ) {
+    if( !aCmd.cmdGwid().classId().equals( CLSID_ALARM ) ) {
       LoggerUtils.errorLogger().warning( FMT_LOG_WARN_INV_CMD_DEST_CLASS, aCmd.cmdGwid().classId() );
       return;
     }
@@ -248,16 +235,16 @@ public class SkAlarmProcessor
     alit.chWriteAlert.setValue( AV_FALSE );
     // confirm command execution
     long time = System.currentTimeMillis();
-    String reason = aCmd.argValues().getStr( CMDARGID_ACK_REASON );
+    String comment = aCmd.argValues().getStr( CMDARGID_ACK_COMMENT );
     Gwid authorGwid = aCmd.argValues().getValobj( CMDARGID_ACK_AUTHOR_GWID );
-    SkCommandState state = new SkCommandState( time, ESkCommandState.SUCCESS, reason, authorGwid );
+    SkCommandState state = new SkCommandState( time, ESkCommandState.SUCCESS, comment, authorGwid );
     DtoCommandStateChangeInfo stateChangeInfo = new DtoCommandStateChangeInfo( aCmd.instanceId(), state );
     coreApi.cmdService().changeCommandState( stateChangeInfo );
     // fire an event
-    Gwid eventGwid = Gwid.createEvent( CLASS_ID_ALARM, EVID_ACKNOWLEDGE );
+    Gwid eventGwid = Gwid.createEvent( CLSID_ALARM, EVID_ACKNOWLEDGE );
     IOptionSetEdit params = new OptionSet();
-    params.setStr( EVPRMID_REASON, reason );
-    params.setValobj( EVPRMID_AUTHOR_GWID, authorGwid );
+    params.setStr( EVPRMID_ACK_COMMNET, comment );
+    params.setValobj( EVPRMID_ACK_AUTHOR, authorGwid );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, params );
     coreApi.eventService().fireEvent( event );
   }

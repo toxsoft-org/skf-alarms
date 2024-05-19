@@ -13,21 +13,12 @@ import org.toxsoft.core.tslib.coll.helpers.*;
 public interface ISkAlarmServiceListener {
 
   /**
-   * Called when alarm generation was muted or unmuted.
-   *
-   * @param aAlarmId String - the alarm ID
-   * @param aMuted boolean - the flag that alarm generation is muted<br>
-   *          <b>true</b> - alarms of the specified ID will not be generated (alarm objects will not be created);<br>
-   *          <b>false</b> - alarm are generated.
-   */
-  void onAlarmMuteStateChange( String aAlarmId, boolean aMuted );
-
-  /**
    * Called when alarm definitions has been changed.
    *
+   * @param aSource {@link ISkAlarmService} - the event source
    * @param aOp {@link ECrudOp} - the kind of change
    * @param aAlarmId String - the affected alarm ID or <code>null</code> for {@link ECrudOp#LIST}
    */
-  void onAlarmDefinition( ECrudOp aOp, String aAlarmId );
+  void onAlarmDefinition( ISkAlarmService aSource, ECrudOp aOp, String aAlarmId );
 
 }

@@ -10,7 +10,7 @@ import org.toxsoft.uskat.core.utils.msgen.*;
  * @author hazard157
  */
 public interface IDtoAlarm
-    extends IStridableParameterized {
+    extends IStridable {
 
   /**
    * Returns the severity of the alarm.
@@ -32,14 +32,5 @@ public interface IDtoAlarm
    * @return {@link ISkMessageInfo} - the alarm message definition
    */
   ISkMessageInfo messageInfo();
-
-  /**
-   * Determines if alarm needs external acknowledgement.
-   *
-   * @return boolean - the flag that external acknowledgement is required <br>
-   *         <b>true</b> - to reset alarm dedicated command executor is required;<br>
-   *         <b>false</b> - alert will be reset by alarm service itself.
-   */
-  boolean isExternalAckowledgement();
 
 }

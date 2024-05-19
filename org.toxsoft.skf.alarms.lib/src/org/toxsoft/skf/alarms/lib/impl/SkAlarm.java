@@ -63,11 +63,6 @@ class SkAlarm
   }
 
   @Override
-  public boolean isExternalAckowledgement() {
-    return attrs().getValue( ATRID_IS_EXTERNAL_ACK ).asBool();
-  }
-
-  @Override
   public boolean isAlert() {
     IAtomicValue val = readRtdataIfOpen( RTDID_IS_ALERT );
     if( val == null ) {
@@ -79,19 +74,28 @@ class SkAlarm
 
   @Override
   public void setAlert() {
-
-    // TODO SkAlarm.setAlert()
-
+    if( isAlert() ) {
+      return;
+    }
+    if( writeRtdataIfOpen( EVID_ALERT, AV_TRUE ) ) {
+      SkEvent alertEvent = SkEvent.create( skid(), EVID_ALERT, //
+          EVPRMID_ALERT_MESSAGE, messageInfo().makeMessage( coreApi() ) //
+      );
+      coreApi().eventService().fireEvent( alertEvent );
+    }
+    else {
+      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
+    }
   }
 
   @Override
-  public ISkCommand sendAcknowledge( Skid aAuthor, String aReason ) {
-    TsNullArgumentRtException.checkNull( aReason );
+  public ISkCommand sendAcknowledge( Skid aAuthor, String aComment ) {
+    TsNullArgumentRtException.checkNull( aComment );
     TsItemNotFoundRtException.checkNull( coreApi().objService().find( aAuthor ) );
     Gwid gwid = Gwid.createCmd( classId(), strid(), CMDID_ACKNOWLEDGE );
     return coreApi().cmdService().sendCommand( gwid, aAuthor, OptionSetUtils.createOpSet( //
         CMDARGID_ACK_AUTHOR_GWID, avValobj( Gwid.createObj( aAuthor ) ), //
-        CMDARGID_ACK_REASON, avStr( aReason ) //
+        CMDARGID_ACK_COMMENT, avStr( aComment ) //
     ) );
   }
 
@@ -113,10 +117,10 @@ class SkAlarm
       return;
     }
     writeRtdataIfOpen( RTDID_IS_MUTED, AV_TRUE );
-    Gwid eventGwid = Gwid.createEvent( classId(), strid(), EVID_MUTED );
+    Gwid eventGwid = Gwid.createEvent( classId(), strid(), EVID_ALARM_MUTED );
     IOptionSetEdit params = new OptionSet();
-    params.setValobj( EVPRMID_AUTHOR_GWID, aAuthor );
-    params.setStr( EVPRMID_REASON, aReason );
+    params.setValobj( EVPRMID_MUTE_AUTHOR, aAuthor );
+    params.setStr( EVPRMID_MUTE_REASON, aReason );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, params );
     coreApi().eventService().fireEvent( event );
   }
@@ -127,7 +131,7 @@ class SkAlarm
       return;
     }
     writeRtdataIfOpen( RTDID_IS_MUTED, AV_FALSE );
-    Gwid eventGwid = Gwid.createEvent( classId(), strid(), EVID_UNMUTED );
+    Gwid eventGwid = Gwid.createEvent( classId(), strid(), EVID_ALARM_UNMUTED );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, IOptionSet.NULL );
     coreApi().eventService().fireEvent( event );
   }

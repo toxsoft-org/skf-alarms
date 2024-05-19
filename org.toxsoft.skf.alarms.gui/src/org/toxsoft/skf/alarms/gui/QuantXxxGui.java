@@ -11,6 +11,8 @@ import org.toxsoft.core.tsgui.bricks.quant.*;
 public class QuantXxxGui
     extends AbstractQuant {
 
+  // TODO register VED items
+
   /**
    * Constructor.
    */

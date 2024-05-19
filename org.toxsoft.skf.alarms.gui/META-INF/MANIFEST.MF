@@ -18,7 +18,7 @@ Require-Bundle: javax.annotation,
  org.toxsoft.core.singlesrc.rcp,
  org.toxsoft.core.tsgui,
  org.toxsoft.core.tsgui.rcp,
- org.toxsoft.core.tsgui.mws,
+ org.toxsoft.core.tsgui.ved,
  org.toxsoft.uskat.core,
  org.toxsoft.uskat.core.gui,
  org.toxsoft.skf.alarms.lib
