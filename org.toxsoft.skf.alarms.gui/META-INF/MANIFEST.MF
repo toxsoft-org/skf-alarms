@@ -3,6 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: USkat Alrams GUI Library
 Bundle-SymbolicName: org.toxsoft.skf.alarms.gui
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.toxsoft.skf.alarms.gui,
+ org.toxsoft.skf.alarms.gui.panels,
+ org.toxsoft.skf.alarms.gui.ved
 Bundle-Activator: org.toxsoft.skf.alarms.gui.Activator
 Bundle-Vendor: toxsoft.org
 Require-Bundle: javax.annotation,

@@ -1,15 +1,21 @@
 package org.toxsoft.skf.alarms.lib.impl;
 
 import static org.toxsoft.core.tslib.utils.TsLibUtils.*;
+import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.toxsoft.core.tslib.bricks.keeper.*;
 import org.toxsoft.core.tslib.bricks.keeper.AbstractEntityKeeper.*;
 import org.toxsoft.core.tslib.bricks.strid.impl.*;
 import org.toxsoft.core.tslib.bricks.strio.*;
+import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.impl.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.lib.*;
+import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.api.objserv.*;
+import org.toxsoft.uskat.core.api.sysdescr.*;
+import org.toxsoft.uskat.core.impl.dto.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
@@ -85,6 +91,32 @@ public class DtoAlarm
     severity = aSeverity;
     firingCondition = aCondInfo;
     messageInfo = aMessageInfo;
+  }
+
+  /**
+   * Creates editable {@link DtoAlarm} with all properties filled.
+   * <p>
+   * If object with specified SKID exists then result will be filled by exiting properties, otherwise default or an
+   * empty values will be applied.
+   * <p>
+   * Created instance does not have system attribute values in the {@link IDtoObject#attrs()} set.
+   *
+   * @param aAlarmId String - the alarm ID
+   * @param aCoreApi {@link ISkSysdescr} - class info provider
+   * @return {@link DtoFullObject} - created instance
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   * @throws TsItemNotFoundRtException no such class as {@link Skid#classId()}
+   */
+  public static DtoAlarm makeAlarm( String aAlarmId, ISkCoreApi aCoreApi ) {
+    TsNullArgumentRtException.checkNulls( aAlarmId, aCoreApi );
+    Skid skid = new Skid( CLSID_ALARM, aAlarmId );
+    DtoFullObject obj = DtoFullObject.createDtoFullObject( skid, aCoreApi );
+    DtoAlarm dto = new DtoAlarm( aAlarmId, obj.nmName(), obj.description(), //
+        obj.attrs().getValobj( ATRID_SEVERITY ), //
+        TsCombiCondInfo.KEEPER.str2ent( obj.clobs().getByKey( CLBID_ALERT_CONDITION ) ), //
+        SkMessageInfo.KEEPER.str2ent( obj.clobs().getByKey( CLBID_MESSAGE_INFO ) ) //
+    );
+    return dto;
   }
 
   // ------------------------------------------------------------------------------------

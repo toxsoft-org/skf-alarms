@@ -8,7 +8,7 @@ import org.toxsoft.core.tsgui.bricks.quant.*;
  *
  * @author hazard157
  */
-public class QuantXxxGui
+public class QuantSkfAlarmsGui
     extends AbstractQuant {
 
   // TODO register VED items
@@ -16,8 +16,8 @@ public class QuantXxxGui
   /**
    * Constructor.
    */
-  public QuantXxxGui() {
-    super( QuantXxxGui.class.getSimpleName() );
+  public QuantSkfAlarmsGui() {
+    super( QuantSkfAlarmsGui.class.getSimpleName() );
   }
 
   // ------------------------------------------------------------------------------------
