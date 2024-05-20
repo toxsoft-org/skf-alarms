@@ -21,7 +21,7 @@ public class SkidePluginAlarms
   /**
    * The plugin ID.
    */
-  public static final String SKIDE_PLUGIN_ID = SKIDE_FULL_ID + ".plugin.template"; //$NON-NLS-1$
+  public static final String SKIDE_PLUGIN_ID = SKIDE_FULL_ID + ".plugin.alarms"; //$NON-NLS-1$
 
   /**
    * The singleton instance.

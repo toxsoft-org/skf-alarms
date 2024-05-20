@@ -42,6 +42,11 @@ public class SkAlarmService
     implements ISkAlarmService {
 
   /**
+   * Service creator singleton.
+   */
+  public static final ISkServiceCreator<AbstractSkService> CREATOR = SkAlarmService::new;
+
+  /**
    * {@link ISkAlarmService#svs()} implementation.
    *
    * @author hazard157
@@ -302,7 +307,7 @@ public class SkAlarmService
     dto.attrs().setStr( AID_NAME, aAlarmInfo.nmName() );
     dto.attrs().setStr( AID_DESCRIPTION, aAlarmInfo.description() );
     dto.attrs().setValobj( ATRID_SEVERITY, aAlarmInfo.severity() );
-    dto.clobs().put( CLBID_ALERT_CONDITION, TsCombiCondInfo.KEEPER.ent2str( aAlarmInfo.firingCondition() ) );
+    dto.clobs().put( CLBID_ALERT_CONDITION, TsCombiCondInfo.KEEPER.ent2str( aAlarmInfo.alertCondition() ) );
     dto.clobs().put( CLBID_MESSAGE_INFO, SkMessageInfo.KEEPER.ent2str( aAlarmInfo.messageInfo() ) );
     return dto;
   }

@@ -27,7 +27,7 @@ public class SkideUnitAlarms
   /**
    * The plugin ID.
    */
-  public static final String UNIT_ID = SKIDE_FULL_ID + ".unit.mnemos"; //$NON-NLS-1$
+  public static final String UNIT_ID = SKIDE_FULL_ID + ".unit.alarms"; //$NON-NLS-1$
 
   SkideUnitAlarms( ITsGuiContext aContext, AbstractSkidePlugin aCreator ) {
     super( UNIT_ID, OptionSetUtils.createOpSet( //

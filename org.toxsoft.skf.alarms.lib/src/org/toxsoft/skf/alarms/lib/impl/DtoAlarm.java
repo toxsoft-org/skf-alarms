@@ -45,7 +45,7 @@ public class DtoAlarm
           aSw.writeSeparatorChar();
           ESkAlarmSeverity.KEEPER.write( aSw, aEntity.severity() );
           aSw.writeSeparatorChar();
-          TsCombiCondInfo.KEEPER.write( aSw, aEntity.firingCondition() );
+          TsCombiCondInfo.KEEPER.write( aSw, aEntity.alertCondition() );
           aSw.writeSeparatorChar();
           SkMessageInfo.KEEPER.write( aSw, aEntity.messageInfo() );
         }
@@ -68,9 +68,9 @@ public class DtoAlarm
         }
       };
 
-  private ESkAlarmSeverity severity        = ESkAlarmSeverity.WARNING;
-  private ITsCombiCondInfo firingCondition = ITsCombiCondInfo.NEVER;
-  private ISkMessageInfo   messageInfo     = new SkMessageInfo( EMPTY_STRING );
+  private ESkAlarmSeverity severity       = ESkAlarmSeverity.WARNING;
+  private ITsCombiCondInfo alertCondition = ITsCombiCondInfo.NEVER;
+  private ISkMessageInfo   messageInfo    = new SkMessageInfo( EMPTY_STRING );
 
   /**
    * Constructor.
@@ -89,7 +89,7 @@ public class DtoAlarm
     TsNullArgumentRtException.checkNulls( aSeverity, aCondInfo, aMessageInfo );
     setNameAndDescription( aName, aDescription );
     severity = aSeverity;
-    firingCondition = aCondInfo;
+    alertCondition = aCondInfo;
     messageInfo = aMessageInfo;
   }
 
@@ -129,8 +129,8 @@ public class DtoAlarm
   }
 
   @Override
-  public ITsCombiCondInfo firingCondition() {
-    return firingCondition;
+  public ITsCombiCondInfo alertCondition() {
+    return alertCondition;
   }
 
   @Override
@@ -141,6 +141,11 @@ public class DtoAlarm
   // ------------------------------------------------------------------------------------
   // API
   //
+
+  @Override
+  public void setNameAndDescription( String aName, String aDescription ) {
+    super.setNameAndDescription( aName, aDescription );
+  }
 
   /**
    * Sets {@link #severity()} value.
@@ -154,14 +159,14 @@ public class DtoAlarm
   }
 
   /**
-   * Sets {@link #firingCondition()} value.
+   * Sets {@link #alertCondition()} value.
    *
    * @param aCondInfo {@link ITsCombiCondInfo} - the alert firing condition
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    */
-  public void setFiringCondition( ITsCombiCondInfo aCondInfo ) {
+  public void setAlertCondition( ITsCombiCondInfo aCondInfo ) {
     TsNullArgumentRtException.checkNull( aCondInfo );
-    firingCondition = aCondInfo;
+    alertCondition = aCondInfo;
   }
 
   /**

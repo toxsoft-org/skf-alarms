@@ -14,9 +14,7 @@ public interface ISkidePluginAlarmsConstants {
   // ------------------------------------------------------------------------------------
   // Icons
 
-  String PREFIX_OF_ICON_FIELD_NAME       = "ICONID_";                   //$NON-NLS-1$
-  String ICONID_SKIDE_PLUGIN_ALARMS      = "skide-plugin-alarmss";      //$NON-NLS-1$
-  String ICONID_SKIDE_UNIT_ALARMS_EDITOR = "skide-unit-alarmss-editor"; //$NON-NLS-1$
+  String PREFIX_OF_ICON_FIELD_NAME = "ICONID_"; //$NON-NLS-1$
 
   /**
    * Constants registration.

@@ -70,15 +70,13 @@ public interface ISkAlarmConstants {
   DtoClobInfo CLBINF_ALERT_CONDITION = DtoClobInfo.create2( CLBID_ALERT_CONDITION, //
       TSID_NAME, STR_ALERT_CONDITION, //
       TSID_DESCRIPTION, STR_ALERT_CONDITION_D, //
-      TSID_KEEPER_ID, TsCombiCondInfo.KEEPER_ID, //
-      TSID_DEFAULT_VALUE, avValobj( ITsCombiCondInfo.NEVER ) //
+      TSID_KEEPER_ID, TsCombiCondInfo.KEEPER_ID //
   );
 
   DtoClobInfo CLBINF_MESSAGE_INFO = DtoClobInfo.create2( CLBID_MESSAGE_INFO, //
       TSID_NAME, STR_ALERT_MESSAGE_INFO, //
       TSID_DESCRIPTION, STR_ALERT_MESSAGE_INFO_D, //
-      TSID_KEEPER_ID, SkMessageInfo.KEEPER_ID, //
-      TSID_DEFAULT_VALUE, avValobj( SkMessageInfo.NONE ) //
+      TSID_KEEPER_ID, SkMessageInfo.KEEPER_ID //
   );
 
   DtoRtdataInfo RTDINF_ALERT = DtoRtdataInfo.create2( RTDID_IS_ALERT, //

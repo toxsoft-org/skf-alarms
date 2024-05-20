@@ -7,6 +7,7 @@ import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
+import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.math.cond.*;
@@ -134,6 +135,13 @@ class SkAlarm
     Gwid eventGwid = Gwid.createEvent( classId(), strid(), EVID_ALARM_UNMUTED );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, IOptionSet.NULL );
     coreApi().eventService().fireEvent( event );
+  }
+
+  @Override
+  public ITimedList<SkEvent> getHistory( IQueryInterval aInterval ) {
+    TsNullArgumentRtException.checkNull( aInterval );
+    Gwid gwid = Gwid.createEvent( classId(), strid(), Gwid.STR_MULTI_ID );
+    return coreApi().eventService().queryObjEvents( aInterval, gwid );
   }
 
 }

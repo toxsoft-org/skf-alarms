@@ -24,7 +24,7 @@ public interface IDtoAlarm
    *
    * @return {@link ITsCombiCondInfo} - alarm generation condition parameters
    */
-  ITsCombiCondInfo firingCondition();
+  ITsCombiCondInfo alertCondition();
 
   /**
    * Definition of the alarm event message.

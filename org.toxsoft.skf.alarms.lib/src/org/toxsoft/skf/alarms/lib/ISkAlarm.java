@@ -1,12 +1,14 @@
 package org.toxsoft.skf.alarms.lib;
 
 import org.toxsoft.core.tslib.av.opset.*;
+import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.api.cmdserv.*;
+import org.toxsoft.uskat.core.api.evserv.*;
 import org.toxsoft.uskat.core.api.objserv.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
@@ -128,5 +130,18 @@ public interface ISkAlarm
    * Generates the event {@link ISkAlarmConstants#EVID_ALARM_UNMUTED}.
    */
   void unmuteAlert();
+
+  /**
+   * Returns history of the alarm - alert, acknowledge and muting events.
+   * <p>
+   * Includes all events of the class events with IDs {@link ISkAlarmConstants#EVID_ALERT ALERT},
+   * {@link ISkAlarmConstants#EVID_ACKNOWLEDGE ACKNOWLEDGE}, {@link ISkAlarmConstants#EVINF_ALARM_MUTED MUTED} and
+   * {@link ISkAlarmConstants#EVINF_ALARM_UNMUTED UNMUTED}.
+   *
+   * @param aInterval {@link IQueryInterval} - the query interval
+   * @return {@link ITimedList}&lt;{@link SkEvent}&gt; - the alarm events history
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   */
+  ITimedList<SkEvent> getHistory( IQueryInterval aInterval );
 
 }
