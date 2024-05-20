@@ -1,12 +1,16 @@
 package org.toxsoft.skf.alarms.lib.impl;
 
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
+import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
 
 import org.toxsoft.core.tslib.bricks.ctx.*;
 import org.toxsoft.core.tslib.bricks.events.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
+import org.toxsoft.core.tslib.bricks.validator.*;
+import org.toxsoft.core.tslib.bricks.validator.impl.*;
+import org.toxsoft.core.tslib.bricks.validator.std.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
@@ -38,11 +42,66 @@ public class SkAlarmService
     implements ISkAlarmService {
 
   /**
+   * {@link ISkAlarmService#svs()} implementation.
+   *
+   * @author hazard157
+   */
+  private class Svs
+      extends AbstractTsValidationSupport<ISkAlarmServiceValidator>
+      implements ISkAlarmServiceValidator {
+
+    @Override
+    public ISkAlarmServiceValidator validator() {
+      return this;
+    }
+
+    @Override
+    public ValidationResult canCreateAlarm( IDtoAlarm aAlarmInfo ) {
+      TsNullArgumentRtException.checkNull( aAlarmInfo );
+      ValidationResult vr = ValidationResult.SUCCESS;
+      for( ISkAlarmServiceValidator v : validatorsList() ) {
+        vr = ValidationResult.firstNonOk( vr, v.canCreateAlarm( aAlarmInfo ) );
+        if( vr.isError() ) {
+          break;
+        }
+      }
+      return vr;
+    }
+
+    @Override
+    public ValidationResult canEditAlarm( IDtoAlarm aAlarmInfo, ISkAlarm aExistingAlarm ) {
+      TsNullArgumentRtException.checkNulls( aAlarmInfo, aExistingAlarm );
+      ValidationResult vr = ValidationResult.SUCCESS;
+      for( ISkAlarmServiceValidator v : validatorsList() ) {
+        vr = ValidationResult.firstNonOk( vr, v.canEditAlarm( aAlarmInfo, aExistingAlarm ) );
+        if( vr.isError() ) {
+          break;
+        }
+      }
+      return vr;
+    }
+
+    @Override
+    public ValidationResult canRemoveAlarm( String aAlarmId ) {
+      TsNullArgumentRtException.checkNull( aAlarmId );
+      ValidationResult vr = ValidationResult.SUCCESS;
+      for( ISkAlarmServiceValidator v : validatorsList() ) {
+        vr = ValidationResult.firstNonOk( vr, v.canRemoveAlarm( aAlarmId ) );
+        if( vr.isError() ) {
+          break;
+        }
+      }
+      return vr;
+    }
+
+  }
+
+  /**
    * {@link ISkAlarmService#serviceEventer()} implementation.
    *
    * @author hazard157
    */
-  class Eventer
+  private class Eventer
       extends AbstractTsEventer<ISkAlarmServiceListener> {
 
     private ECrudOp op      = null;
@@ -90,7 +149,9 @@ public class SkAlarmService
   private final IListEdit<ISkAlertListener>       alertListeners = new ElemLinkedBundleList<>();
   private final TsCheckerTopicManager<ISkCoreApi> topicManager   = new TsCheckerTopicManager<>( ISkCoreApi.class );
 
-  private final Eventer                    eventer           = new Eventer();
+  private final Svs     svs     = new Svs();
+  private final Eventer eventer = new Eventer();
+
   private final ClassClaimingCoreValidator claimingValidator = new ClassClaimingCoreValidator();
 
   private final IStringMapEdit<ISkReadCurrDataChannel>  chReadAlerts  = new StringMap<>();
@@ -154,12 +215,40 @@ public class SkAlarmService
   };
 
   /**
+   * Builtin validator.
+   */
+  private final ISkAlarmServiceValidator builtinValidator = new ISkAlarmServiceValidator() {
+
+    @Override
+    public ValidationResult canCreateAlarm( IDtoAlarm aAlarmInfo ) {
+      ValidationResult vr = NameStringValidator.VALIDATOR.validate( aAlarmInfo.nmName() );
+      return vr;
+    }
+
+    @Override
+    public ValidationResult canEditAlarm( IDtoAlarm aAlarmInfo, ISkAlarm aExistingAlarm ) {
+      ValidationResult vr = NameStringValidator.VALIDATOR.validate( aAlarmInfo.nmName() );
+      return vr;
+    }
+
+    @Override
+    public ValidationResult canRemoveAlarm( String aAlarmId ) {
+      if( findAlarm( aAlarmId ) == null ) {
+        return ValidationResult.warn( FMT_NO_ALARM_ID_TO_REMOVE, aAlarmId );
+      }
+      return ValidationResult.SUCCESS;
+    }
+
+  };
+
+  /**
    * Constructor.
    *
    * @param aCoreApi {@link IDevCoreApi} - owner core API implementation
    */
   public SkAlarmService( IDevCoreApi aCoreApi ) {
     super( SERVICE_ID, aCoreApi );
+    svs.addValidator( builtinValidator );
   }
 
   // ------------------------------------------------------------------------------------
@@ -339,7 +428,7 @@ public class SkAlarmService
   }
 
   @Override
-  public void removeAlarmDefinition( String aAlarmId ) {
+  public void removeAlarm( String aAlarmId ) {
     ISkAlarm skAlarm = findAlarm( aAlarmId );
     if( skAlarm == null ) {
       return;
@@ -369,6 +458,11 @@ public class SkAlarmService
   @Override
   public ITsCheckerTopicManager<ISkCoreApi> getAlarmCheckersTopicManager() {
     return topicManager;
+  }
+
+  @Override
+  public ITsValidationSupport<ISkAlarmServiceValidator> svs() {
+    return svs;
   }
 
   @Override

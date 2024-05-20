@@ -2,6 +2,8 @@ package org.toxsoft.skf.alarms.lib;
 
 import org.toxsoft.core.tslib.bricks.events.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
+import org.toxsoft.core.tslib.bricks.validator.*;
+import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.*;
@@ -41,15 +43,17 @@ public interface ISkAlarmService
    * @param aAlarmInfo {@link IDtoAlarm} - the alarm definition
    * @return {@link ISkAlarm} - new or edited alarm
    * @throws TsNullArgumentRtException any argument = <code>null</code>
+   * @throws TsValidationFailedRtException failed {@link ISkAlarmServiceValidator} validation
    */
   ISkAlarm defineAlarm( IDtoAlarm aAlarmInfo );
 
   /**
-   * Removes the alarm .
+   * Removes the alarm if exists.
    *
    * @param aAlarmId String - ID of alarm to remove
+   * @throws TsValidationFailedRtException failed {@link ISkAlarmServiceValidator} validation
    */
-  void removeAlarmDefinition( String aAlarmId );
+  void removeAlarm( String aAlarmId );
 
   /**
    * Add the alert listener.
@@ -85,6 +89,16 @@ public interface ISkAlarmService
    * @return {@link ITsCheckerTopicManager} - the alarm single checkers topic manager
    */
   ITsCheckerTopicManager<ISkCoreApi> getAlarmCheckersTopicManager();
+
+  // ------------------------------------------------------------------------------------
+  // Service support
+
+  /**
+   * Returns the service validator.
+   *
+   * @return {@link ITsValidationSupport}&lt;{@link ISkAlarmServiceValidator}&gt; - the service validator
+   */
+  ITsValidationSupport<ISkAlarmServiceValidator> svs();
 
   /**
    * Returns the service eventer.

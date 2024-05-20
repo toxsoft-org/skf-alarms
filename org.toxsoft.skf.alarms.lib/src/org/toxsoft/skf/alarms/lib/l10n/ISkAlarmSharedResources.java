@@ -57,6 +57,11 @@ public interface ISkAlarmSharedResources {
   String STR_ALSEV_CRITICAL   = Messages.getString( "STR_ALSEV_CRITICAL" );   //$NON-NLS-1$
   String STR_ALSEV_CRITICAL_D = Messages.getString( "STR_ALSEV_CRITICAL_D" ); //$NON-NLS-1$
 
+  /**
+   * {@link SkAlarmService}
+   */
+  String FMT_NO_ALARM_ID_TO_REMOVE = Messages.getString( "FMT_NO_ALARM_ID_TO_REMOVE" ); //$NON-NLS-1$
+
   // ------------------------------------------------------------------------------------
   // Log messages need no translation
 
