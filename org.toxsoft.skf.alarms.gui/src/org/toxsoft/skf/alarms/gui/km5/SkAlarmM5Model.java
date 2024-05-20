@@ -3,6 +3,7 @@ package org.toxsoft.skf.alarms.gui.km5;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
+import org.toxsoft.core.tsgui.bricks.cond.valed.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
@@ -37,9 +38,10 @@ public class SkAlarmM5Model
           setName( CLBINF_ALERT_CONDITION.nmName() );
           setDescription( CLBINF_ALERT_CONDITION.description() );
           setDefaultValue( ITsCombiCondInfo.NEVER );
-
-          // FIXME set VALED editor name
-
+          setValedEditor( ValedCombiCondInfo.FACTORY_NAME );
+          ISkAlarmService alarmService = coreApi().getService( ISkAlarmService.SERVICE_ID );
+          ITsConditionsTopicManager tm = alarmService.getAlarmCheckersTopicManager();
+          valedRefs().put( ValedCombiCondInfo.REFDEF_TOPIC_MANAGER.refKey(), tm );
           setFlags( M5FF_DETAIL );
         }
 
@@ -80,8 +82,8 @@ public class SkAlarmM5Model
    */
   public SkAlarmM5Model( ISkConnection aConn ) {
     super( CLSID_ALARM, ISkAlarm.class, aConn );
-    addFieldDefs( STRID, SEVERITY, NAME, DESCRIPTION
-    // , ALERT_CONDITION, MESSAGE_INFO
+    addFieldDefs( STRID, SEVERITY, NAME, DESCRIPTION, ALERT_CONDITION
+    // , MESSAGE_INFO
     );
   }
 
