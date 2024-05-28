@@ -1,18 +1,20 @@
-package org.toxsoft.skf.alarms.lib.filters;
+package org.toxsoft.skf.alarms.lib.checkers;
 
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.math.*;
+import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.bricks.filter.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
+import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.math.cond.*;
+import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.math.cond.filter.*;
 import org.toxsoft.core.tslib.utils.errors.*;
-import org.toxsoft.skf.alarms.lib.checkers.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.rtdserv.*;
 import org.toxsoft.uskat.core.connection.*;
@@ -23,14 +25,14 @@ import org.toxsoft.uskat.core.gui.conn.*;
  *
  * @author dima
  */
-public class RtGwidOpConstSingleFilterType
-    extends AbstractTsSingleFilterType {
+public class RtGwidOpConstSingleChecker
+    extends AbstractTsSingleCheckerType {
 
   /**
    * Constructor.
    */
-  public RtGwidOpConstSingleFilterType() {
-    super( RtGwidOpConstSingleCondType.TYPE_ID, IOptionSet.NULL, IStridablesList.EMPTY );
+  public RtGwidOpConstSingleChecker( ITsGuiContext aContext ) {
+    super( aContext );
     setDefs( RtGwidOpConstSingleCondType.OPDEF_RTGWID, //
         RtGwidOpConstSingleCondType.OPDEF_OPERATION, //
         RtGwidOpConstSingleCondType.OPDEF_CONST );
@@ -104,6 +106,54 @@ public class RtGwidOpConstSingleFilterType
 
       return rtdCahannel.getValue();
     }
+  }
+
+  @Override
+  public IStridablesList<IDataDef> paramDefs() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ValidationResult validateParams( IOptionSet aCondParams ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String humanReadableDescription( IOptionSet aCondParams ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String id() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String nmName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String description() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public IOptionSet params() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <E> AbstractTsSingleChecker<E> create( E aEnviron, ITsSingleCondInfo aCombiCondInfo ) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

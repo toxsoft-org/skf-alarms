@@ -1,4 +1,4 @@
-package org.toxsoft.skf.alarms.lib.filters;
+package org.toxsoft.skf.alarms.lib.checkers;
 
 /**
  * Localizable resources.

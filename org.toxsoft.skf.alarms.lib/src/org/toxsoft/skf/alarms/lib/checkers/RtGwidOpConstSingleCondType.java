@@ -1,10 +1,10 @@
-package org.toxsoft.skf.alarms.lib.filters;
+package org.toxsoft.skf.alarms.lib.checkers;
 
 import static org.toxsoft.core.tslib.ITsHardConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
-import static org.toxsoft.skf.alarms.lib.filters.ITsResources.*;
+import static org.toxsoft.skf.alarms.lib.checkers.ITsResources.*;
 
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
@@ -19,8 +19,8 @@ import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.impl.*;
 
 /**
- * {@link ITsSingleCondType} implementation of condition for RtGwid {@link Gwid} OP {@link EAvCompareOp} Const
- * {@link IAtomicValue} filter.
+ * {@link ITsSingleCondType} implementation of condition formula: <i><b> RtGwid </i></b> {@link Gwid} <b><i>OP</i></b>
+ * {@link EAvCompareOp} <b><i>Const</i></b> {@link IAtomicValue}.
  *
  * @author dima
  */
