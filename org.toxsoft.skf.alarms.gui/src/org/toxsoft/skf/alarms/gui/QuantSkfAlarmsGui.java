@@ -53,7 +53,7 @@ public class QuantSkfAlarmsGui
     TsCheckerTopicManager<ISkCoreApi> tm =
         (TsCheckerTopicManager<ISkCoreApi>)alarmService.getAlarmCheckersTopicManager();
     // add my checkers here
-    tm.registerType( new RtGwidOpConstSingleCheckerType() );
+    tm.registerType( new AlertCheckerRtdataVsConstType() );
   }
 
 }

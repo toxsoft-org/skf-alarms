@@ -7,10 +7,12 @@ Bundle-Vendor: toxsoft.org
 Automatic-Module-Name: org.toxsoft.skf.alarms.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.toxsoft.core.tslib,
- org.toxsoft.uskat.core
+ org.toxsoft.uskat.core,
+ org.toxsoft.core.tsgui
 Export-Package: org.toxsoft.skf.alarms.lib,
  org.toxsoft.skf.alarms.lib.checkers,
  org.toxsoft.skf.alarms.lib.impl,
  org.toxsoft.skf.alarms.lib.l10n
 Import-Package: org.toxsoft.core.tsgui.bricks.ctx,
+ org.toxsoft.skf.reports.gui.panels.valed,
  org.toxsoft.uskat.core.gui.conn

@@ -12,7 +12,6 @@ import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.uskat.core.connection.*;
 import org.toxsoft.uskat.core.gui.km5.*;
-import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
  * LM for {@link SkAlarmM5Model}.
@@ -48,7 +47,8 @@ public class SkAlarmM5LifecycleManager
     dto.setNameAndDescription( name, description );
     dto.setSeverity( aValues.getAsAv( ATRID_SEVERITY ).asValobj() );
     dto.setAlertCondition( aValues.getAs( CLBID_ALERT_CONDITION, ITsCombiCondInfo.class ) );
-    dto.setMessageInfo( aValues.getAs( CLBID_MESSAGE_INFO, ISkMessageInfo.class ) );
+    // FIXME comment to mask error
+    // dto.setMessageInfo( aValues.getAs( CLBID_MESSAGE_INFO, ISkMessageInfo.class ) );
     return dto;
   }
 

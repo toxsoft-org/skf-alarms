@@ -1,24 +1,27 @@
 package org.toxsoft.skf.alarms.lib.checkers;
 
+import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.lib.checkers.ISkResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
 
+import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.math.*;
 import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
+import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
-import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
+import org.toxsoft.skf.reports.gui.panels.valed.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.rtdserv.*;
 
@@ -46,7 +49,9 @@ public class AlertCheckerRtdataVsConstType
       TSID_NAME, STR_RTDVC_RTDATA_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RTDATA_GWID_D, //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      TSID_DEFAULT_VALUE, Gwid.createRtdata( Skid.NONE.classId(), Skid.NONE.strid(), NONE_ID ), //
+      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME, //
+      ValedGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_RTDATA ), //
+      TSID_DEFAULT_VALUE, avValobj( Gwid.createRtdata( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );
 
@@ -58,7 +63,8 @@ public class AlertCheckerRtdataVsConstType
       TSID_NAME, STR_RTDVC_COMPARE_OP, //
       TSID_DESCRIPTION, STR_RTDVC_COMPARE_OP_D, //
       TSID_KEEPER_ID, EAvCompareOp.KEEPER_ID, //
-      TSID_DEFAULT_VALUE, EAvCompareOp.EQ, //
+      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjEnumCombo.FACTORY_NAME, //
+      TSID_DEFAULT_VALUE, avValobj( EAvCompareOp.GE ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );
 
