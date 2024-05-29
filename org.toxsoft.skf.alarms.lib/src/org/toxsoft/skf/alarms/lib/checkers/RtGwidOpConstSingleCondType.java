@@ -39,6 +39,8 @@ public class RtGwidOpConstSingleCondType
       DataDef.create( TS_FULL_ID + ".skf.alarms.lib.filters.RtGwidOpConstSingleCondType.RtGwid", VALOBJ, //$NON-NLS-1$
           TSID_NAME, "RtGwid", //
           TSID_DESCRIPTION, "RtGwid in condition", //
+          // OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjAnyGwidEditor.FACTORY_NAME, //
+          // TSID_DEFAULT_VALUE, avValobj( Gwid.of( "classId[*]" ) ), //
           TSID_KEEPER_ID, Gwid.KEEPER_ID ); //
 
   /**
