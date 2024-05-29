@@ -64,6 +64,7 @@ public class SkAlarmProcessor
 
     @Override
     public void close() {
+      alertChecker.close();
       chReadAlert.close();
       chWriteAlert.close();
       chReadMute.close();
