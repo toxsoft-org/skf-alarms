@@ -22,8 +22,6 @@ import org.toxsoft.uskat.core.impl.*;
 public class QuantSkfAlarmsGui
     extends AbstractQuant {
 
-  // TODO register VED items
-
   /**
    * Constructor.
    */
@@ -54,6 +52,8 @@ public class QuantSkfAlarmsGui
         (TsCheckerTopicManager<ISkCoreApi>)alarmService.getAlarmCheckersTopicManager();
     // add my checkers here
     tm.registerType( new AlertCheckerRtdataVsConstType() );
+    tm.registerType( new AlertCheckerRtdataVsRriType() );
+    tm.registerType( new AlertCheckerRtdataVsAttrType() );
   }
 
 }
