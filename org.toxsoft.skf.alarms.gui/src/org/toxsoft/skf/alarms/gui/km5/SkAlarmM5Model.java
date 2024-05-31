@@ -1,10 +1,16 @@
 package org.toxsoft.skf.alarms.gui.km5;
 
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
+import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.toxsoft.core.tsgui.bricks.cond.valed.*;
+import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.m5.*;
+import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tslib.math.cond.*;
@@ -85,6 +91,18 @@ public class SkAlarmM5Model
     addFieldDefs( STRID, SEVERITY, NAME, DESCRIPTION, ALERT_CONDITION
     // , MESSAGE_INFO
     );
+    setPanelCreator( new M5DefaultPanelCreator<>() {
+
+      @Override
+      protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
+          IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
+        OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_TRUE );
+        OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
+        MultiPaneComponentModown<ISkAlarm> mpc = new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
+        return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
+      }
+    } );
+
   }
 
   @Override
