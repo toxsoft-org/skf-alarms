@@ -22,6 +22,8 @@ public class KM5AlarmsContributor
   public static final IKM5ContributorCreator CREATOR = KM5AlarmsContributor::new;
 
   private static final IStringList CONRTIBUTED_MODEL_IDS = new StringArrayList( //
+      UsedUgwi4MessageInfoM5Model.MODEL_ID, //
+      SkMessageInfoM5Model.MODEL_ID, //
       ISkAlarmConstants.CLSID_ALARM //
   );
 
@@ -38,6 +40,8 @@ public class KM5AlarmsContributor
 
   @Override
   protected IStringList papiCreateModels() {
+    m5().addModel( new UsedUgwi4MessageInfoM5Model() );
+    m5().addModel( new SkMessageInfoM5Model() );
     m5().addModel( new SkAlarmM5Model( skConn() ) );
     return CONRTIBUTED_MODEL_IDS;
   }

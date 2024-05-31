@@ -25,7 +25,8 @@ Require-Bundle: javax.annotation,
  org.toxsoft.core.tsgui.ved,
  org.toxsoft.uskat.core,
  org.toxsoft.uskat.core.gui,
- org.toxsoft.skf.alarms.lib
+ org.toxsoft.skf.alarms.lib,
+ org.toxsoft.skf.reports.gui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.toxsoft.skf.alarms.gui
 Bundle-ActivationPolicy: lazy
