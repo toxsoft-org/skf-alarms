@@ -59,7 +59,7 @@ public class AlertCheckerRtdataVsRriType
    * @author dima
    */
   static class Checker
-      extends BaseChecker {
+      extends AbstractChecker {
 
     private final Gwid          rriGwid;
     private final ISkRriSection rriSection;
@@ -82,7 +82,7 @@ public class AlertCheckerRtdataVsRriType
     }
 
     @Override
-    protected IAtomicValue getXxxValue() {
+    protected IAtomicValue doGetXxxValue() {
       IAtomicValue retVal = IAtomicValue.NULL;
       if( init ) {
         retVal = rriSection.getAttrParamValue( rriGwid.skid(), rriGwid.propId() );

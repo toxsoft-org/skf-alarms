@@ -22,20 +22,18 @@ interface ISkResources {
   /**
    * {@link AlertCheckerRtdataVsAttrType}
    */
-  String STR_RTD_VC_ATTR       = Messages.getString("STR_RTD_VC_ATTR"); //$NON-NLS-1$
-  String STR_RTD_VC_ATTR_D     = Messages.getString("STR_RTD_VC_ATTR_D"); //$NON-NLS-1$
-  String STR_RTDVC_ATTR_GWID   = Messages.getString("STR_RTDVC_ATTR_GWID"); //$NON-NLS-1$
-  String STR_RTDVC_ATTR_GWID_D =
-      Messages.getString("STR_RTDVC_ATTR_GWID_D"); //$NON-NLS-1$
+  String STR_RTD_VC_ATTR       = Messages.getString( "STR_RTD_VC_ATTR" );       //$NON-NLS-1$
+  String STR_RTD_VC_ATTR_D     = Messages.getString( "STR_RTD_VC_ATTR_D" );     //$NON-NLS-1$
+  String STR_RTDVC_ATTR_GWID   = Messages.getString( "STR_RTDVC_ATTR_GWID" );   //$NON-NLS-1$
+  String STR_RTDVC_ATTR_GWID_D = Messages.getString( "STR_RTDVC_ATTR_GWID_D" ); //$NON-NLS-1$
 
   /**
    * {@link AlertCheckerRtdataVsRriType}
    */
-  String STR_RTD_VC_RRI       = Messages.getString("STR_RTD_VC_RRI"); //$NON-NLS-1$
-  String STR_RTD_VC_RRI_D     = Messages.getString("STR_RTD_VC_RRI_D"); //$NON-NLS-1$
-  String STR_RTDVC_RRI_GWID   = Messages.getString("STR_RTDVC_RRI_GWID"); //$NON-NLS-1$
-  String STR_RTDVC_RRI_GWID_D =
-      Messages.getString("STR_RTDVC_RRI_GWID_D"); //$NON-NLS-1$
+  String STR_RTD_VC_RRI       = Messages.getString( "STR_RTD_VC_RRI" );       //$NON-NLS-1$
+  String STR_RTD_VC_RRI_D     = Messages.getString( "STR_RTD_VC_RRI_D" );     //$NON-NLS-1$
+  String STR_RTDVC_RRI_GWID   = Messages.getString( "STR_RTDVC_RRI_GWID" );   //$NON-NLS-1$
+  String STR_RTDVC_RRI_GWID_D = Messages.getString( "STR_RTDVC_RRI_GWID_D" ); //$NON-NLS-1$
 
   // ------------------------------------------------------------------------------------
   // Log messages, no need to localize

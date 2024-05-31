@@ -10,23 +10,23 @@ import org.toxsoft.core.tslib.av.math.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
-import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.rtdserv.*;
 
 /**
- * Implementation of {@link AbstractTsSingleChecker} created in by this type.
+ * {@link AbstractAlertChecker} basic implementation for {@link AlertCheckerRtdataVsXxxBaseType} subclasses.
  *
+ * @author dima
  * @author hazard157
  */
-abstract class BaseChecker
+abstract class AbstractChecker
     extends AbstractAlertChecker {
 
   private final ISkReadCurrDataChannel channel;
   private final EAvCompareOp           op;
 
-  public BaseChecker( ISkCoreApi aEnviron, IOptionSet aParams ) {
+  public AbstractChecker( ISkCoreApi aEnviron, IOptionSet aParams ) {
     super( aEnviron, aParams );
     Gwid rtdGwid = params().getValobj( AlertCheckerRtdataVsXxxBaseType.OPDEF_RTDATA_GWID );
     op = params().getValobj( AlertCheckerRtdataVsXxxBaseType.OPDEF_COMPARE_OP );
@@ -38,17 +38,19 @@ abstract class BaseChecker
     }
   }
 
+  // ------------------------------------------------------------------------------------
+  // AbstractAlertChecker
+  //
+
   @Override
   public boolean checkCondition() {
     if( channel != null ) {
       IAtomicValue rtdVal = channel.getValue();
-      IAtomicValue val = getXxxValue();
+      IAtomicValue val = doGetXxxValue();
       return AvComparatorStrict.INSTANCE.avCompare( rtdVal, op, val );
     }
     return false;
   }
-
-  protected abstract IAtomicValue getXxxValue();
 
   @Override
   public void close() {
@@ -56,5 +58,11 @@ abstract class BaseChecker
       channel.close();
     }
   }
+
+  // ------------------------------------------------------------------------------------
+  // To implement/override
+  //
+
+  protected abstract IAtomicValue doGetXxxValue();
 
 }
