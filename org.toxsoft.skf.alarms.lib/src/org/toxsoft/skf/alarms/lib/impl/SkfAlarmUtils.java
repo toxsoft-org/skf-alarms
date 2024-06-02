@@ -19,12 +19,15 @@ public class SkfAlarmUtils {
   /**
    * Core handler to register all registered Sk-connection bound {@link ISkUgwiKind} when connection opens.
    */
-  private static final ISkCoreExternalHandler ugwisRegistrationHandler = aCoreApi -> {
+  private static final ISkCoreExternalHandler coreRegistrationHandler = aCoreApi -> {
     ISkAlarmService alarmService = aCoreApi.getService( ISkAlarmService.SERVICE_ID );
     ITsCheckerTopicManager<ISkCoreApi> tm = alarmService.getAlarmCheckersTopicManager();
     tm.registerType( new AlertCheckerRtdataVsConstType() );
     tm.registerType( new AlertCheckerRtdataVsRriType() );
     tm.registerType( new AlertCheckerRtdataVsAttrType() );
+
+    // FIXME create and register UGWIs
+
   };
 
   /**
@@ -33,7 +36,7 @@ public class SkfAlarmUtils {
   public static void initialize() {
     TsValobjUtils.registerKeeper( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
     SkCoreUtils.registerSkServiceCreator( SkAlarmService.CREATOR );
-    SkCoreUtils.registerCoreApiHandler( ugwisRegistrationHandler );
+    SkCoreUtils.registerCoreApiHandler( coreRegistrationHandler );
   }
 
   /**
