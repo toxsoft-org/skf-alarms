@@ -28,6 +28,7 @@ public class QuantSkfAlarmsGui
   public QuantSkfAlarmsGui() {
     super( QuantSkfAlarmsGui.class.getSimpleName() );
     TsValobjUtils.registerKeeper( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
+    TsValobjUtils.registerKeeper( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
     SkCoreUtils.registerSkServiceCreator( SkAlarmService.CREATOR );
     KM5Utils.registerContributorCreator( KM5AlarmsContributor.CREATOR );
   }
