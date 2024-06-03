@@ -61,10 +61,8 @@ public class SkAlarmM5Model
   /**
    * Field {@link ISkAlarm#messageInfo()}.
    */
-  // public final IM5FieldDef<ISkAlarm, ISkMessageInfo> MESSAGE_INFO =
-  // new M5FieldDef<>( CLBID_MESSAGE_INFO, ISkMessageInfo.class ) {
   public final IM5SingleModownFieldDef<ISkAlarm, ISkMessageInfo> MESSAGE_INFO =
-      new M5SingleModownFieldDef<>( CLBID_MESSAGE_INFO, ISkAlarmConstants.CLSID_MESSAGE_INFO ) {
+      new M5SingleModownFieldDef<>( CLBID_MESSAGE_INFO, SkMessageInfoM5Model.MODEL_ID ) {
 
         @Override
         protected void doInit() {
