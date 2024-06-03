@@ -2,7 +2,7 @@ package org.toxsoft.skf.alarms.gui.km5;
 
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
-import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
+import static org.toxsoft.uskat.core.ISkHardConstants.*;
 
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
@@ -29,14 +29,19 @@ public class SkMessageInfoM5Model
     extends M5Model<ISkMessageInfo> {
 
   /**
+   * The model ID.
+   */
+  static final String MODEL_ID = USKAT_FULL_ID + ".m5.SkMessageInfo"; //$NON-NLS-1$
+
+  /**
    * ID of attribute {@link ISkMessageInfo#fmtStr()}.
    */
-  static String ATRID_FMT_STR = "fmtStr"; //$NON-NLS-1$
+  static final String ATRID_FMT_STR = "fmtStr"; //$NON-NLS-1$
 
   /**
    * ID of attribute {@link ISkMessageInfo#usedUgwies()}.
    */
-  static String CLBID_USED_UGWIES = "usedUgwies"; //$NON-NLS-1$
+  static final String CLBID_USED_UGWIES = "usedUgwies"; //$NON-NLS-1$
 
   /**
    * Attribute {@link ISkMessageInfo#fmtStr()}.
@@ -88,7 +93,7 @@ public class SkMessageInfoM5Model
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    */
   public SkMessageInfoM5Model() {
-    super( CLSID_MESSAGE_INFO, ISkMessageInfo.class );
+    super( MODEL_ID, ISkMessageInfo.class );
 
     addFieldDefs( FMT_STR, USED_UGWIES );
     setPanelCreator( new M5DefaultPanelCreator<>() {

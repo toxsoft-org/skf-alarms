@@ -23,7 +23,7 @@ public class KM5AlarmsContributor
 
   private static final IStringList CONRTIBUTED_MODEL_IDS = new StringArrayList( //
       UsedUgwi4MessageInfoM5Model.MODEL_ID, //
-      ISkAlarmConstants.CLSID_MESSAGE_INFO, //
+      SkMessageInfoM5Model.MODEL_ID, //
       ISkAlarmConstants.CLSID_ALARM //
   );
 

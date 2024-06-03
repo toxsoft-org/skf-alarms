@@ -55,11 +55,6 @@ public interface ISkAlarmConstants {
   String EVID_ALARM_UNMUTED = "evUnmuted"; //$NON-NLS-1$
 
   // ------------------------------------------------------------------------------------
-  // SkMessageInfo class properties IDs
-
-  String CLSID_MESSAGE_INFO = SK_ID + ".MessageInfo"; //$NON-NLS-1$
-
-  // ------------------------------------------------------------------------------------
   // Alarm class properties INFOs
 
   DtoAttrInfo ATRINF_SEVERITY = DtoAttrInfo.create2( ATRID_SEVERITY, //

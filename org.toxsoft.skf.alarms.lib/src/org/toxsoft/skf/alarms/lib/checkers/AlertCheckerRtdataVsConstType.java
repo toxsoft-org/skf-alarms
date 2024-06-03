@@ -52,7 +52,7 @@ public class AlertCheckerRtdataVsConstType
    * @author dima
    */
   static class Checker
-      extends BaseChecker {
+      extends AbstractChecker {
 
     private final IAtomicValue constVal;
 
@@ -62,7 +62,7 @@ public class AlertCheckerRtdataVsConstType
     }
 
     @Override
-    protected IAtomicValue getXxxValue() {
+    protected IAtomicValue doGetXxxValue() {
       return constVal;
     }
 

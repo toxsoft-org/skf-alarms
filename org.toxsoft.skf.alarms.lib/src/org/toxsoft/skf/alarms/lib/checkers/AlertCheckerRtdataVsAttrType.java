@@ -58,7 +58,7 @@ public class AlertCheckerRtdataVsAttrType
    * @author dima
    */
   static class Checker
-      extends BaseChecker {
+      extends AbstractChecker {
 
     private final Gwid attrGwid;
     private boolean    init = false;
@@ -76,7 +76,7 @@ public class AlertCheckerRtdataVsAttrType
     }
 
     @Override
-    protected IAtomicValue getXxxValue() {
+    protected IAtomicValue doGetXxxValue() {
       IAtomicValue retVal = IAtomicValue.NULL;
       if( init ) {
         retVal = coreApi().objService().get( attrGwid.skid() ).attrs().getValue( attrGwid.propId() );
