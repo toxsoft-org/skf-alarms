@@ -3,6 +3,7 @@ package org.toxsoft.skf.alarms.gui.km5;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
+import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.toxsoft.core.tsgui.bricks.cond.valed.*;
@@ -60,17 +61,19 @@ public class SkAlarmM5Model
   /**
    * Field {@link ISkAlarm#messageInfo()}.
    */
-  public final IM5FieldDef<ISkAlarm, ISkMessageInfo> MESSAGE_INFO =
-      new M5FieldDef<>( CLBID_MESSAGE_INFO, ISkMessageInfo.class ) {
+  // public final IM5FieldDef<ISkAlarm, ISkMessageInfo> MESSAGE_INFO =
+  // new M5FieldDef<>( CLBID_MESSAGE_INFO, ISkMessageInfo.class ) {
+  public final IM5SingleModownFieldDef<ISkAlarm, ISkMessageInfo> MESSAGE_INFO =
+      new M5SingleModownFieldDef<>( CLBID_MESSAGE_INFO, ISkAlarmConstants.CLSID_MESSAGE_INFO ) {
 
         @Override
         protected void doInit() {
           setName( CLBINF_MESSAGE_INFO.nmName() );
           setDescription( CLBINF_MESSAGE_INFO.description() );
           setDefaultValue( ISkMessageInfo.NONE );
-
+          params().setBool( TSID_IS_NULL_ALLOWED, false );
+          // params().setStr( M5_VALED_OPDEF_WIDGET_TYPE_ID, M5VWTID_INPLACE );
           // FIXME set VALED editor name
-
           setFlags( M5FF_DETAIL );
         }
 
@@ -88,9 +91,7 @@ public class SkAlarmM5Model
    */
   public SkAlarmM5Model( ISkConnection aConn ) {
     super( CLSID_ALARM, ISkAlarm.class, aConn );
-    addFieldDefs( STRID, SEVERITY, NAME, DESCRIPTION, ALERT_CONDITION
-    // , MESSAGE_INFO
-    );
+    addFieldDefs( STRID, SEVERITY, NAME, DESCRIPTION, MESSAGE_INFO, ALERT_CONDITION );
     setPanelCreator( new M5DefaultPanelCreator<>() {
 
       @Override

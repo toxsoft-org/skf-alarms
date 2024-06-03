@@ -65,6 +65,11 @@ public class UsedUgwi4MessageInfoM5Model
       OPID_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME //
   ) {
 
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+
     protected IAtomicValue doGetFieldValue( IUsedUgwi4MessageInfo aEntity ) {
       return AvUtils.avValobj( aEntity.usedUgwi() );
     }

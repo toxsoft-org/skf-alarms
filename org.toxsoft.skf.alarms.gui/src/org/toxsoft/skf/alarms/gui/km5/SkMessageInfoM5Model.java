@@ -4,6 +4,10 @@ import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
+import org.toxsoft.core.tsgui.bricks.ctx.*;
+import org.toxsoft.core.tsgui.m5.gui.mpc.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tslib.av.*;
@@ -17,7 +21,7 @@ import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
- * M5-model of {@link ISkMessageInfo} Sk-objects
+ * M5-model of {@link ISkMessageInfo}
  *
  * @author dima
  */
@@ -86,24 +90,26 @@ public class SkMessageInfoM5Model
   public SkMessageInfoM5Model() {
     super( CLSID_MESSAGE_INFO, ISkMessageInfo.class );
 
-    addFieldDefs( FMT_STR );
-    // setPanelCreator( new M5DefaultPanelCreator<>() {
-    //
-    // @Override
-    // protected IM5CollectionPanel<ISkMessageInfo> doCreateCollEditPanel( ITsGuiContext aContext,
-    // IM5ItemsProvider<ISkMessageInfo> aItemsProvider, IM5LifecycleManager<ISkMessageInfo> aLifecycleManager ) {
-    // OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_TRUE );
-    // OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
-    // MultiPaneComponentModown<ISkMessageInfo> mpc =
-    // new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
-    // return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
-    // }
-    // } );
+    addFieldDefs( FMT_STR, USED_UGWIES );
+    setPanelCreator( new M5DefaultPanelCreator<>() {
+
+      protected IM5EntityPanel<ISkMessageInfo> doCreateEntityEditorPanel( ITsGuiContext aContext,
+          IM5LifecycleManager<ISkMessageInfo> aLifecycleManager ) {
+        IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AvUtils.AV_FALSE );
+
+        return new M5DefaultEntityControlledPanel<>( aContext, model(), aLifecycleManager, null );
+      }
+    } );
 
   }
 
   @Override
   protected IM5LifecycleManager<ISkMessageInfo> doCreateLifecycleManager( Object aMaster ) {
+    return new SkMessageInfoM5LifecycleManager( this );
+  }
+
+  @Override
+  protected IM5LifecycleManager<ISkMessageInfo> doCreateDefaultLifecycleManager() {
     return new SkMessageInfoM5LifecycleManager( this );
   }
 
