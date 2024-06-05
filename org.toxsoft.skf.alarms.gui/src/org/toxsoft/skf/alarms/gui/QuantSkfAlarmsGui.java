@@ -4,10 +4,8 @@ import org.eclipse.e4.core.contexts.*;
 import org.toxsoft.core.tsgui.bricks.quant.*;
 import org.toxsoft.core.tslib.utils.valobj.*;
 import org.toxsoft.skf.alarms.gui.km5.*;
-import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.uskat.core.gui.km5.*;
-import org.toxsoft.uskat.core.impl.*;
 
 /**
  * The GUI library quant.
@@ -22,10 +20,8 @@ public class QuantSkfAlarmsGui
    */
   public QuantSkfAlarmsGui() {
     super( QuantSkfAlarmsGui.class.getSimpleName() );
-    TsValobjUtils.registerKeeper( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
-    TsValobjUtils.registerKeeper( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
-    SkCoreUtils.registerSkServiceCreator( SkAlarmService.CREATOR );
     SkfAlarmUtils.initialize();
+    TsValobjUtils.registerKeeper( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
     // GUI initialization
     KM5Utils.registerContributorCreator( KM5AlarmsContributor.CREATOR );
   }
