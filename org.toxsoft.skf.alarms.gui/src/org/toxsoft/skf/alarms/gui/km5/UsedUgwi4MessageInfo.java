@@ -6,6 +6,7 @@ import org.toxsoft.core.tslib.bricks.keeper.*;
 import org.toxsoft.core.tslib.bricks.keeper.AbstractEntityKeeper.*;
 import org.toxsoft.core.tslib.bricks.strio.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.gw.ugwi.*;
 
 /**
  * {@link IUsedUgwi4MessageInfo} immutable implementation.
@@ -31,21 +32,21 @@ public final class UsedUgwi4MessageInfo
           // idPath
           aSw.writeQuotedString( aEntity.idPath() );
           aSw.writeChar( CHAR_ITEM_SEPARATOR );
-          // пишем Gwid
-          Gwid.KEEPER.write( aSw, aEntity.usedUgwi() );
+          // пишем Ugwi
+          Ugwi.KEEPER.write( aSw, aEntity.usedUgwi() );
         }
 
         @Override
         protected IUsedUgwi4MessageInfo doRead( IStrioReader aSr ) {
           String idPath = aSr.readQuotedString();
           aSr.ensureChar( CHAR_ITEM_SEPARATOR );
-          Gwid gwid = Gwid.KEEPER.read( aSr );
-          return new UsedUgwi4MessageInfo( idPath, gwid );
+          Ugwi ugwi = Ugwi.KEEPER.read( aSr );
+          return new UsedUgwi4MessageInfo( idPath, ugwi );
         }
       };
 
   protected final String idPath;
-  protected final Gwid   usedUgwi;
+  protected final Ugwi   usedUgwi;
 
   /**
    * Constructor.
@@ -53,7 +54,7 @@ public final class UsedUgwi4MessageInfo
    * @param aIdPath - id path
    * @param aUsedUgwi - {@link Gwid} green world id of that parameter
    */
-  public UsedUgwi4MessageInfo( String aIdPath, Gwid aUsedUgwi ) {
+  public UsedUgwi4MessageInfo( String aIdPath, Ugwi aUsedUgwi ) {
     idPath = aIdPath;
     usedUgwi = aUsedUgwi;
   }
@@ -68,7 +69,7 @@ public final class UsedUgwi4MessageInfo
   }
 
   @Override
-  public Gwid usedUgwi() {
+  public Ugwi usedUgwi() {
     return usedUgwi;
   }
 

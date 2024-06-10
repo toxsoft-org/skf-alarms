@@ -6,7 +6,6 @@ import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.ugwi.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
@@ -79,9 +78,7 @@ public class SkMessageInfoM5LifecycleManager
     IList<IUsedUgwi4MessageInfo> usedUgwiList = aValues.getAs( SkMessageInfoM5Model.CLBID_USED_UGWIES, IList.class );
     IStringMapEdit<Ugwi> usedUgwiMap = new StringMap<>();
     for( IUsedUgwi4MessageInfo uu : usedUgwiList ) {
-      // FIXME temporary work with Gwid instead of Ugwi
-      Gwid gwid = uu.usedUgwi();
-      Ugwi ugwi = Ugwi.of( "org.toxsoft.dev", gwid.canonicalString() );
+      Ugwi ugwi = uu.usedUgwi();
       usedUgwiMap.put( uu.idPath(), ugwi );
     }
     return new SkMessageInfo( fmtStr, usedUgwiMap );

@@ -3,6 +3,7 @@ package org.toxsoft.skf.alarms.gui.km5;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 
@@ -11,8 +12,9 @@ import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
-import org.toxsoft.skf.reports.gui.panels.valed.*;
+import org.toxsoft.core.tslib.gw.ugwi.*;
+import org.toxsoft.uskat.core.api.ugwis.kinds.*;
+import org.toxsoft.uskat.core.gui.ugwi.valed.*;
 
 /**
  * M5-model of {@link IUsedUgwi4MessageInfo}.
@@ -60,9 +62,10 @@ public class UsedUgwi4MessageInfoM5Model
    */
   public M5AttributeFieldDef<IUsedUgwi4MessageInfo> USED_UGWI = new M5AttributeFieldDef<>( FID_USED_UGWI, VALOBJ, //
       TSID_NAME, STR_N_USED_UGWI, //
-      TSID_DESCRIPTION, STR_D_USED_UGWI, //
-      TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      OPID_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME //
+      TSID_DESCRIPTION, STR_D_USED_UGWI, // FIXME change to list types
+      ValedUgwiSelectorFactory.OPDEF_SINGLE_UGWI_KIND_ID, avStr( UgwiKindSkRtdata.KIND_ID ), //
+      TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
+      OPID_EDITOR_FACTORY_NAME, ValedAvValobjUgwiSelectorTextAndButton.FACTORY_NAME //
   ) {
 
     @Override

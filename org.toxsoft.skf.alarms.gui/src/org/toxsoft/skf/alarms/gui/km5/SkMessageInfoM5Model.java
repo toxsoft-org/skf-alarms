@@ -15,7 +15,6 @@ import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.ugwi.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
@@ -78,9 +77,7 @@ public class SkMessageInfoM5Model
           IListEdit<IUsedUgwi4MessageInfo> retVal = new ElemArrayList<>();
           for( String key : aEntity.usedUgwies().keys() ) {
             Ugwi ugwi = aEntity.usedUgwies().getByKey( key );
-            // FIXME for debug use Gwid instead Ugwi
-            Gwid gwid = Gwid.of( ugwi.essence() );
-            retVal.add( new UsedUgwi4MessageInfo( key, gwid ) );
+            retVal.add( new UsedUgwi4MessageInfo( key, ugwi ) );
           }
           return retVal;
         }

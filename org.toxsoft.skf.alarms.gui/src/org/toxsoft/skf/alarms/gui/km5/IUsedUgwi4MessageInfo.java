@@ -1,6 +1,5 @@
 package org.toxsoft.skf.alarms.gui.km5;
 
-import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.ugwi.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
@@ -22,6 +21,6 @@ public interface IUsedUgwi4MessageInfo {
    *
    * @return { link Gwid} usedUgwi
    */
-  Gwid usedUgwi();
+  Ugwi usedUgwi();
 
 }

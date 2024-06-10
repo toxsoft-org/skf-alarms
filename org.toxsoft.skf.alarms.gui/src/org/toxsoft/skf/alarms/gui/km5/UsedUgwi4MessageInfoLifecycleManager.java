@@ -6,7 +6,7 @@ import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.gw.ugwi.*;
 
 /**
  * Lifecycle manager for {@link UsedUgwi4MessageInfoM5Model}.
@@ -48,7 +48,7 @@ class UsedUgwi4MessageInfoLifecycleManager
 
   private static IUsedUgwi4MessageInfo bunch2UsedUgwi( IM5Bunch<IUsedUgwi4MessageInfo> aValues ) {
     String idPath = aValues.getAsAv( UsedUgwi4MessageInfoM5Model.FID_IDPATH ).asString();
-    Gwid usedUgwi = aValues.getAsAv( UsedUgwi4MessageInfoM5Model.FID_USED_UGWI ).asValobj();
+    Ugwi usedUgwi = aValues.getAsAv( UsedUgwi4MessageInfoM5Model.FID_USED_UGWI ).asValobj();
 
     return new UsedUgwi4MessageInfo( idPath, usedUgwi );
   }

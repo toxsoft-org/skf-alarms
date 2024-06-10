@@ -16,18 +16,20 @@ import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.gw.ugwi.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
-import org.toxsoft.skf.reports.gui.panels.valed.*;
 import org.toxsoft.skf.rri.lib.*;
+import org.toxsoft.skf.rri.lib.ugwi.*;
 import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.gui.ugwi.valed.*;
 
 /**
- * Alert checker type: compares specified RTdata current value to the specified constant.
+ * Alert checker type: compares specified RTdata current value to the RRI attribute value constant.
  * <p>
  * {@link ITsSingleCondType} implementation of condition formula: <i><b> RtGwid </i></b> {@link Gwid} <b><i>OP</i></b>
- * {@link EAvCompareOp} <b><i>RRI value</i></b> {@link Gwid}.
+ * {@link EAvCompareOp} <b><i>RRI value</i></b> {@link Ugwi}.
  *
  * @author dima
  */
@@ -40,18 +42,22 @@ public class AlertCheckerRtdataVsRriType
   public static final String TYPE_ID = USKAT_FULL_ID + ".alert_checker.RtdataVsRri"; //$NON-NLS-1$
 
   /**
-   * {@link ITsSingleCondInfo#params()} option: The GWID of the attribute.<br>
-   * Type: {@link Gwid}
+   * {@link ITsSingleCondInfo#params()} option: The Ugwi of the RRI attribute.<br>
+   * Type: {@link Ugwi}
    */
-  public static final IDataDef OPDEF_RRI_GWID = DataDef.create( "RriGwid", VALOBJ, //$NON-NLS-1$
+  public static final IDataDef OPDEF_RRI_UGWI = DataDef.create( "RriUgwi", VALOBJ, //$NON-NLS-1$
       TSID_NAME, STR_RTDVC_RRI_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RRI_GWID_D, //
-      TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME, //
-      ValedGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
-      TSID_DEFAULT_VALUE, avValobj( Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
-      TSID_IS_MANDATORY, AV_TRUE //
-  );
+      // TSID_KEEPER_ID, Gwid.KEEPER_ID, //
+      // OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME, //
+      // ValedGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
+      // TSID_DEFAULT_VALUE, avValobj( Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ),
+      // TSID_IS_MANDATORY, AV_TRUE, //
+      TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
+      ValedUgwiSelectorFactory.OPDEF_SINGLE_UGWI_KIND_ID, avStr( UgwiKindRriAttr.KIND_ID ), //
+      OPID_EDITOR_FACTORY_NAME, ValedAvValobjUgwiSelectorTextAndButton.FACTORY_NAME, //
+      TSID_DEFAULT_VALUE, avValobj( Ugwi.of( UgwiKindRriAttr.KIND_ID,
+          Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ).canonicalString() ) ) );
 
   /**
    * Implementation of {@link AbstractTsSingleChecker} created in by this type.
@@ -67,11 +73,12 @@ public class AlertCheckerRtdataVsRriType
 
     public Checker( ISkCoreApi aEnviron, IOptionSet aParams ) {
       super( aEnviron, aParams );
-      rriGwid = params().getValobj( AlertCheckerRtdataVsRriType.OPDEF_RRI_GWID );
+      Ugwi ugwi = params().getValobj( AlertCheckerRtdataVsRriType.OPDEF_RRI_UGWI );
+      rriGwid = Gwid.of( ugwi.essence() );
       ISkRegRefInfoService rriService =
           (ISkRegRefInfoService)coreApi().services().getByKey( ISkRegRefInfoService.SERVICE_ID );
-      // FIXME just for debug
-      rriSection = rriService.listSections().first();
+      String sectId = ugwi.namespace();
+      rriSection = rriService.listSections().getByKey( sectId );
       try {
         rriSection.getAttrParamValue( rriGwid.skid(), rriGwid.propId() );
         init = true;
@@ -104,7 +111,7 @@ public class AlertCheckerRtdataVsRriType
         new StridablesList<>( //
             OPDEF_RTDATA_GWID, //
             OPDEF_COMPARE_OP, //
-            OPDEF_RRI_GWID //
+            OPDEF_RRI_UGWI //
         ) );
   }
 
@@ -119,7 +126,7 @@ public class AlertCheckerRtdataVsRriType
 
   @Override
   protected IAtomicValue getXxxValue( IOptionSet aCondParams ) {
-    Gwid attrGwid = aCondParams.getValobj( AlertCheckerRtdataVsRriType.OPDEF_RRI_GWID );
+    Gwid attrGwid = aCondParams.getValobj( AlertCheckerRtdataVsRriType.OPDEF_RRI_UGWI );
     return AvUtils.avStr( attrGwid.canonicalString() );
   }
 

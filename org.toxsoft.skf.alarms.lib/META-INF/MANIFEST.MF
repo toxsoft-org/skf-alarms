@@ -16,4 +16,5 @@ Export-Package: org.toxsoft.skf.alarms.lib,
  org.toxsoft.skf.alarms.lib.l10n
 Import-Package: org.toxsoft.core.tsgui.bricks.ctx,
  org.toxsoft.skf.reports.gui.panels.valed,
- org.toxsoft.uskat.core.gui.conn
+ org.toxsoft.uskat.core.gui.conn,
+ org.toxsoft.uskat.core.gui.ugwi.valed

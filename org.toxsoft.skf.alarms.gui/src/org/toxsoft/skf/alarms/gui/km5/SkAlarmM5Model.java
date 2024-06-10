@@ -70,8 +70,6 @@ public class SkAlarmM5Model
           setDescription( CLBINF_MESSAGE_INFO.description() );
           setDefaultValue( ISkMessageInfo.NONE );
           params().setBool( TSID_IS_NULL_ALLOWED, false );
-          // params().setStr( M5_VALED_OPDEF_WIDGET_TYPE_ID, M5VWTID_INPLACE );
-          // FIXME set VALED editor name
           setFlags( M5FF_DETAIL );
         }
 
