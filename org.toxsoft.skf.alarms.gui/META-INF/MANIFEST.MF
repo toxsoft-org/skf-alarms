@@ -30,3 +30,4 @@ Require-Bundle: javax.annotation,
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.toxsoft.skf.alarms.gui
 Bundle-ActivationPolicy: lazy
+Import-Package: org.toxsoft.skf.rri.lib.ugwi
