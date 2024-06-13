@@ -7,8 +7,16 @@
    </category-def>
 
    <bundle id="org.toxsoft.skf.alarms.lib"/>
+   <bundle id="org.toxsoft.skf.alarms.gui"/>
+   <bundle id="org.toxsoft.skf.alarms.mws"/>
+   <bundle id="org.toxsoft.skf.alarms.skide"/>
+   <bundle id="org.toxsoft.skf.alarms.skatlet"/>
 
    <!-- sources -->
    <bundle id="org.toxsoft.skf.alarms.lib.source"/>
+   <bundle id="org.toxsoft.skf.alarms.gui.source"/>
+   <bundle id="org.toxsoft.skf.alarms.mws.source"/>
+   <bundle id="org.toxsoft.skf.alarms.skide.source"/>
+   <bundle id="org.toxsoft.skf.alarms.skatlet.source"/>
 
 </site>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- skatlet -->
+<project name="org.toxsoft.skf.alarms.skatlet" default="4_deploy">
+  <loadproperties srcFile="ts-build-commons.properties"/>
+  <basename file="${basedir}" property="project.name"/>
+  <!-- каталог для размещения собираемой библиотеки скатлета -->
+  <property name="lib.dir" value="../zz-targets/lib"/>
+  <!-- имя собираемой библиотеки скатлета  -->
+  <property name="lib.jar" value="org.toxsoft.skf.alarms.skatlet-lib.jar"/>
+  <!-- каталог для размещения собираемой библиотеки скатлета (main plugins) -->
+  <property name="main.plugins.dir" value="../zz-targets/main"/>
+  <!-- каталог для размещения собранной библиотеки размещаемой в wildfly -->
+  <property name="deploy.dir" value="../zz-targets/deploy"/>
+  <!-- имя собираемой библиотеки сервера для deploy -->
+  <property name="deploy.jar" value="org.toxsoft.skf.alarms-skatlet.jar"/>
+
+  <tstamp>
+    <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+  </tstamp>
+
+  <manifest file="dist/META_INF/MANIFEST.MF">
+    <attribute name="Application-Name" value="${ts.application-name}" />
+    <attribute name="Application-Version" value="${ts.application-version}" />
+    <attribute name="Company-Name" value="${ts.company-name}" />
+    <attribute name="Built-Date" value="${TODAY}" />
+  </manifest>
+
+  <target name="1_clean">
+    <delete file="${lib.dir}/${lib.jar}" />
+    <delete file="${deploy.dir}/${deploy.jar}" />
+    <delete>
+      <fileset dir="dist/META_INF" includes="*.MF" />
+      <fileset dir="${main.plugins.dir}/plugins" includes="${project.name}*" />
+    </delete>
+<!--
+    <eclipse.refreshLocal resource="${project.name}" depth="infinite" />
+-->
+  </target>
+
+  <target name="2_build">
+    <jar destfile="${lib.dir}/${lib.jar}" manifest="dist/META_INF/MANIFEST.MF">
+      <metainf dir="dist/META_INF" />
+        <fileset dir="bin">
+          <!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
+        </fileset>
+        <fileset dir="src">
+          <include name="ru/**/*.properties" />
+        </fileset>
+        <fileset dir="src">
+        	<!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
+        </fileset>
+    </jar>
+
+<!--
+    <eclipse.refreshLocal resource="${project.name}/dist" depth="infinite" />
+-->
+    <pde.exportPlugins destination="${main.plugins.dir}"
+                       exportSource="true"
+                       exportSourceBundle="false"
+                       exportType="directory"
+                       plugins="${project.name}"
+                       useworkspacecompiledclasses="true"
+                       qualifier="0"
+                       useJARFormat="true" />
+  </target>
+
+  <target name="3_build_deploy">
+      <jar destfile="${deploy.dir}/${deploy.jar}" manifest="dist/META_INF/MANIFEST.MF">
+        <metainf dir="dist/META_INF" />
+
+        <!--
+        <fileset dir="bin">
+            // <exclude name="ru/sitrol/tm/server/local/**"/> 
+        </fileset>
+        -->
+        <!--
+        <fileset dir="src">
+           // <include name="ru/**/*.properties" /> 
+        </fileset>
+        -->
+        <zipfileset src="../../ts4-targets/ts4-target-skf-alarms/lib/org.toxsoft.skf.alarms.lib-lib.jar" />
+      	
+      	<zipfileset src="${lib.dir}/${lib.jar}" />
+      </jar>
+<!--
+      <eclipse.refreshLocal resource="${project_dir}/dist" depth="infinite" />
+-->
+  </target>
+  
+  <target name="4_deploy" description="Формирование и размещение *-deploy-jar в wildfly">
+    <copy todir="${wildfly-home.dir}/skatlets/deployments" file="${deploy.dir}/${deploy.jar}" overwrite="true" />
+  </target>
+  
+</project>

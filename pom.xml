@@ -565,6 +565,10 @@
   </profiles>
   <modules>
     <module>org.toxsoft.skf.alarms.lib</module>
+    <module>org.toxsoft.skf.alarms.gui</module>
+    <module>org.toxsoft.skf.alarms.mws</module>
+    <module>org.toxsoft.skf.alarms.skide</module>
+    <module>org.toxsoft.skf.alarms.skatlet</module>
 
     <module>zz-releng/p2.main</module>
     <module>zz-releng/ant.main</module>
