@@ -19,8 +19,8 @@ import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
-import org.toxsoft.skf.reports.gui.panels.valed.*;
 import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.gui.valed.*;
 
 /**
  * Alert checker type: compares specified RTdata current value to the specified constant.
@@ -46,8 +46,8 @@ public class AlertCheckerRtdataVsAttrType
       TSID_NAME, STR_RTDVC_ATTR_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_ATTR_GWID_D, //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME, //
-      ValedGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
+      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjConcreteGwidEditor.FACTORY_NAME, //
+      ValedConcreteGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
       TSID_DEFAULT_VALUE, avValobj( Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );

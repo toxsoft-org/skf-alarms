@@ -48,11 +48,6 @@ public class AlertCheckerRtdataVsRriType
   public static final IDataDef OPDEF_RRI_UGWI = DataDef.create( "RriUgwi", VALOBJ, //$NON-NLS-1$
       TSID_NAME, STR_RTDVC_RRI_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RRI_GWID_D, //
-      // TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      // OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjGwidEditor.FACTORY_NAME, //
-      // ValedGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
-      // TSID_DEFAULT_VALUE, avValobj( Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ),
-      // TSID_IS_MANDATORY, AV_TRUE, //
       TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
       ValedUgwiSelectorFactory.OPDEF_SINGLE_UGWI_KIND_ID, avStr( UgwiKindRriAttr.KIND_ID ), //
       OPID_EDITOR_FACTORY_NAME, ValedAvValobjUgwiSelectorTextAndButton.FACTORY_NAME, //
