@@ -16,6 +16,7 @@
   <!-- ЦЕЛЬ: lib.jar библиотек -->
   <!-- TODO: -->
   <target name="build-lib-jar" depends="clean" description="Сборка общих плагинов">
+    <ant dir="../../org.toxsoft.skf.alarms.inner" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
     <ant dir="../../org.toxsoft.skf.alarms.lib" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
     <ant dir="../../org.toxsoft.skf.alarms.gui" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
     <ant dir="../../org.toxsoft.skf.alarms.mws" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
@@ -31,7 +32,8 @@
                        exportSource="true"
                        exportSourceBundle="false"
                        exportType="directory"
-                       plugins="org.toxsoft.skf.alarms.lib,
+                       plugins="org.toxsoft.skf.alarms.inner,
+                                org.toxsoft.skf.alarms.lib,
                                 org.toxsoft.skf.alarms.gui,
                                 org.toxsoft.skf.alarms.mws,
                                 org.toxsoft.skf.alarms.skide,

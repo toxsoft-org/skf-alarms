@@ -563,7 +563,8 @@
      </modules>
     </profile>
   </profiles>
-  <modules>
+  <modules> 
+    <module>org.toxsoft.skf.alarms.inner</module>
     <module>org.toxsoft.skf.alarms.lib</module>
     <module>org.toxsoft.skf.alarms.gui</module>
     <module>org.toxsoft.skf.alarms.mws</module>
