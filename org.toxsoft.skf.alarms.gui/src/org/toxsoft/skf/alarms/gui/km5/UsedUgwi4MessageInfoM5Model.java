@@ -16,7 +16,7 @@ import org.toxsoft.core.tslib.coll.primtypes.impl.*;
 import org.toxsoft.core.tslib.gw.ugwi.*;
 import org.toxsoft.skf.rri.lib.ugwi.*;
 import org.toxsoft.uskat.core.api.ugwis.kinds.*;
-import org.toxsoft.uskat.core.gui.ugwi.valed.*;
+import org.toxsoft.uskat.core.gui.valed.ugwi.*;
 
 /**
  * M5-model of {@link IUsedUgwi4MessageInfo}.
@@ -65,10 +65,10 @@ public class UsedUgwi4MessageInfoM5Model
   public M5AttributeFieldDef<IUsedUgwi4MessageInfo> USED_UGWI = new M5AttributeFieldDef<>( FID_USED_UGWI, VALOBJ, //
       TSID_NAME, STR_N_USED_UGWI, //
       TSID_DESCRIPTION, STR_D_USED_UGWI, //
-      ValedUgwiSelectorFactory.OPDEF_UGWI_KIND_IDS_LIST,
+      ValedUgwiSelector.OPDEF_UGWI_KIND_IDS_LIST,
       avValobj( new StringArrayList( UgwiKindSkRtdata.KIND_ID, UgwiKindRriAttr.KIND_ID ) ), //
       TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
-      OPID_EDITOR_FACTORY_NAME, ValedAvValobjUgwiSelectorTextAndButton.FACTORY_NAME //
+      OPID_EDITOR_FACTORY_NAME, ValedAvUgwiSelector.FACTORY_NAME //
   ) {
 
     @Override
