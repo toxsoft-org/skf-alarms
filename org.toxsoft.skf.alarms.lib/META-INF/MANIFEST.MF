@@ -3,19 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: USkat Alarms SkService library
 Bundle-SymbolicName: org.toxsoft.skf.alarms.lib
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.toxsoft.skf.alarms.lib,
+ org.toxsoft.skf.alarms.lib.checkers,
+ org.toxsoft.skf.alarms.lib.impl,
+ org.toxsoft.skf.alarms.lib.l10n
 Bundle-Vendor: toxsoft.org
 Automatic-Module-Name: org.toxsoft.skf.alarms.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.toxsoft.core.tslib,
  org.toxsoft.uskat.core,
- org.toxsoft.core.tsgui,
- org.toxsoft.skf.rri.lib,
- org.toxsoft.uskat.core.gui
-Export-Package: org.toxsoft.skf.alarms.lib,
- org.toxsoft.skf.alarms.lib.checkers,
- org.toxsoft.skf.alarms.lib.impl,
- org.toxsoft.skf.alarms.lib.l10n
-Import-Package: org.toxsoft.core.tsgui.bricks.ctx,
- org.toxsoft.skf.reports.gui.panels.valed,
- org.toxsoft.uskat.core.gui.conn,
- org.toxsoft.uskat.core.gui.ugwi.valed
+ org.toxsoft.uskat.core.inner,
+ org.toxsoft.skf.rri.lib

@@ -1,11 +1,12 @@
 package org.toxsoft.skf.alarms.lib.checkers;
 
-import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
+import static org.toxsoft.core.tslib.utils.gui.ITsLibInnerSharedConstants.*;
 import static org.toxsoft.skf.alarms.lib.checkers.ISkResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
+import static org.toxsoft.uskat.core.inner.ISkCoreGuiInnerSharedConstants.*;
 
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
@@ -13,7 +14,6 @@ import org.toxsoft.core.tslib.av.math.*;
 import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
-import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.ugwi.*;
@@ -23,7 +23,6 @@ import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.skf.rri.lib.*;
 import org.toxsoft.skf.rri.lib.ugwi.*;
 import org.toxsoft.uskat.core.*;
-import org.toxsoft.uskat.core.gui.ugwi.valed.*;
 
 /**
  * Alert checker type: compares specified RTdata current value to the RRI attribute value constant.
@@ -49,10 +48,9 @@ public class AlertCheckerRtdataVsRriType
       TSID_NAME, STR_RTDVC_RRI_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RRI_GWID_D, //
       TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
-      ValedUgwiSelectorFactory.OPDEF_SINGLE_UGWI_KIND_ID, avStr( UgwiKindRriAttr.KIND_ID ), //
-      OPID_EDITOR_FACTORY_NAME, ValedAvValobjUgwiSelectorTextAndButton.FACTORY_NAME, //
-      TSID_DEFAULT_VALUE, avValobj( Ugwi.of( UgwiKindRriAttr.KIND_ID,
-          Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ).canonicalString() ) ) );
+      TSLIB_VCC_EDITOR_FACTORY_NAME, SKCGC_VALED_AV_VALOBJ_UGWI_SELECTOR_TEXT_AND_BUTTON, //
+      SKCGC_VALED_UGWI_SELECTOR_OPID_SINGLE_UGWI_KIND_ID, avStr( UgwiKindRriAttr.KIND_ID ), //
+      TSID_DEFAULT_VALUE, avValobj( UgwiKindRriAttr.makeUgwi( NONE_ID, Gwid.NONE_CONCR_ATTR ) ) );
 
   /**
    * Implementation of {@link AbstractTsSingleChecker} created in by this type.

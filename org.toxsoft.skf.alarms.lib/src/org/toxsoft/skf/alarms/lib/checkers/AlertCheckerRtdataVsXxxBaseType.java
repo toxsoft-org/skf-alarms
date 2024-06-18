@@ -1,12 +1,12 @@
 package org.toxsoft.skf.alarms.lib.checkers;
 
-import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
+import static org.toxsoft.core.tslib.utils.gui.ITsLibInnerSharedConstants.*;
 import static org.toxsoft.skf.alarms.lib.checkers.ISkResources.*;
+import static org.toxsoft.uskat.core.inner.ISkCoreGuiInnerSharedConstants.*;
 
-import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.math.*;
@@ -19,7 +19,6 @@ import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.*;
-import org.toxsoft.uskat.core.gui.valed.*;
 
 /**
  * Base type for alert checker type: compares specified RTdata current value to the specified data value.
@@ -40,8 +39,8 @@ abstract public class AlertCheckerRtdataVsXxxBaseType
       TSID_NAME, STR_RTDVC_RTDATA_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RTDATA_GWID_D, //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjConcreteGwidEditor.FACTORY_NAME, //
-      ValedConcreteGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_RTDATA ), //
+      TSLIB_VCC_EDITOR_FACTORY_NAME, SKCGC_VALED_AV_VALOBJ_UGWI_SELECTOR_TEXT_AND_BUTTON, //
+      SKCGC_VALED_CONCRETE_GWID_EDITOR_NAME_OPID_GWID_KIND, avValobj( EGwidKind.GW_RTDATA ), //
       TSID_DEFAULT_VALUE, avValobj( Gwid.createRtdata( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );
@@ -54,7 +53,7 @@ abstract public class AlertCheckerRtdataVsXxxBaseType
       TSID_NAME, STR_RTDVC_COMPARE_OP, //
       TSID_DESCRIPTION, STR_RTDVC_COMPARE_OP_D, //
       TSID_KEEPER_ID, EAvCompareOp.KEEPER_ID, //
-      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjEnumCombo.FACTORY_NAME, //
+      TSLIB_VCC_EDITOR_FACTORY_NAME, TSLIB_VALED_AV_VALOBJ_ENUM_COMBO, //
       TSID_DEFAULT_VALUE, avValobj( EAvCompareOp.GE ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );

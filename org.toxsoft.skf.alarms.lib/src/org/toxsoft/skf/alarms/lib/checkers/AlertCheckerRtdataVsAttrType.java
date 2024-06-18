@@ -1,11 +1,12 @@
 package org.toxsoft.skf.alarms.lib.checkers;
 
-import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
+import static org.toxsoft.core.tslib.utils.gui.ITsLibInnerSharedConstants.*;
 import static org.toxsoft.skf.alarms.lib.checkers.ISkResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
+import static org.toxsoft.uskat.core.inner.ISkCoreGuiInnerSharedConstants.*;
 
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
@@ -20,7 +21,6 @@ import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.uskat.core.*;
-import org.toxsoft.uskat.core.gui.valed.*;
 
 /**
  * Alert checker type: compares specified RTdata current value to the specified constant.
@@ -46,8 +46,8 @@ public class AlertCheckerRtdataVsAttrType
       TSID_NAME, STR_RTDVC_ATTR_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_ATTR_GWID_D, //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      OPDEF_EDITOR_FACTORY_NAME, ValedAvValobjConcreteGwidEditor.FACTORY_NAME, //
-      ValedConcreteGwidEditor.OPDEF_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
+      TSLIB_VCC_EDITOR_FACTORY_NAME, SKCGC_VALED_AV_VALOBJ_CONCRETE_GWID_EDITOR_NAME, //
+      SKCGC_VALED_CONCRETE_GWID_EDITOR_NAME_OPID_GWID_KIND, avValobj( EGwidKind.GW_ATTR ), //
       TSID_DEFAULT_VALUE, avValobj( Gwid.createAttr( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
       TSID_IS_MANDATORY, AV_TRUE //
   );

@@ -6,7 +6,8 @@ import org.toxsoft.core.tslib.coll.helpers.*;
  * Listens to the alarm service events.
  * <p>
  * This interface informs about alarms configuration and state changes, it <b>does not</b> informs about alarm alerts.
- * Listen common {@link ISkAlarmConstants#EVID_ALERT} events of the {@link ISkAlarm} objects instead.
+ * Listen common {@link ISkAlarmConstants#EVID_ALERT} and/or {@link ISkAlarmConstants#EVID_ACKNOWLEDGE} events of the
+ * {@link ISkAlarm} objects instead.
  *
  * @author hazard157
  */
