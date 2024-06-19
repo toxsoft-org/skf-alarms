@@ -25,6 +25,7 @@ public class SkfAlarmUtils {
     tm.registerType( new AlertCheckerRtdataVsConstType() );
     tm.registerType( new AlertCheckerRtdataVsRriType() );
     tm.registerType( new AlertCheckerRtdataVsAttrType() );
+    tm.registerType( new AlertCheckerRriTypeGtZero() );
 
     // FIXME create and register UGWIs
 
