@@ -19,18 +19,10 @@
     <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
   </tstamp>
 
-  <manifest file="dist/META_INF/MANIFEST.MF">
-    <attribute name="Application-Name" value="${ts.application-name}" />
-    <attribute name="Application-Version" value="${ts.application-version}" />
-    <attribute name="Company-Name" value="${ts.company-name}" />
-    <attribute name="Built-Date" value="${TODAY}" />
-  </manifest>
-
   <target name="1_clean">
     <delete file="${lib.dir}/${lib.jar}" />
     <delete file="${deploy.dir}/${deploy.jar}" />
     <delete>
-      <fileset dir="dist/META_INF" includes="*.MF" />
       <fileset dir="${main.plugins.dir}/plugins" includes="${project.name}*" />
     </delete>
 <!--
@@ -39,17 +31,19 @@
   </target>
 
   <target name="2_build">
-    <jar destfile="${lib.dir}/${lib.jar}" manifest="dist/META_INF/MANIFEST.MF">
-      <metainf dir="dist/META_INF" />
-        <fileset dir="bin">
-          <!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
-        </fileset>
-        <fileset dir="src">
-          <include name="ru/**/*.properties" />
-        </fileset>
-        <fileset dir="src">
-        	<!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
-        </fileset>
+    <jar destfile="${lib.dir}/${lib.jar}" manifest="META-INF/MANIFEST.MF" filesetmanifest="merge" manifestencoding="UTF-8" >
+      <manifest>
+        <attribute name="Built-Date" value="${TODAY}" />
+      </manifest>
+      <fileset dir="bin">
+        <!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
+      </fileset>
+      <fileset dir="src">
+        <include name="ru/**/*.properties" />
+      </fileset>
+      <fileset dir="src">
+      	<!-- <exclude name="ru/sitrol/tm/server/local/**"/> -->
+      </fileset>
     </jar>
 
 <!--
@@ -66,8 +60,10 @@
   </target>
 
   <target name="3_build_deploy">
-      <jar destfile="${deploy.dir}/${deploy.jar}" manifest="dist/META_INF/MANIFEST.MF">
-        <metainf dir="dist/META_INF" />
+      <jar destfile="${deploy.dir}/${deploy.jar}" manifest="META-INF/MANIFEST.MF">
+        <manifest>
+          <attribute name="Built-Date" value="${TODAY}" />
+        </manifest>
 
         <!--
         <fileset dir="bin">
@@ -79,6 +75,12 @@
            // <include name="ru/**/*.properties" /> 
         </fileset>
         -->
+        <zipfileset src="../../ts4-targets/ts4-target-core/lib/org.toxsoft.core.tslib-lib.jar" />
+        <zipfileset src="../../ts4-targets/ts4-target-core/lib/org.toxsoft.core.tsgui-lib.jar" />
+        <zipfileset src="../../ts4-targets/ts4-target-uskat/lib/org.toxsoft.uskat.core-lib.jar" />
+      	<zipfileset src="../../ts4-targets/ts4-target-uskat/lib/org.toxsoft.uskat.core.gui-lib.jar" />
+        <zipfileset src="../../ts4-targets/ts4-target-skf-rri/lib/org.toxsoft.skf.rri.lib-lib.jar" />
+        <zipfileset src="../../ts4-targets/ts4-target-skf-reports/lib/org.toxsoft.skf.reports.gui-lib.jar" />
         <zipfileset src="../../ts4-targets/ts4-target-skf-alarms/lib/org.toxsoft.skf.alarms.lib-lib.jar" />
       	
       	<zipfileset src="${lib.dir}/${lib.jar}" />

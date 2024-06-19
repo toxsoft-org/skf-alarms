@@ -4,25 +4,28 @@ import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 
-import org.toxsoft.core.tslib.av.opset.*;
-import org.toxsoft.core.tslib.av.opset.impl.*;
-import org.toxsoft.core.tslib.bricks.*;
-import org.toxsoft.core.tslib.coll.*;
-import org.toxsoft.core.tslib.coll.helpers.*;
-import org.toxsoft.core.tslib.coll.impl.*;
-import org.toxsoft.core.tslib.coll.primtypes.*;
-import org.toxsoft.core.tslib.coll.primtypes.impl.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
-import org.toxsoft.core.tslib.math.cond.checker.*;
-import org.toxsoft.core.tslib.utils.*;
-import org.toxsoft.core.tslib.utils.errors.*;
-import org.toxsoft.core.tslib.utils.logs.impl.*;
+import org.toxsoft.core.tslib.av.opset.IOptionSetEdit;
+import org.toxsoft.core.tslib.av.opset.impl.OptionSet;
+import org.toxsoft.core.tslib.bricks.ICooperativeWorkerComponent;
+import org.toxsoft.core.tslib.coll.IListEdit;
+import org.toxsoft.core.tslib.coll.IMap;
+import org.toxsoft.core.tslib.coll.helpers.ECrudOp;
+import org.toxsoft.core.tslib.coll.impl.ElemArrayList;
+import org.toxsoft.core.tslib.coll.primtypes.IStringMapEdit;
+import org.toxsoft.core.tslib.coll.primtypes.impl.StringMap;
+import org.toxsoft.core.tslib.gw.gwid.Gwid;
+import org.toxsoft.core.tslib.gw.gwid.GwidList;
+import org.toxsoft.core.tslib.math.cond.checker.ITsChecker;
+import org.toxsoft.core.tslib.utils.ICloseable;
+import org.toxsoft.core.tslib.utils.errors.TsNullArgumentRtException;
+import org.toxsoft.core.tslib.utils.logs.impl.LoggerUtils;
 import org.toxsoft.skf.alarms.lib.*;
-import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.ISkCoreApi;
 import org.toxsoft.uskat.core.api.cmdserv.*;
-import org.toxsoft.uskat.core.api.evserv.*;
-import org.toxsoft.uskat.core.api.rtdserv.*;
-import org.toxsoft.uskat.core.utils.msgen.*;
+import org.toxsoft.uskat.core.api.evserv.SkEvent;
+import org.toxsoft.uskat.core.api.rtdserv.ISkReadCurrDataChannel;
+import org.toxsoft.uskat.core.api.rtdserv.ISkWriteCurrDataChannel;
+import org.toxsoft.uskat.core.utils.msgen.ISkMessageInfo;
 
 /**
  * The alarm processor is periodically invoked to check alarm conditions and generate alerts.
@@ -205,7 +208,10 @@ public class SkAlarmProcessor
       }
     }
     // fire all alert events at once
-    coreApi.eventService().fireEvents( llEvents );
+    // 2024-06-19 mvk +++ if( != null )
+    if( llEvents != null ) {
+      coreApi.eventService().fireEvents( llEvents );
+    }
   }
 
   // ------------------------------------------------------------------------------------
