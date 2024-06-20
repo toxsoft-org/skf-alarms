@@ -66,7 +66,7 @@ public class UsedUgwi4MessageInfoM5Model
       TSID_NAME, STR_N_USED_UGWI, //
       TSID_DESCRIPTION, STR_D_USED_UGWI, //
       ValedUgwiSelector.OPDEF_UGWI_KIND_IDS_LIST,
-      avValobj( new StringArrayList( UgwiKindSkRtdata.KIND_ID, UgwiKindRriAttr.KIND_ID ) ), //
+      avValobj( new StringArrayList( UgwiKindSkRtdata.KIND_ID, UgwiKindSkAttr.KIND_ID, UgwiKindRriAttr.KIND_ID ) ), //
       TSID_KEEPER_ID, Ugwi.KEEPER_ID, //
       OPID_EDITOR_FACTORY_NAME, ValedAvUgwiSelector.FACTORY_NAME //
   ) {
