@@ -6,4 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: org.toxsoft.skf.alarms.inner
 Bundle-Vendor: toxsoft.org
 Automatic-Module-Name: org.toxsoft.skf.alarms.inner
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

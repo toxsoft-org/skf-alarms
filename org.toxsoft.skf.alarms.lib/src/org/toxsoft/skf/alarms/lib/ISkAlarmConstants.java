@@ -60,7 +60,7 @@ public interface ISkAlarmConstants {
   DtoAttrInfo ATRINF_SEVERITY = DtoAttrInfo.create2( ATRID_SEVERITY, //
       DataType.create( VALOBJ, //
           TSID_KEEPER_ID, ESkAlarmSeverity.KEEPER_ID, //
-          TSID_DEFAULT_VALUE, avValobj( ESkAlarmSeverity.WARNING ) //
+          TSID_DEFAULT_VALUE, avValobj( ESkAlarmSeverity.CRITICAL ) //
       ), //
       TSID_NAME, STR_ALARM_SEVERTITY, //
       TSID_DESCRIPTION, STR_ALARM_SEVERTITY_D //

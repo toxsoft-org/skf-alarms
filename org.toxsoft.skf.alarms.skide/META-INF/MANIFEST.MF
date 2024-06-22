@@ -10,8 +10,8 @@ Export-Package: org.toxsoft.skf.alarms.skide,
  org.toxsoft.skf.alarms.skide.main,
  org.toxsoft.skf.alarms.skide.tasks.codegen,
  org.toxsoft.skf.alarms.skide.tasks.upload
-Require-Bundle: javax.annotation,
- javax.inject,
+Require-Bundle: jakarta.inject.jakarta.inject-api,
+ jakarta.annotation-api,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.e4.core.contexts,
@@ -31,6 +31,6 @@ Require-Bundle: javax.annotation,
  org.toxsoft.skide.core,
  org.toxsoft.skide.task.codegen,
  org.toxsoft.skide.plugin.exconn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.toxsoft.skf.alarms.skide
 Bundle-ActivationPolicy: lazy

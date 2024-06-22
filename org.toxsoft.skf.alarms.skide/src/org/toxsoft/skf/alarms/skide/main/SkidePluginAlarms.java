@@ -32,7 +32,7 @@ public class SkidePluginAlarms
     super( SKIDE_PLUGIN_ID, OptionSetUtils.createOpSet( //
         TSID_NAME, STR_SKIDE_ALARMS_UNIT, //
         TSID_DESCRIPTION, STR_SKIDE_ALARMS_UNIT_D, //
-        TSID_ICON_ID, ICONID_ALARM_INFOS_LIST //
+        TSID_ICON_ID, ICONID_APP_ALARM_EDITOR //
     ) );
   }
 

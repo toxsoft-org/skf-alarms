@@ -18,11 +18,12 @@ public interface ISkfAlarmsGuiConstants {
   // ------------------------------------------------------------------------------------
   // Icons
 
-  String PREFIX_OF_ICON_FIELD_NAME = "ICONID_";          //$NON-NLS-1$
-  String ICONID_ALARM_INFO         = "alarm-info";       //$NON-NLS-1$
-  String ICONID_ALARM_INFOS_LIST   = "alarm-infos-list"; //$NON-NLS-1$
-  String ICONID_ALERT_INFO         = "alert-info";       //$NON-NLS-1$
-  String ICONID_ALERT_INFOS_LIST   = "alert-infos-list"; //$NON-NLS-1$
+  String PREFIX_OF_ICON_FIELD_NAME = "ICONID_";           //$NON-NLS-1$
+  String ICONID_ALARM_INFO         = "alarm-info";        //$NON-NLS-1$
+  String ICONID_APP_ALARM_EDITOR   = "app-alarms-editor"; //$NON-NLS-1$
+  String ICONID_ALARM_INFOS_LIST   = "alarm-infos-list";  //$NON-NLS-1$
+  String ICONID_ALERT_INFO         = "alert-info";        //$NON-NLS-1$
+  String ICONID_ALERT_INFOS_LIST   = "alert-infos-list";  //$NON-NLS-1$
 
   /**
    * Constants registration.

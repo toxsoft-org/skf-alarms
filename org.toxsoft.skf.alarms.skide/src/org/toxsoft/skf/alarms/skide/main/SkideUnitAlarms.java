@@ -34,7 +34,7 @@ public class SkideUnitAlarms
         TSID_NAME, STR_SKIDE_ALARMS_UNIT, //
         TSID_DESCRIPTION, STR_SKIDE_ALARMS_UNIT_D, //
         OPDEF_SKIDE_UNIT_CATEGORY, UCATEGID_SYSDESCR, //
-        TSID_ICON_ID, ICONID_ALARM_INFOS_LIST //
+        TSID_ICON_ID, ICONID_APP_ALARM_EDITOR //
     ), aContext, aCreator );
     unitActions().add( ACDEF_ABOUT );
   }
