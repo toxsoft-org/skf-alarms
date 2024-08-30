@@ -66,7 +66,10 @@ public class AlertCheckerRriTypeGtZero
     public Checker( ISkCoreApi aEnviron, IOptionSet aParams ) {
       super( aEnviron, aParams );
       Ugwi ugwi = params().getValobj( AlertCheckerRriTypeGtZero.OPDEF_RRI_UGWI );
-      rriGwid = Gwid.of( ugwi.essence() );
+      // переделываем на правильную
+      // rriGwid = Gwid.of( ugwi.essence() );
+      rriGwid = Gwid.createAttr( UgwiKindRriAttr.getClassId( ugwi ), UgwiKindRriAttr.getObjStrid( ugwi ),
+          UgwiKindRriAttr.getAttrId( ugwi ) );
       ISkRegRefInfoService rriService =
           (ISkRegRefInfoService)coreApi().services().getByKey( ISkRegRefInfoService.SERVICE_ID );
       String sectId = ugwi.namespace();
