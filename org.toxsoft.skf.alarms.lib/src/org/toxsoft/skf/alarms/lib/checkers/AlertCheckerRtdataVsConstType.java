@@ -38,11 +38,10 @@ public class AlertCheckerRtdataVsConstType
    * {@link ITsSingleCondInfo#params()} option: the constant to compare current RTdata value with it.<br>
    * Type: {@link IAtomicValue}.
    */
-  public static final IDataDef OPDEF_CONST_VALUE = DataDef.create( "ConstValue", INTEGER, //$NON-NLS-1$
+  public static final IDataDef OPDEF_CONST_VALUE = DataDef.create( "ConstValue", NONE, //$NON-NLS-1$
       TSID_NAME, STR_RTDVC_CONST_VALUE, //
       TSID_DESCRIPTION, STR_RTDVC_CONST_VALUE_D, //
-      TSID_KEEPER_ID, EAvCompareOp.KEEPER_ID, //
-      TSID_DEFAULT_VALUE, avInt( 0 ), //
+      TSID_DEFAULT_VALUE, IAtomicValue.NULL, //
       TSID_IS_MANDATORY, AV_TRUE //
   );
 
@@ -58,7 +57,7 @@ public class AlertCheckerRtdataVsConstType
 
     public Checker( ISkCoreApi aEnviron, IOptionSet aParams ) {
       super( aEnviron, aParams );
-      constVal = AvUtils.avInt( params().getInt( AlertCheckerRtdataVsConstType.OPDEF_CONST_VALUE ) );
+      constVal = params().getValue( AlertCheckerRtdataVsConstType.OPDEF_CONST_VALUE );
     }
 
     @Override
@@ -95,7 +94,7 @@ public class AlertCheckerRtdataVsConstType
 
   @Override
   protected IAtomicValue getXxxValue( IOptionSet aCondParams ) {
-    return AvUtils.avInt( aCondParams.getInt( AlertCheckerRtdataVsConstType.OPDEF_CONST_VALUE ) );
+    return aCondParams.getValue( AlertCheckerRtdataVsConstType.OPDEF_CONST_VALUE );
   }
 
 }
