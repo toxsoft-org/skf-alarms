@@ -8,10 +8,14 @@ import org.eclipse.swt.widgets.*;
 import org.toxsoft.core.tsgui.bricks.actions.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
+import org.toxsoft.core.tsgui.bricks.stdevents.*;
 import org.toxsoft.core.tsgui.m5.gui.viewers.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
+import org.toxsoft.core.tsgui.utils.checkcoll.*;
+import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
@@ -136,6 +140,84 @@ public class AlertRtPanel
   public IList<ISkAlarm> listAlertAlarms() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public IList<SkEvent> items() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ITsCheckSupport<SkEvent> checkSupport() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void refresh() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public boolean isViewer() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public IGenericChangeEventer genericChangeEventer() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public SkEvent selectedItem() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setSelectedItem( SkEvent aItem ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void addTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void addTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public ISkidList listMonitoredAlarms() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setMeonitoredAlarms( ISkidList aAlarmSkids ) {
+    // TODO Auto-generated method stub
+
   }
 
 }
