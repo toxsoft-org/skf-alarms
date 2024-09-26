@@ -86,12 +86,13 @@ public interface ISkAlarm
   /**
    * Sends command to set {@link #isAlert()} to <code>false</code>.
    * <p>
-   * This is a dangerous operation so author is required and comment is optional.
+   * This is a dangerous operation so author is required (but comment is optional).
    * <p>
    * Prepares and sends {@link ISkAlarmConstants#CMDID_ACKNOWLEDGE} command by method
    * {@link ISkCommandService#sendCommand(Gwid, Skid, IOptionSet)} so returns immediately. In fact, the ALERT state will
-   * be reset after the executor processes the command. When alert becomes off the event
-   * {@link ISkAlarmConstants#EVID_ACKNOWLEDGE} is generated.
+   * be reset after the executor processes the command.
+   * <p>
+   * When alert becomes off the event {@link ISkAlarmConstants#EVID_ACKNOWLEDGE} is generated.
    *
    * @param aAuthor {@link Skid} - the acknowledge author object SKID
    * @param aCommanets String - optional human readable comments on acknowledgement

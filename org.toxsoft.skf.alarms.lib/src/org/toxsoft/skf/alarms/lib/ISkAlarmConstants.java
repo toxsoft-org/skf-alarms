@@ -179,6 +179,7 @@ public interface ISkAlarmConstants {
       OptionSetUtils.createOpSet( //
           TSID_NAME, STR_CLASS_ALARM, //
           TSID_DESCRIPTION, STR_CLASS_ALARM_D, //
+          OPDEF_SK_IS_SOURCE_USKAT_SYSEXT_CLASS, AV_TRUE, //
           OPDEF_SK_IS_SOURCE_CODE_DEFINED_CLASS, AV_TRUE //
       ), //
       new StridablesList<>( ATRINF_SEVERITY ), //
