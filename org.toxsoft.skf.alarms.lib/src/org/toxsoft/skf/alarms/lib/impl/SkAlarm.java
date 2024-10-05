@@ -70,7 +70,7 @@ class SkAlarm
       LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
       return false;
     }
-    return val.asBool();
+    return val.isAssigned() ? val.asBool() : false;
   }
 
   @Override
@@ -107,7 +107,7 @@ class SkAlarm
       LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_MUTED );
       return false;
     }
-    return val.asBool();
+    return val.isAssigned() ? val.asBool() : false;
   }
 
   @Override
