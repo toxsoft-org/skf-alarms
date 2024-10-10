@@ -78,7 +78,7 @@ class SkAlarm
     if( isAlert() ) {
       return;
     }
-    if( writeRtdataIfOpen( EVID_ALERT, AV_TRUE ) ) {
+    if( writeRtdataIfOpen( RTDID_IS_ALERT, AV_TRUE ) ) {
       SkEvent alertEvent = SkEvent.create( skid(), EVID_ALERT, //
           EVPRMID_ALERT_MESSAGE, messageInfo().makeMessage( coreApi() ) //
       );
