@@ -24,7 +24,9 @@ public class KM5AlarmsContributor
   private static final IStringList CONRTIBUTED_MODEL_IDS = new StringArrayList( //
       UsedUgwi4MessageInfoM5Model.MODEL_ID, //
       SkMessageInfoM5Model.MODEL_ID, //
-      ISkAlarmConstants.CLSID_ALARM //
+      ISkAlarmConstants.CLSID_ALARM, //
+      SkEventM5Model.MID_SKEVENT_M5MODEL, //
+      SkAlertM5Model.MODEL_ID //
   );
 
   /**
@@ -43,6 +45,8 @@ public class KM5AlarmsContributor
     m5().addModel( new UsedUgwi4MessageInfoM5Model() );
     m5().addModel( new SkMessageInfoM5Model() );
     m5().addModel( new SkAlarmM5Model( skConn() ) );
+    m5().addModel( new SkAlertM5Model( skConn() ) );
+    m5().addModel( new SkEventM5Model( skConn() ) );
     return CONRTIBUTED_MODEL_IDS;
   }
 

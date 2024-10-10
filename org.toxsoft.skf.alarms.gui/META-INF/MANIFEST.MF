@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: org.toxsoft.skf.alarms.gui,
  org.toxsoft.skf.alarms.gui.km5,
  org.toxsoft.skf.alarms.gui.panels,
+ org.toxsoft.skf.alarms.gui.panels.impl,
  org.toxsoft.skf.alarms.gui.ved
 Bundle-Activator: org.toxsoft.skf.alarms.gui.Activator
 Bundle-Vendor: toxsoft.org

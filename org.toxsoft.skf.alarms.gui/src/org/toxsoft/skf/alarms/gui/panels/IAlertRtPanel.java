@@ -65,7 +65,7 @@ public interface IAlertRtPanel
    * @param aAlarmSkids {@link ISkidList} - the SKIDs of alarms to monitor
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    */
-  void setMeonitoredAlarms( ISkidList aAlarmSkids );
+  void setMonitoredAlarms( ISkidList aAlarmSkids );
 
   /**
    * Returns list of alarms currently having active alerts in this panel displayed.
@@ -73,5 +73,4 @@ public interface IAlertRtPanel
    * @return {@link IList}&lt;{@link ISkAlarm}&gt; - list of alarms with alerts in panel
    */
   IList<ISkAlarm> listAlertAlarms();
-
 }

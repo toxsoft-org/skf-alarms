@@ -2,22 +2,36 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
+import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.widgets.*;
 import org.toxsoft.core.tsgui.bricks.actions.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.stdevents.*;
+import org.toxsoft.core.tsgui.dialogs.*;
+import org.toxsoft.core.tsgui.m5.*;
+import org.toxsoft.core.tsgui.m5.gui.mpc.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.*;
 import org.toxsoft.core.tsgui.m5.gui.viewers.*;
+import org.toxsoft.core.tsgui.m5.gui.viewers.impl.*;
+import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
 import org.toxsoft.core.tsgui.utils.checkcoll.*;
+import org.toxsoft.core.tsgui.utils.layout.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
+import org.toxsoft.core.tslib.bricks.time.*;
+import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.coll.*;
+import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
+import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
@@ -29,12 +43,19 @@ import org.toxsoft.uskat.core.api.evserv.*;
  */
 public class AlertRtPanel
     extends AbstractSkLazyControl
-    implements IAlertRtPanel, ISkEventHandler {
+    implements IAlertRtPanel, ISkAlertListener {
+
+  // private static final String MODEL_ID = "SkAlert"; //$NON-NLS-1$
 
   private static final String ACTID_ACKNOWLEDGE = "acknowledge"; //$NON-NLS-1$
+  private static final String ACTID_DEBUG       = "debug";       //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
       "Acknowledge", "Acknowledge marked alers", ICONID_ARROW_LEFT_DOUBLE //
+  );
+
+  private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
+      "Debug", "Debug button", ICONID_ARROW_DOWN //
   );
 
   /**
@@ -50,6 +71,8 @@ public class AlertRtPanel
       defineAction( ACDEF_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
       defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::canAcknowledge );
+      defineSeparator();
+      defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
     }
 
     void doCheckAll() {
@@ -61,7 +84,11 @@ public class AlertRtPanel
     }
 
     void doAcknowledge() {
-      // TODO AlertRtPanel.AspLocal.doAcknowledge()
+      SkEvent event = selectedItem();
+      Shell shell = tsContext().get( Shell.class );
+      if( TsDialogUtils.askYesNoCancel( shell, "Acknowledge this alarm",
+          "browserRow.cmdInfo().id()" ) == ETsDialogCode.YES ) {
+      }
     }
 
     boolean isNotEmpty() {
@@ -72,12 +99,23 @@ public class AlertRtPanel
       return !tree.checks().listCheckedItems( true ).isEmpty();
     }
 
+    void doDebug() {
+      IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+      for( ISkAlarm alarm : allAlarms ) {
+        alarm.setAlert();
+      }
+    }
+
+    boolean isDebug() {
+      return true;
+    }
   }
 
   private final AspLocal asp = new AspLocal();
 
-  private TsToolbar              toolbar = null;
-  private IM5TreeViewer<SkEvent> tree    = null;
+  private TsToolbar                   toolbar = null;
+  private IM5TreeViewer<SkEvent>      tree    = null;
+  private IM5CollectionPanel<SkEvent> panel   = null;
 
   /**
    * Constructor.
@@ -89,18 +127,40 @@ public class AlertRtPanel
    */
   public AlertRtPanel( ITsGuiContext aContext ) {
     super( aContext );
-    // listen to the alert/acknowledge events
-    IGwidList gwids = new GwidList( //
-        Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ALERT ), // alert events of all alarms
-        Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ACKNOWLEDGE ) // acknowledge events of all alarms
-    );
-    skEventServ().registerHandler( gwids, this );
+    // // listen to the alert/acknowledge events
+    // IGwidList gwids = new GwidList( //
+    // Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ALERT ), // alert events of all alarms
+    // Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ACKNOWLEDGE ) // acknowledge events of all alarms
+    // );
+    alarmService().addAlertListener( this );
   }
 
   @Override
   protected void doDispose() {
-    skEventServ().unregisterHandler( this );
+    alarmService().removeAlertListener( this );
     super.doDispose();
+  }
+
+  @Override
+  public ISkidList listMonitoredAlarms() {
+    return null;
+  }
+
+  @Override
+  public void setMonitoredAlarms( ISkidList aAlarmSkids ) {
+    //
+  }
+
+  @Override
+  public IList<ISkAlarm> listAlertAlarms() {
+    IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+    IListEdit<ISkAlarm> alertAlarms = new ElemLinkedBundleList<>( 256, false );
+    for( ISkAlarm alarm : allAlarms ) {
+      if( alarm.isAlert() ) {
+        alertAlarms.add( alarm );
+      }
+    }
+    return alertAlarms;
   }
 
   // ------------------------------------------------------------------------------------
@@ -109,115 +169,147 @@ public class AlertRtPanel
 
   @Override
   protected Control doCreateControl( Composite aParent ) {
-    // aParent.setLayout( new BorderLayout() );
-    // // toolbar
+    Composite board = new Composite( aParent, SWT.NONE );
+    board.setLayout( new BorderLayout() );
+    // toolbar
+    toolbar = TsToolbar.create( board, tsContext(), asp.listAllActionDefs() );
+    toolbar.getControl().setLayoutData( BorderLayout.NORTH );
+    toolbar.addListener( asp );
+
     // ITsGuiContext ctx1 = new TsGuiContext( tsContext() );
     // toolbar = TsToolbar.create( aParent, ctx1, asp.listAllActionDefs() );
     // toolbar.createControl( aParent );
     // toolbar.getControl().setLayoutData( BorderLayout.NORTH );
-    // // tree
-    // ITsGuiContext ctx2 = new TsGuiContext( tsContext() );
-    // IM5Model<SkEvent> model = m5().getModel( SkEvMMCLSID_ALARM, ISkAlarm.class );
-    // tree = new M5TreeViewer<>( ctx2, model );
-    //
-    // // TODO Auto-generated method stub
 
-    // TODO реализовать AlertRtPanel.doCreateControl()
-    throw new TsUnderDevelopmentRtException( "AlertRtPanel.doCreateControl()" );
+    // toolbar = TsToolbar.create( board, tsContext(), asp.listAllActionDefs() );
+    // toolbar.getControl().setLayoutData( BorderLayout.NORTH );
+
+    // CENTER: sash form
+    SashForm sfMain = new SashForm( board, SWT.HORIZONTAL );
+    sfMain.setLayoutData( BorderLayout.CENTER );
+    // tree
+    // ITsGuiContext ctx2 = new TsGuiContext( tsContext() );
+    IM5Model<SkEvent> model = m5().getModel( SkAlertM5Model.MODEL_ID, SkEvent.class );
+    IM5LifecycleManager<SkEvent> lm = new SkAlertM5LifecycleManager( model, skConn() );
+    //
+    // IM5Model<SkEvent> model = m5().getModel( SkEventM5Model.MID_SKEVENT_M5MODEL, SkEvent.class );
+    // IM5LifecycleManager<SkEvent> lm = new SkEventM5LifecycleManager( model, skConn() );
+    tree = new M5TreeViewer<SkEvent>( tsContext(), model );
+
+    initializeItems();
+
+    IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( tsContext().params(), AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( tsContext().params(),
+        avValobj( EBorderLayoutPlacement.SOUTH ) );
+    IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( tsContext().params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( tsContext().params(), AV_FALSE );
+    panel = model.panelCreator().createCollEditPanel( tsContext(), lm.itemsProvider(), lm );
+    panel.createControl( sfMain );
+    return board;
   }
 
   // ------------------------------------------------------------------------------------
-  // ISkEventHandler
+  // IGenericCollPanel
   //
 
   @Override
-  public void onEvents( ISkEventList aEvents ) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public IList<ISkAlarm> listAlertAlarms() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public IList<SkEvent> items() {
-    // TODO Auto-generated method stub
-    return null;
+    return tree.items();
   }
 
   @Override
   public ITsCheckSupport<SkEvent> checkSupport() {
-    // TODO Auto-generated method stub
-    return null;
+    return tree.checks();
   }
 
   @Override
   public void refresh() {
-    // TODO Auto-generated method stub
-
+    tree.refresh();
   }
 
   @Override
   public boolean isViewer() {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   @Override
   public IGenericChangeEventer genericChangeEventer() {
-    // TODO Auto-generated method stub
-    return null;
+    return tree.iconSizeChangeEventer(); // ???
   }
 
   @Override
   public SkEvent selectedItem() {
-    // TODO Auto-generated method stub
-    return null;
+    return tree.selectedItem();
   }
 
   @Override
   public void setSelectedItem( SkEvent aItem ) {
-    // TODO Auto-generated method stub
-
+    tree.setSelectedItem( aItem );
   }
 
   @Override
   public void addTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    // TODO Auto-generated method stub
-
+    tree.addTsSelectionListener( aListener );
   }
 
   @Override
   public void removeTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    // TODO Auto-generated method stub
-
+    tree.removeTsSelectionListener( aListener );
   }
 
   @Override
   public void addTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    // TODO Auto-generated method stub
-
+    tree.addTsDoubleClickListener( aListener );
   }
 
   @Override
   public void removeTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    // TODO Auto-generated method stub
+    tree.removeTsDoubleClickListener( aListener );
+  }
 
+  // ------------------------------------------------------------------------------------
+  // ISkAlertHandler
+  //
+
+  @Override
+  public void onAlert( SkEvent aEvent ) {
+    tree.items().add( aEvent );
+    tree.refresh();
   }
 
   @Override
-  public ISkidList listMonitoredAlarms() {
-    // TODO Auto-generated method stub
-    return null;
+  public void onAcknowledge( SkEvent aEvent ) {
+    tree.items().remove( aEvent );
+    tree.refresh();
+
+    // Shell shell = tsContext().get( Shell.class );
+    // if( TsDialogUtils.askYesNoCancel( shell, "123", "browserRow.cmdInfo().id()" ) == ETsDialogCode.YES ) {
+    // }
   }
 
-  @Override
-  public void setMeonitoredAlarms( ISkidList aAlarmSkids ) {
-    // TODO Auto-generated method stub
+  // ------------------------------------------------------------------------------------
+  // Implementation
+  //
 
+  private ISkAlarmService alarmService() {
+    return coreApi().getService( ISkAlarmService.SERVICE_ID );
+  }
+
+  private void initializeItems() {
+    IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+    for( ISkAlarm alarm : allAlarms ) {
+      if( alarm.isAlert() ) {
+        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, 0, System.currentTimeMillis() );
+        ITimedList<SkEvent> events =
+            skEventServ().queryObjEvents( interval, Gwid.createEvent( CLSID_ALARM, alarm.strid(), EVID_ALERT ) );
+        SkEvent lastEvent = events.findOnly();
+        if( lastEvent != null ) {
+          tree.items().add( lastEvent );
+        }
+      }
+    }
   }
 
 }

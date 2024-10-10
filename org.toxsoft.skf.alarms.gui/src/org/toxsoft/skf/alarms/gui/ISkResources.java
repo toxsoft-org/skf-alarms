@@ -28,4 +28,8 @@ public interface ISkResources {
   String STR_N_USED_UGWI = "used Ugwi";
   String STR_D_USED_UGWI = "Ugwi assotiated with key in Map";
 
+  String STR_N_EV_GWID      = "Event Gwid";
+  String STR_D_EV_GWID      = "Green world id события";
+  String STR_N_EVENT_PARAMS = "Params of event";
+  String STR_D_EVENT_PARAMS = "Параметры события";
 }
