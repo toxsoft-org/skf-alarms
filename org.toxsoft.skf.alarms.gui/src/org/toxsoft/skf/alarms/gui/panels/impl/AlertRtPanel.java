@@ -2,8 +2,8 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
+import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
-import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
@@ -12,9 +12,7 @@ import org.toxsoft.core.tsgui.bricks.actions.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.stdevents.*;
-import org.toxsoft.core.tsgui.dialogs.*;
 import org.toxsoft.core.tsgui.m5.*;
-import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
 import org.toxsoft.core.tsgui.m5.gui.viewers.*;
 import org.toxsoft.core.tsgui.m5.gui.viewers.impl.*;
@@ -25,9 +23,9 @@ import org.toxsoft.core.tsgui.utils.layout.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
+import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
-import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
@@ -35,6 +33,7 @@ import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
+import org.toxsoft.uskat.core.api.users.*;
 
 /**
  * {@link IAlertRtPanel} implementation.
@@ -84,10 +83,18 @@ public class AlertRtPanel
     }
 
     void doAcknowledge() {
-      SkEvent event = selectedItem();
-      Shell shell = tsContext().get( Shell.class );
-      if( TsDialogUtils.askYesNoCancel( shell, "Acknowledge this alarm",
-          "browserRow.cmdInfo().id()" ) == ETsDialogCode.YES ) {
+      ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
+      String comment = AcknowledgeDlg.enterComment( tsContext(), commentValidator );
+      if( comment != null ) {
+        ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+
+        IList<SkEvent> checkedEvents = tree.checks().listCheckedItems( true );
+        for( int i = 0; i < checkedEvents.size(); i++ ) {
+          SkEvent event = checkedEvents.get( i );
+          // Getting object of alarm from event.
+          ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
+          alarm.sendAcknowledge( author.userSkid(), comment );
+        }
       }
     }
 
@@ -127,11 +134,7 @@ public class AlertRtPanel
    */
   public AlertRtPanel( ITsGuiContext aContext ) {
     super( aContext );
-    // // listen to the alert/acknowledge events
-    // IGwidList gwids = new GwidList( //
-    // Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ALERT ), // alert events of all alarms
-    // Gwid.createEvent( CLSID_ALARM, Gwid.STR_MULTI_ID, EVID_ACKNOWLEDGE ) // acknowledge events of all alarms
-    // );
+    // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
   }
 
@@ -194,17 +197,19 @@ public class AlertRtPanel
     //
     // IM5Model<SkEvent> model = m5().getModel( SkEventM5Model.MID_SKEVENT_M5MODEL, SkEvent.class );
     // IM5LifecycleManager<SkEvent> lm = new SkEventM5LifecycleManager( model, skConn() );
-    tree = new M5TreeViewer<SkEvent>( tsContext(), model );
+    tree = new M5TreeViewer<SkEvent>( tsContext(), model, true );
 
     initializeItems();
 
-    IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_FALSE );
-    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( tsContext().params(), AV_FALSE );
-    IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( tsContext().params(),
-        avValobj( EBorderLayoutPlacement.SOUTH ) );
-    IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( tsContext().params(), AV_TRUE );
-    IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_FALSE );
-    IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( tsContext().params(), AV_FALSE );
+    OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_TRUE );
+    OPDEF_IS_DETAILS_PANE.setValue( tsContext().params(), AV_FALSE );
+    // OPDEF_DETAILS_PANE_PLACE.setValue( tsContext().params(), avValobj( EBorderLayoutPlacement.SOUTH ) );
+    OPDEF_IS_SUPPORTS_TREE.setValue( tsContext().params(), AV_TRUE );
+    OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_FALSE );
+    OPDEF_IS_FILTER_PANE.setValue( tsContext().params(), AV_FALSE );
+    OPDEF_IS_SUMMARY_PANE.setValue( tsContext().params(), AV_TRUE );
+    OPDEF_IS_SUPPORTS_CHECKS.setValue( tsContext().params(), AV_TRUE );
+    // OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_TRUE );
     panel = model.panelCreator().createCollEditPanel( tsContext(), lm.itemsProvider(), lm );
     panel.createControl( sfMain );
     return board;
@@ -283,10 +288,6 @@ public class AlertRtPanel
   public void onAcknowledge( SkEvent aEvent ) {
     tree.items().remove( aEvent );
     tree.refresh();
-
-    // Shell shell = tsContext().get( Shell.class );
-    // if( TsDialogUtils.askYesNoCancel( shell, "123", "browserRow.cmdInfo().id()" ) == ETsDialogCode.YES ) {
-    // }
   }
 
   // ------------------------------------------------------------------------------------
@@ -302,8 +303,7 @@ public class AlertRtPanel
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
         IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, 0, System.currentTimeMillis() );
-        ITimedList<SkEvent> events =
-            skEventServ().queryObjEvents( interval, Gwid.createEvent( CLSID_ALARM, alarm.strid(), EVID_ALERT ) );
+        ITimedList<SkEvent> events = alarm.getHistory( interval );
         SkEvent lastEvent = events.findOnly();
         if( lastEvent != null ) {
           tree.items().add( lastEvent );
