@@ -48,13 +48,18 @@ public class AlertRtPanel
 
   private static final String ACTID_ACKNOWLEDGE = "acknowledge"; //$NON-NLS-1$
   private static final String ACTID_DEBUG       = "debug";       //$NON-NLS-1$
+  private static final String ACTID_DEBUG2      = "debug2";      //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
       "Acknowledge", "Acknowledge marked alers", ICONID_ARROW_LEFT_DOUBLE //
   );
 
   private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
-      "Debug", "Debug button", ICONID_ARROW_DOWN //
+      "Set acknowledge", "Set acknowledge", ICONID_ARROW_DOWN //
+  );
+
+  private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
+      "Clear acknowledge", "Clear acknowledge", ICONID_ARROW_UP //
   );
 
   /**
@@ -72,6 +77,7 @@ public class AlertRtPanel
       defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
       defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
+      defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
     void doCheckAll() {
@@ -110,6 +116,14 @@ public class AlertRtPanel
       IList<ISkAlarm> allAlarms = alarmService().listAlarms();
       for( ISkAlarm alarm : allAlarms ) {
         alarm.setAlert();
+      }
+    }
+
+    void doDebug2() {
+      ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+      IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+      for( ISkAlarm alarm : allAlarms ) {
+        alarm.sendAcknowledge( author.userSkid(), "Debug acknowledge" );
       }
     }
 
