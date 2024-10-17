@@ -51,7 +51,7 @@ public class TaskAlarmsUpload
     ISkAlarmService destAlarmService = destConn.coreApi().getService( ISkAlarmService.SERVICE_ID );
     IStridablesList<ISkAlarm> srcAlarmsList = srcAlarmService.listAlarms();
     for( ISkAlarm srcAlarm : srcAlarmsList ) {
-      DtoAlarm dto = DtoAlarm.makeAlarm( srcAlarm.classId(), coreApi() );
+      DtoAlarm dto = DtoAlarm.makeAlarm( srcAlarm.id(), coreApi() );
       destAlarmService.defineAlarm( dto );
     }
     ValidationResult vr = ValidationResult.info( FMT_INFO_ALARMS_UPLOADED, srcAlarmsList.size() );
