@@ -201,7 +201,7 @@ public class AlertRtPanel
 
     initializeItems();
 
-    OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_TRUE );
+    OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_FALSE );
     OPDEF_IS_DETAILS_PANE.setValue( tsContext().params(), AV_FALSE );
     // OPDEF_DETAILS_PANE_PLACE.setValue( tsContext().params(), avValobj( EBorderLayoutPlacement.SOUTH ) );
     OPDEF_IS_SUPPORTS_TREE.setValue( tsContext().params(), AV_TRUE );
