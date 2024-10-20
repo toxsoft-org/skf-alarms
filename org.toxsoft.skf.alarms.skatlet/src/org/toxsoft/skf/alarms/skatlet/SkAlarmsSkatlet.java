@@ -3,22 +3,20 @@ package org.toxsoft.skf.alarms.skatlet;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.skatlet.ISkResources.*;
 
-import org.toxsoft.core.tslib.av.opset.impl.OptionSetUtils;
-import org.toxsoft.core.tslib.bricks.ctx.ITsContextRo;
-import org.toxsoft.core.tslib.bricks.strid.coll.IStridablesList;
-import org.toxsoft.core.tslib.bricks.threadexec.ITsThreadExecutor;
-import org.toxsoft.core.tslib.bricks.validator.ValidationResult;
-import org.toxsoft.core.tslib.math.cond.ITsSingleCondType;
-import org.toxsoft.core.tslib.math.cond.checker.ITsCheckerTopicManager;
-import org.toxsoft.core.tslib.utils.valobj.TsValobjUtils;
-import org.toxsoft.skf.alarms.lib.ESkAlarmSeverity;
-import org.toxsoft.skf.alarms.lib.ISkAlarmService;
+import org.toxsoft.core.tslib.av.math.*;
+import org.toxsoft.core.tslib.av.opset.impl.*;
+import org.toxsoft.core.tslib.bricks.ctx.*;
+import org.toxsoft.core.tslib.bricks.strid.coll.*;
+import org.toxsoft.core.tslib.bricks.threadexec.*;
+import org.toxsoft.core.tslib.bricks.validator.*;
+import org.toxsoft.core.tslib.math.cond.*;
+import org.toxsoft.core.tslib.math.cond.checker.*;
+import org.toxsoft.core.tslib.utils.valobj.*;
+import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.checkers.*;
-import org.toxsoft.skf.alarms.lib.impl.SkAlarmProcessor;
-import org.toxsoft.skf.alarms.lib.impl.SkAlarmService;
-import org.toxsoft.uskat.core.ISkCoreApi;
-import org.toxsoft.uskat.core.impl.SkThreadExecutorService;
-import org.toxsoft.uskat.core.impl.SkatletBase;
+import org.toxsoft.skf.alarms.lib.impl.*;
+import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.impl.*;
 
 /**
  * Alarm skatlet Writer for GBH.
@@ -49,8 +47,11 @@ public class SkAlarmsSkatlet
     super.doInit( aEnviron );
     ISkCoreApi coreApi = connection().coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
+
+    // 2024-10-20 mvk на существующем API нельзя использовать SkfAlarmUtils.initialize(): соединение уже существует(!)
     // if need register alarm keepers
     TsValobjUtils.registerKeeperIfNone( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
+    TsValobjUtils.registerKeeperIfNone( EAvCompareOp.KEEPER_ID, EAvCompareOp.KEEPER );
     // if need register alarm service
     if( !coreApi.services().hasKey( ISkAlarmService.SERVICE_ID ) ) {
       threadExecutor.syncExec( () -> coreApi.addService( SkAlarmService.CREATOR ) );
