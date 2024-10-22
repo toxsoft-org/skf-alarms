@@ -13,7 +13,7 @@ import org.toxsoft.uskat.core.api.objserv.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
- * Generated alarm instance.
+ * The alarm description.
  * <p>
  * Generates the following events:
  * <ul>
