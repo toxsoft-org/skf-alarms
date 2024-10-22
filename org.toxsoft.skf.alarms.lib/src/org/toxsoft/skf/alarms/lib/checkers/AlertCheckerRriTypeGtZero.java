@@ -66,14 +66,16 @@ public class AlertCheckerRriTypeGtZero
     public Checker( ISkCoreApi aEnviron, IOptionSet aParams ) {
       super( aEnviron, aParams );
       Ugwi ugwi = params().getValobj( AlertCheckerRriTypeGtZero.OPDEF_RRI_UGWI );
+      String sectionId = UgwiKindRriAttr.getSectionId( ugwi );
+      String classId = UgwiKindRriAttr.getClassId( ugwi );
+      String objId = UgwiKindRriAttr.getObjStrid( ugwi );
+      String attrId = UgwiKindRriAttr.getAttrId( ugwi );
+
       // переделываем на правильную
-      // rriGwid = Gwid.of( ugwi.essence() );
-      rriGwid = Gwid.createAttr( UgwiKindRriAttr.getClassId( ugwi ), UgwiKindRriAttr.getObjStrid( ugwi ),
-          UgwiKindRriAttr.getAttrId( ugwi ) );
+      rriGwid = Gwid.createAttr( classId, objId, attrId );
       ISkRegRefInfoService rriService =
           (ISkRegRefInfoService)coreApi().services().getByKey( ISkRegRefInfoService.SERVICE_ID );
-      String sectId = ugwi.namespace();
-      rriSection = rriService.listSections().getByKey( sectId );
+      rriSection = rriService.listSections().getByKey( sectionId );
       try {
         IAtomicValue val = rriSection.getAttrParamValue( rriGwid.skid(), rriGwid.propId() );
         switch( val.atomicType() ) {

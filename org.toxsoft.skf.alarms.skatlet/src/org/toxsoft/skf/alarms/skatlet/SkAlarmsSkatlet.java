@@ -15,6 +15,8 @@ import org.toxsoft.core.tslib.utils.valobj.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.checkers.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
+import org.toxsoft.skf.rri.lib.*;
+import org.toxsoft.skf.rri.lib.impl.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.impl.*;
 
@@ -52,6 +54,10 @@ public class SkAlarmsSkatlet
     // if need register alarm keepers
     TsValobjUtils.registerKeeperIfNone( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
     TsValobjUtils.registerKeeperIfNone( EAvCompareOp.KEEPER_ID, EAvCompareOp.KEEPER );
+    // if need register rri service
+    if( !coreApi.services().hasKey( ISkRegRefInfoService.SERVICE_ID ) ) {
+      threadExecutor.syncExec( () -> coreApi.addService( SkRegRefInfoService.CREATOR ) );
+    }
     // if need register alarm service
     if( !coreApi.services().hasKey( ISkAlarmService.SERVICE_ID ) ) {
       threadExecutor.syncExec( () -> coreApi.addService( SkAlarmService.CREATOR ) );
@@ -67,6 +73,9 @@ public class SkAlarmsSkatlet
     }
     if( !types.hasKey( AlertCheckerRtdataVsAttrType.TYPE_ID ) ) {
       tm.registerType( new AlertCheckerRtdataVsAttrType() );
+    }
+    if( !types.hasKey( AlertCheckerRriTypeGtZero.TYPE_ID ) ) {
+      tm.registerType( new AlertCheckerRriTypeGtZero() );
     }
 
     alarmProcecessor = new SkAlarmProcessor( coreApi );

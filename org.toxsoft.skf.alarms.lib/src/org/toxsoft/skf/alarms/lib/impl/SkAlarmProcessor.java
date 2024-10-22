@@ -4,28 +4,25 @@ import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 
-import org.toxsoft.core.tslib.av.opset.IOptionSetEdit;
-import org.toxsoft.core.tslib.av.opset.impl.OptionSet;
-import org.toxsoft.core.tslib.bricks.ICooperativeWorkerComponent;
-import org.toxsoft.core.tslib.coll.IListEdit;
-import org.toxsoft.core.tslib.coll.IMap;
-import org.toxsoft.core.tslib.coll.helpers.ECrudOp;
-import org.toxsoft.core.tslib.coll.impl.ElemArrayList;
-import org.toxsoft.core.tslib.coll.primtypes.IStringMapEdit;
-import org.toxsoft.core.tslib.coll.primtypes.impl.StringMap;
-import org.toxsoft.core.tslib.gw.gwid.Gwid;
-import org.toxsoft.core.tslib.gw.gwid.GwidList;
-import org.toxsoft.core.tslib.math.cond.checker.ITsChecker;
-import org.toxsoft.core.tslib.utils.ICloseable;
-import org.toxsoft.core.tslib.utils.errors.TsNullArgumentRtException;
-import org.toxsoft.core.tslib.utils.logs.impl.LoggerUtils;
+import org.toxsoft.core.tslib.av.opset.*;
+import org.toxsoft.core.tslib.av.opset.impl.*;
+import org.toxsoft.core.tslib.bricks.*;
+import org.toxsoft.core.tslib.coll.*;
+import org.toxsoft.core.tslib.coll.helpers.*;
+import org.toxsoft.core.tslib.coll.impl.*;
+import org.toxsoft.core.tslib.coll.primtypes.*;
+import org.toxsoft.core.tslib.coll.primtypes.impl.*;
+import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.math.cond.checker.*;
+import org.toxsoft.core.tslib.utils.*;
+import org.toxsoft.core.tslib.utils.errors.*;
+import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.skf.alarms.lib.*;
-import org.toxsoft.uskat.core.ISkCoreApi;
+import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.cmdserv.*;
-import org.toxsoft.uskat.core.api.evserv.SkEvent;
-import org.toxsoft.uskat.core.api.rtdserv.ISkReadCurrDataChannel;
-import org.toxsoft.uskat.core.api.rtdserv.ISkWriteCurrDataChannel;
-import org.toxsoft.uskat.core.utils.msgen.ISkMessageInfo;
+import org.toxsoft.uskat.core.api.evserv.*;
+import org.toxsoft.uskat.core.api.rtdserv.*;
+import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
  * The alarm processor is periodically invoked to check alarm conditions and generate alerts.
@@ -112,11 +109,12 @@ public class SkAlarmProcessor
     IMap<Gwid, ISkReadCurrDataChannel> mmChMutes = coreApi.rtdService().createReadCurrDataChannels( llMuteGwids );
     // create items for alarmItems
     for( ISkAlarm alarm : alarmService.listAlarms() ) {
-      Gwid alarmObjGwid = Gwid.createObj( CLSID_ALARM, alarm.strid() );
+      Gwid alertGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_ALERT );
+      Gwid muteGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_MUTED );
       ITsChecker checker =
           alarmService.getAlarmCheckersTopicManager().createCombiChecker( alarm.alertCondition(), coreApi );
-      AlarmItem alit = new AlarmItem( mmChRead.getByKey( alarmObjGwid ), mmChWrite.getByKey( alarmObjGwid ),
-          mmChMutes.getByKey( alarmObjGwid ), checker, alarm );
+      AlarmItem alit = new AlarmItem( mmChRead.getByKey( alertGwid ), mmChWrite.getByKey( alertGwid ),
+          mmChMutes.getByKey( muteGwid ), checker, alarm );
       alarmItems.put( alarm.strid(), alit );
       // alarm need to register command executor for it
       Gwid acknowledgementCmdGwid = Gwid.createCmd( alarm.classId(), alarm.strid(), CMDID_ACKNOWLEDGE );

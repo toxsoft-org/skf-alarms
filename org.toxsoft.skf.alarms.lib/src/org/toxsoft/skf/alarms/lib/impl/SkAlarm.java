@@ -75,9 +75,9 @@ class SkAlarm
 
   @Override
   public void setAlert() {
-    if( isAlert() ) {
-      return;
-    }
+    // if( isAlert() ) {
+    // return;
+    // }
     if( writeRtdataIfOpen( RTDID_IS_ALERT, AV_TRUE ) ) {
       SkEvent alertEvent = SkEvent.create( skid(), EVID_ALERT, //
           EVPRMID_ALERT_MESSAGE, messageInfo().makeMessage( coreApi() ) //

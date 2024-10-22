@@ -46,6 +46,9 @@
           <fileset dir="../../ts4-targets/ts4-target-uskat/lib">
              <include name="**/*.jar" />
           </fileset>
+        <fileset dir="../../ts4-targets/ts4-target-skf-rri/lib">
+           <include name="**/*.jar" />
+        </fileset>
         <fileset dir="../../ts4-targets/ts4-target-skf-dq/lib">
            <include name="**/*.jar" />
         </fileset>
