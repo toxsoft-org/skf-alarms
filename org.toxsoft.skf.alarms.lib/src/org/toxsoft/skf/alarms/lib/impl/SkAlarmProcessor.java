@@ -189,7 +189,7 @@ public class SkAlarmProcessor
     // process all alarms
     for( AlarmItem alit : alarmItems ) {
       boolean isMute = alit.chReadMute.getValue().asBool();
-      if( isMute || !alit.chReadAlert.getValue().asBool() ) {
+      if( isMute || alit.chReadAlert.getValue().asBool() ) {
         continue; // alert muted or is already set, nothing to do with this alarm
       }
       // if alert, set RtData and fire event
@@ -226,32 +226,45 @@ public class SkAlarmProcessor
       LoggerUtils.errorLogger().warning( FMT_LOG_WARN_INV_CMD_ID, aCmd.cmdGwid().propId() );
       return;
     }
+    // confirm command execution
+    String commandInstanceId = aCmd.instanceId();
+    Gwid authorGwid = aCmd.argValues().getValobj( CMDARGID_ACK_AUTHOR_GWID );
     String alarmStrid = aCmd.cmdGwid().strid();
     AlarmItem alit = alarmItems.findByKey( alarmStrid );
     if( alit == null ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_INV_CMD_STRID, alarmStrid );
+      String comment = String.format( FMT_LOG_WARN_INV_CMD_STRID, alarmStrid );
+      LoggerUtils.errorLogger().warning( comment );
+      changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
     if( !alit.chReadAlert.getValue().asBool() ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_ACK_CMD_NO_ALERT, aCmd.cmdGwid().toString() );
+      String comment = String.format( FMT_LOG_WARN_ACK_CMD_NO_ALERT, aCmd.cmdGwid().toString() );
+      LoggerUtils.errorLogger().warning( comment );
+      changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
     // reset alert and fire an event
     alit.chWriteAlert.setValue( AV_FALSE );
-    // confirm command execution
-    long time = System.currentTimeMillis();
     String comment = aCmd.argValues().getStr( CMDARGID_ACK_COMMENT );
-    Gwid authorGwid = aCmd.argValues().getValobj( CMDARGID_ACK_AUTHOR_GWID );
-    SkCommandState state = new SkCommandState( time, ESkCommandState.SUCCESS, comment, authorGwid );
-    DtoCommandStateChangeInfo stateChangeInfo = new DtoCommandStateChangeInfo( aCmd.instanceId(), state );
-    coreApi.cmdService().changeCommandState( stateChangeInfo );
+    changeCommandState( commandInstanceId, ESkCommandState.SUCCESS, authorGwid, comment );
     // fire an event
-    Gwid eventGwid = Gwid.createEvent( CLSID_ALARM, EVID_ACKNOWLEDGE );
+    Gwid eventGwid = Gwid.createEvent( CLSID_ALARM, alarmStrid, EVID_ACKNOWLEDGE );
     IOptionSetEdit params = new OptionSet();
     params.setStr( EVPRMID_ACK_COMMNET, comment );
     params.setValobj( EVPRMID_ACK_AUTHOR, authorGwid );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, params );
     coreApi.eventService().fireEvent( event );
+  }
+
+  // ------------------------------------------------------------------------------------
+  // private methods
+  //
+  private void changeCommandState( String aCommandInstanceId, ESkCommandState aState, Gwid aAuthorGwid,
+      String aComment ) {
+    long time = System.currentTimeMillis();
+    SkCommandState state = new SkCommandState( time, aState, aComment, aAuthorGwid );
+    DtoCommandStateChangeInfo stateChangeInfo = new DtoCommandStateChangeInfo( aCommandInstanceId, state );
+    coreApi.cmdService().changeCommandState( stateChangeInfo );
   }
 
 }

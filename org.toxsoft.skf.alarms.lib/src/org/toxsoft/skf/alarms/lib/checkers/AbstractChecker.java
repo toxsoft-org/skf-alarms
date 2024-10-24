@@ -47,6 +47,10 @@ abstract class AbstractChecker
     if( channel != null ) {
       IAtomicValue rtdVal = channel.getValue();
       IAtomicValue val = doGetXxxValue();
+      // 2024-10-22 mvk TODO:
+      if( !rtdVal.isAssigned() || !val.isAssigned() ) {
+        return false;
+      }
       return AvComparatorStrict.INSTANCE.avCompare( rtdVal, op, val );
     }
     return false;
