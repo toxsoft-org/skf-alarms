@@ -50,13 +50,13 @@ public class SkEventM5LifecycleManager
     // nop
   }
 
-  // @Override
-  // protected IList<SkEvent> doListEntities() {
-  // return IList.EMPTY;
-  // // long now = System.currentTimeMillis();
-  // // ITimeInterval interval = new TimeInterval( now - 86400, now );
-  // // IList<SkEvent> ll = master().coreApi().eventService().queryObjEvents( interval, Gwid aGwid );
-  // // //listObjs( IPostalAddressConstants.CLSID, false );
-  // // return ll;
-  // }
+  @Override
+  protected IList<SkEvent> doListEntities() {
+    return IList.EMPTY;
+    // long now = System.currentTimeMillis();
+    // ITimeInterval interval = new TimeInterval( now - 86400, now );
+    // IList<SkEvent> ll = master().coreApi().eventService().queryObjEvents( interval, Gwid aGwid );
+    // //listObjs( IPostalAddressConstants.CLSID, false );
+    // return ll;
+  }
 }

@@ -46,7 +46,7 @@ public class KM5AlarmsContributor
     m5().addModel( new SkMessageInfoM5Model() );
     m5().addModel( new SkAlarmM5Model( skConn() ) );
     m5().addModel( new SkAlertM5Model( skConn() ) );
-    m5().addModel( new SkEventM5Model( skConn() ) );
+    // m5().addModel( new SkEventM5Model( skConn() ) );
     return CONRTIBUTED_MODEL_IDS;
   }
 

@@ -12,6 +12,8 @@ import org.toxsoft.uskat.core.connection.*;
 public class SkAlertM5LifecycleManager
     extends M5LifecycleManager<SkEvent, ISkConnection> {
 
+  public static String EVENT_CLASS_ID = "sk.SkEvent"; //$NON-NLS-1$
+
   /**
    * The ID of the field {@link SkEvent#paramValues()}.
    */
@@ -21,44 +23,10 @@ public class SkAlertM5LifecycleManager
     super( aModel, false, false, false, true, aMaster );
   }
 
-  // private static SkEvent makeEvent( IM5Bunch<SkEvent> aValues ) {
-  // IOptionSetEdit params = new OptionSet();
-  // IList<IdValue> idvals = aValues.getAs( FID_PARAMS, IList.class );
-  // IdValue.fillOptionSetFromIdValuesColl( idvals, params );
-  //
-  // SkEvent event = new SkEvent( System.currentTimeMillis(), aValues.originalEntity().eventGwid(), params );
-  // return event;
-  // }
-
-  // @Override
-  // protected SkEvent doCreate( IM5Bunch<SkEvent> aValues ) {
-  // return makeEvent( aValues );
-  // }
-  //
-  // @Override
-  // protected SkEvent doEdit( IM5Bunch<SkEvent> aValues ) {
-  // SkEvent retVal = makeEvent( aValues );
-  // master().coreApi().eventService().fireEvent( retVal );
-  // return retVal;
-  // }
-  //
-  // @Override
-  // protected void doRemove( SkEvent aEntity ) {
-  // // nop
-  // }
-
   @Override
   protected IList<SkEvent> doListEntities() {
     return IList.EMPTY;
+    // IList<SkEvent> ll = skObjServ().listObjs( EVENT_CLASS_ID, false );
+    // return ll;
   }
-
-  // @Override
-  // protected IList<SkEvent> doListEntities() {
-  // return IList.EMPTY;
-  // // long now = System.currentTimeMillis();
-  // // ITimeInterval interval = new TimeInterval( now - 86400, now );
-  // // IList<SkEvent> ll = master().coreApi().eventService().queryObjEvents( interval, Gwid aGwid );
-  // // //listObjs( IPostalAddressConstants.CLSID, false );
-  // // return ll;
-  // }
 }
