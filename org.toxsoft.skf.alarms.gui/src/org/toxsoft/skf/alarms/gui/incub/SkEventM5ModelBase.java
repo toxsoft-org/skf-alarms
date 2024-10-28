@@ -38,7 +38,18 @@ public class SkEventM5ModelBase
       TSID_DESCRIPTION, "Time moment when event happaned", //
       TSID_DEFAULT_VALUE, AV_TIME_0, //
       TSID_FORMAT_STRING, "%tF %tT" //$NON-NLS-1$
-  );
+  ) {
+
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+
+    @Override
+    protected String doGetFieldValueName( SkEvent aEntity ) {
+      return String.valueOf( aEntity.timestamp() );
+    }
+  };
 
   /**
    * Attribute {@link SkEvent#eventGwid()}.
@@ -48,7 +59,13 @@ public class SkEventM5ModelBase
       TSID_DESCRIPTION, "The event GWID", //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
       TSID_DEFAULT_VALUE, avValobj( Gwid.NONE_CONCR_EVENT ) //
-  );
+  ) {
+
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+  };
 
   /**
    * Attribute event source object class ID (from the GWID {@link SkEvent#eventGwid()}).
@@ -57,7 +74,13 @@ public class SkEventM5ModelBase
       TSID_NAME, "Class ID", //
       TSID_DESCRIPTION, "The event source object class ID", //
       TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
-  );
+  ) {
+
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+  };
 
   /**
    * Attribute event source object STRID (from the GWID {@link SkEvent#eventGwid()}).
@@ -66,7 +89,13 @@ public class SkEventM5ModelBase
       TSID_NAME, "STRID", //
       TSID_DESCRIPTION, "The event source object STRID", //
       TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
-  );
+  ) {
+
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+  };
 
   /**
    * Attribute event ID (from the GWID {@link SkEvent#eventGwid()}).
@@ -75,7 +104,13 @@ public class SkEventM5ModelBase
       TSID_NAME, "Class ID", //
       TSID_DESCRIPTION, "The event source object class ID", //
       TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
-  );
+  ) {
+
+    @Override
+    protected void doInit() {
+      setFlags( M5FF_COLUMN );
+    }
+  };
 
   /**
    * Field {@link SkEvent#paramValues()} as a {@link IList}&lt;{@link IdValue}&gt;
@@ -86,7 +121,7 @@ public class SkEventM5ModelBase
         @Override
         protected void doInit() {
           setNameAndDescription( "Parameters", "The event parameters values" );
-          setFlags( M5FF_DETAIL );
+          setFlags( M5FF_DETAIL | M5FF_COLUMN );
         }
 
         protected IList<IdValue> doGetFieldValue( SkEvent aEntity ) {

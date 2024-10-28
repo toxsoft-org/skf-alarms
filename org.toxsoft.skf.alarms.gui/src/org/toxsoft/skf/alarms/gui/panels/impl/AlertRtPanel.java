@@ -2,30 +2,26 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
-import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
-import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
-import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 
 import org.eclipse.swt.*;
-import org.eclipse.swt.custom.*;
 import org.eclipse.swt.widgets.*;
 import org.toxsoft.core.tsgui.bricks.actions.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
+import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
 import org.toxsoft.core.tsgui.bricks.stdevents.*;
+import org.toxsoft.core.tsgui.bricks.tstree.impl.*;
 import org.toxsoft.core.tsgui.m5.*;
+import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
-import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
-import org.toxsoft.core.tsgui.m5.gui.viewers.*;
-import org.toxsoft.core.tsgui.m5.gui.viewers.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
 import org.toxsoft.core.tsgui.utils.checkcoll.*;
 import org.toxsoft.core.tsgui.utils.layout.*;
-import org.toxsoft.core.tslib.av.*;
+import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
@@ -86,11 +82,11 @@ public class AlertRtPanel
     }
 
     void doCheckAll() {
-      treeViewer.checks().setAllItemsCheckState( true );
+      componentModown.tree().checks().setAllItemsCheckState( true );
     }
 
     void doUnCheckAll() {
-      treeViewer.checks().setAllItemsCheckState( false );
+      componentModown.tree().checks().setAllItemsCheckState( false );
     }
 
     void doAcknowledge() {
@@ -99,7 +95,7 @@ public class AlertRtPanel
       if( comment != null ) {
         ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
 
-        IList<SkEvent> checkedEvents = treeViewer.checks().listCheckedItems( true );
+        IList<SkEvent> checkedEvents = componentModown.tree().checks().listCheckedItems( true );
         for( int i = 0; i < checkedEvents.size(); i++ ) {
           SkEvent event = checkedEvents.get( i );
           // Getting object of alarm from event.
@@ -110,11 +106,11 @@ public class AlertRtPanel
     }
 
     boolean isNotEmpty() {
-      return !treeViewer.items().isEmpty();
+      return !componentModown.tree().items().isEmpty();
     }
 
     boolean canAcknowledge() {
-      return !treeViewer.checks().listCheckedItems( true ).isEmpty();
+      return !componentModown.tree().checks().listCheckedItems( true ).isEmpty();
     }
 
     void doDebug() {
@@ -141,48 +137,6 @@ public class AlertRtPanel
       extends SkEventM5ModelBase {
 
     public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
-
-    /**
-     * {@link EventM5Model},
-     */
-    String EVENTS_LIST_TABLE_DESCR = "Messages.EVENTS_LIST_TABLE_DESCR";
-    String EVENTS_LIST_TABLE_NAME  = "Messages.EVENTS_LIST_TABLE_NAME";
-    String EVENT_SRC_COL_DESCR     = "Messages.EVENT_SRC_COL_DESCR";
-    String EVENT_SRC_COL_NAME      = "Messages.EVENT_SRC_COL_NAME";
-    String EVENT_TIME_COL_DESCR    = "Messages.EVENT_TIME_COL_DESCR";
-    String EVENT_TIME_COL_NAME     = "Messages.EVENT_TIME_COL_NAME";
-    String EVENT_NAME_COL_DESCR    = "Messages.EVENT_NAME_COL_DESCR";
-    String EVENT_NAME_COL_NAME     = "Messages.EVENT_NAME_COL_NAME";
-    String DESCRIPTION_STR         = "Messages.DESCRIPTION_STR";
-    String EV_DESCRIPTION          = "Messages.EV_DESCRIPTION";
-
-    /**
-     * Идентификатор поля {@link #TIME}.
-     */
-    public static final String FID_TIME = "ts.Time"; //$NON-NLS-1$
-
-    /**
-     * The ID of the field {@link SkEvent#paramValues()}.
-     */
-    public static final String FID_PARAMS = "params"; //$NON-NLS-1$
-
-    /**
-     * Время события
-     */
-    public final M5AttributeFieldDef<SkEvent> TIME = new M5AttributeFieldDef<>( FID_TIME, TIMESTAMP ) {
-
-      @Override
-      protected void doInit() {
-        // setNameAndDescription( EVENT_TIME_COL_NAME, EVENT_TIME_COL_DESCR );
-        setDefaultValue( IAtomicValue.NULL );
-        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
-      }
-
-      @Override
-      protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
-        return avTimestamp( aEntity.timestamp() );
-      }
-    };
 
     public InnerModel( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
@@ -218,9 +172,8 @@ public class AlertRtPanel
 
   private final AspLocal asp = new AspLocal();
 
-  private TsToolbar                   toolbar    = null;
-  private IM5TreeViewer<SkEvent>      treeViewer = null;
-  private IM5CollectionPanel<SkEvent> panel      = null;
+  private MultiPaneComponentModown<SkEvent> componentModown;
+  private IM5CollectionPanel<SkEvent>       eventsPanel;
 
   /**
    * Constructor.
@@ -242,14 +195,73 @@ public class AlertRtPanel
     super.doDispose();
   }
 
+  // ------------------------------------------------------------------------------------
+  // IAlertRtPanel
+
+  @Override
+  public IList<SkEvent> items() {
+    return componentModown.tree().items();
+  }
+
+  @Override
+  public ITsCheckSupport<SkEvent> checkSupport() {
+    return componentModown.tree().checks();
+  }
+
+  @Override
+  public void refresh() {
+    componentModown.refresh();
+  }
+
+  @Override
+  public boolean isViewer() {
+    return true;
+  }
+
+  @Override
+  public IGenericChangeEventer genericChangeEventer() {
+    return componentModown.genericChangeEventer();
+  }
+
+  @Override
+  public SkEvent selectedItem() {
+    return componentModown.selectedItem();
+  }
+
+  @Override
+  public void setSelectedItem( SkEvent aItem ) {
+    componentModown.setSelectedItem( aItem );
+  }
+
+  @Override
+  public void addTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
+    componentModown.addTsSelectionListener( aListener );
+  }
+
+  @Override
+  public void removeTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
+    componentModown.removeTsSelectionListener( aListener );
+  }
+
+  @Override
+  public void addTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
+    componentModown.addTsDoubleClickListener( aListener );
+  }
+
+  @Override
+  public void removeTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
+    componentModown.removeTsDoubleClickListener( aListener );
+  }
+
   @Override
   public ISkidList listMonitoredAlarms() {
+    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public void setMonitoredAlarms( ISkidList aAlarmSkids ) {
-    //
+    // TODO Auto-generated method stub
   }
 
   @Override
@@ -265,122 +277,61 @@ public class AlertRtPanel
   }
 
   // ------------------------------------------------------------------------------------
-  // AbstractLazyPanel
-  //
-
-  @Override
-  protected Control doCreateControl( Composite aParent ) {
-    Composite board = new Composite( aParent, SWT.NONE );
-    board.setLayout( new BorderLayout() );
-    // toolbar
-    toolbar = TsToolbar.create( board, tsContext(), asp.listAllActionDefs() );
-    toolbar.getControl().setLayoutData( BorderLayout.NORTH );
-    toolbar.addListener( asp );
-
-    // CENTER: sash form
-    SashForm sfMain = new SashForm( board, SWT.HORIZONTAL );
-    sfMain.setLayoutData( BorderLayout.CENTER );
-    // tree
-    IM5Model<SkEvent> model = m5().getModel( InnerModel.MODEL_ID, SkEvent.class );
-    IM5LifecycleManager<SkEvent> lm = new InnerLifecycleManager( model, skConn() );
-    treeViewer = new M5TreeViewer<SkEvent>( tsContext(), model, true );
-    MultiPaneComponentModown<SkEvent> eventComponent = new MultiPaneComponentModown<>( treeViewer );
-    eventComponent.setItemProvider( lm.itemsProvider() );
-
-    initializeAlertEvents();
-
-    OPDEF_IS_TOOLBAR.setValue( tsContext().params(), AV_FALSE );
-    OPDEF_IS_DETAILS_PANE.setValue( tsContext().params(), AV_FALSE );
-    // OPDEF_DETAILS_PANE_PLACE.setValue( tsContext().params(), avValobj( EBorderLayoutPlacement.SOUTH ) );
-    OPDEF_IS_SUPPORTS_TREE.setValue( tsContext().params(), AV_TRUE );
-    // OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_FALSE );
-    // OPDEF_IS_FILTER_PANE.setValue( tsContext().params(), AV_FALSE );
-    OPDEF_IS_SUMMARY_PANE.setValue( tsContext().params(), AV_TRUE );
-    OPDEF_IS_SUPPORTS_CHECKS.setValue( tsContext().params(), AV_TRUE );
-    // OPDEF_IS_ACTIONS_CRUD.setValue( tsContext().params(), AV_TRUE );
-    // panel = model.panelCreator().createCollViewerPanel( tsContext(), lm.itemsProvider() );
-    panel = new M5CollectionPanelMpcModownWrapper<>( eventComponent, true );
-    // panel = model.panelCreator().createCollViewerPanel( tsContext(), lm.itemsProvider() );
-    panel.createControl( sfMain );
-    return board;
-  }
-
-  // ------------------------------------------------------------------------------------
-  // IGenericCollPanel
-  //
-
-  @Override
-  public IList<SkEvent> items() {
-    return treeViewer.items();
-  }
-
-  @Override
-  public ITsCheckSupport<SkEvent> checkSupport() {
-    return treeViewer.checks();
-  }
-
-  @Override
-  public void refresh() {
-    treeViewer.refresh();
-  }
-
-  @Override
-  public boolean isViewer() {
-    return true;
-  }
-
-  @Override
-  public IGenericChangeEventer genericChangeEventer() {
-    return treeViewer.iconSizeChangeEventer(); // ???
-  }
-
-  @Override
-  public SkEvent selectedItem() {
-    return treeViewer.selectedItem();
-  }
-
-  @Override
-  public void setSelectedItem( SkEvent aItem ) {
-    treeViewer.setSelectedItem( aItem );
-  }
-
-  @Override
-  public void addTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    treeViewer.addTsSelectionListener( aListener );
-  }
-
-  @Override
-  public void removeTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    treeViewer.removeTsSelectionListener( aListener );
-  }
-
-  @Override
-  public void addTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    treeViewer.addTsDoubleClickListener( aListener );
-  }
-
-  @Override
-  public void removeTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    treeViewer.removeTsDoubleClickListener( aListener );
-  }
-
-  // ------------------------------------------------------------------------------------
-  // ISkAlertHandler
-  //
+  // ISkAlertListener
 
   @Override
   public void onAlert( SkEvent aEvent ) {
-    treeViewer.items().add( aEvent );
-    treeViewer.refresh();
+    ((IListEdit<SkEvent>)componentModown.tree().items()).add( aEvent );
+    componentModown.tree().refresh();
   }
 
   @Override
   public void onAcknowledge( SkEvent aEvent ) {
     SkEvent alertEvent = findAlertEvent( aEvent );
     if( alertEvent != null ) {
-      treeViewer.items().remove( alertEvent );
-      treeViewer.refresh();
+      ((IListEdit<SkEvent>)componentModown.tree().items()).remove( aEvent );
+      componentModown.tree().refresh();
     }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // AbstractLazyPanel
+
+  @Override
+  protected Control doCreateControl( Composite aParent ) {
+    Composite board = new Composite( aParent, SWT.NONE );
+    board.setLayout( new BorderLayout() );
+
+    ITsGuiContext ctx = new TsGuiContext( tsContext() );
+    ctx.params().addAll( tsContext().params() ); // !!!
+
+    TsToolbar toolbar = TsToolbar.create( board, ctx, asp.listAllActionDefs() );
+    toolbar.getControl().setLayoutData( BorderLayout.NORTH );
+    toolbar.addListener( asp );
+
+    IM5Model<SkEvent> model = m5().getModel( InnerModel.MODEL_ID, SkEvent.class );
+    IM5LifecycleManager<SkEvent> lm = new InnerLifecycleManager( model, skConn() );
+
+    IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AvUtils.AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( ctx.params(),
+        avValobj( EBorderLayoutPlacement.SOUTH ) );
+    IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_COLUMN_HEADER.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_CHECKS.setValue( ctx.params(), AvUtils.AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( ctx.params(), AvUtils.AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_FALSE );
+    TsTreeViewer.OPDEF_IS_HEADER_SHOWN.setValue( ctx.params(), AvUtils.AV_TRUE );
+
+    componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
+    // eventsPanel = new M5CollectionPanelMpcModownWrapper<>( componentModown, false );
+
+    componentModown.createControl( board );
+    // eventsPanel.createControl( board );
+
+    initializeAlertEvents();
+
+    return board;
   }
 
   // ------------------------------------------------------------------------------------
@@ -402,7 +353,7 @@ public class AlertRtPanel
         ITimedList<SkEvent> events = alarm.getHistory( interval );
         SkEvent lastEvent = events.findOnly();
         if( lastEvent != null ) {
-          treeViewer.items().add( lastEvent );
+          ((IListEdit<SkEvent>)eventsPanel.items()).add( lastEvent );
         }
       }
     }

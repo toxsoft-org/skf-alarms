@@ -18,5 +18,7 @@ class SkAlertMpc
   public SkAlertMpc( ITsGuiContext aContext, IM5Model<SkEvent> aModel, IM5ItemsProvider<SkEvent> aItemsProvider,
       IM5LifecycleManager<SkEvent> aLifecycleManager ) {
     super( aContext, aModel, aItemsProvider, aLifecycleManager );
+    setItemProvider( aItemsProvider );
+    setLifecycleManager( aLifecycleManager );
   }
 }
