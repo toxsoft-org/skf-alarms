@@ -2,7 +2,10 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
+import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
+import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
+import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
@@ -138,10 +141,70 @@ public class AlertRtPanel
 
     public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
 
+    public static final String AID_EVENT_TIMESTAMP     = "EventTimestamp";    //$NON-NLS-1$
+    public static final String AID_ALARM_NAME          = "EventAlarmName";    //$NON-NLS-1$
+    public static final String AID_ALARM_EVENT_MESSAGE = "EventEventMessage"; //$NON-NLS-1$
+
+    public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
+        new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
+            TSID_NAME, "Time", //
+            TSID_DESCRIPTION, "Time moment when event happaned", //
+            TSID_DEFAULT_VALUE, AV_TIME_0, //
+            TSID_FORMAT_STRING, "%tF %tT" //$NON-NLS-1$
+        ) {
+
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN );
+          }
+
+          @Override
+          protected String doGetFieldValueName( SkEvent aEntity ) {
+            return TimeUtils.timestampToString( aEntity.timestamp() );
+          }
+        };
+
+    public final IM5AttributeFieldDef<SkEvent> EVENT_ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
+        TSID_NAME, "Alarm name", //
+        TSID_DESCRIPTION, "The alarm name", //
+        TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+    ) {
+
+      @Override
+      protected void doInit() {
+        setFlags( M5FF_COLUMN );
+      }
+
+      @Override
+      protected String doGetFieldValueName( SkEvent aEntity ) {
+        ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+        return alarm.description();
+      }
+    };
+
+    public final IM5AttributeFieldDef<SkEvent> ALERT_EVENT_MESSAGE =
+        new M5AttributeFieldDef<>( AID_ALARM_EVENT_MESSAGE, STRING, //
+            TSID_NAME, "Alert event message", //
+            TSID_DESCRIPTION, "The alert event message", //
+            TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+        ) {
+
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN );
+          }
+
+          @Override
+          protected String doGetFieldValueName( SkEvent aEntity ) {
+            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+            return alarm.messageInfo().makeMessage( coreApi() );
+          }
+        };
+
     public InnerModel( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
       setNameAndDescription( ESkClassPropKind.EVENT.nmName(), ESkClassPropKind.EVENT.description() );
-      addFieldDefs( EV_TIMESTAMP, EVENT_ID, PARAM_VALUES );
+      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
     }
 
     @Override
@@ -309,11 +372,15 @@ public class AlertRtPanel
     toolbar.getControl().setLayoutData( BorderLayout.NORTH );
     toolbar.addListener( asp );
 
-    IM5Model<SkEvent> model = m5().getModel( InnerModel.MODEL_ID, SkEvent.class );
+    // Using temporary model.
+    InnerModel model = new InnerModel( skConn() );
+    m5().initTemporaryModel( model );
+
+    // IM5Model<SkEvent> model = m5().getModel( InnerModel.MODEL_ID, SkEvent.class );
     IM5LifecycleManager<SkEvent> lm = new InnerLifecycleManager( model, skConn() );
 
     IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_FALSE );
-    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AvUtils.AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( ctx.params(),
         avValobj( EBorderLayoutPlacement.SOUTH ) );
     IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );

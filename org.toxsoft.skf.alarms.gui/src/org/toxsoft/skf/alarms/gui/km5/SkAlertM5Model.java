@@ -32,7 +32,7 @@ import org.toxsoft.uskat.core.gui.km5.*;
 public class SkAlertM5Model
     extends KM5ConnectedModelBase<SkEvent> {
 
-  public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
+  public static final String MODEL_ID = "SkAlertM5Model2"; //$NON-NLS-1$
 
   /**
    * The ID of the field {@link SkEvent#paramValues()}.
