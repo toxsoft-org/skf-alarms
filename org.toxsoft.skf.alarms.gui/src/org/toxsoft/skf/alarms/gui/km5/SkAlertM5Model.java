@@ -51,7 +51,7 @@ public class SkAlertM5Model
 
     @Override
     protected void doInit() {
-      setFlags( M5FF_READ_ONLY );
+      setFlags( M5FF_READ_ONLY | M5FF_COLUMN );
     }
 
     protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
@@ -69,7 +69,7 @@ public class SkAlertM5Model
         @Override
         protected void doInit() {
           setNameAndDescription( STR_N_EVENT_PARAMS, STR_D_EVENT_PARAMS );
-          setFlags( M5FF_DETAIL );
+          setFlags( M5FF_DETAIL | M5FF_COLUMN );
         }
 
         protected IList<IdValue> doGetFieldValue( SkEvent aEntity ) {
