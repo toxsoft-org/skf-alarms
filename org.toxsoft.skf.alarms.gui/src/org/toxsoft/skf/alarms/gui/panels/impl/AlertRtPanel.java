@@ -7,6 +7,7 @@ import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
+import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.*;
@@ -24,6 +25,7 @@ import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
+import org.toxsoft.core.tsgui.m5.gui.viewers.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
@@ -38,6 +40,7 @@ import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
+import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
@@ -64,7 +67,7 @@ public class AlertRtPanel
   private static final String ACTID_DEBUG2      = "debug2";      //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
-      "Acknowledge", "Acknowledge marked alers", ICONID_ARROW_LEFT_DOUBLE //
+      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ARROW_LEFT_DOUBLE //
   );
 
   private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
@@ -165,8 +168,8 @@ public class AlertRtPanel
 
     public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
         new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
-            TSID_NAME, "Time", //
-            TSID_DESCRIPTION, "Time moment when event happaned", //
+            TSID_NAME, STR_N_EVENT_TIME, //
+            TSID_DESCRIPTION, STR_D_EVENT_TIME, //
             TSID_DEFAULT_VALUE, AV_TIME_0, //
             TSID_FORMAT_STRING, "%tF %tT" //$NON-NLS-1$
         ) {
@@ -183,8 +186,8 @@ public class AlertRtPanel
         };
 
     public final IM5AttributeFieldDef<SkEvent> EVENT_ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
-        TSID_NAME, "Alarm name", //
-        TSID_DESCRIPTION, "The alarm name", //
+        TSID_NAME, STR_N_ALARM_NAME, //
+        TSID_DESCRIPTION, STR_D_ALARM_NAME, //
         TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
     ) {
 
@@ -202,8 +205,8 @@ public class AlertRtPanel
 
     public final IM5AttributeFieldDef<SkEvent> ALERT_EVENT_MESSAGE =
         new M5AttributeFieldDef<>( AID_ALARM_EVENT_MESSAGE, STRING, //
-            TSID_NAME, "Alert event message", //
-            TSID_DESCRIPTION, "The alert event message", //
+            TSID_NAME, STR_N_ALERT_EVENT_MESSAGE, //
+            TSID_DESCRIPTION, STR_D_ALERT_EVENT_MESSAGE, //
             TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
         ) {
 
@@ -221,8 +224,8 @@ public class AlertRtPanel
 
     public M5AttributeFieldDef<SkEvent> EVENT_ALARM_SEVERITY =
         new M5AttributeFieldDef<>( AID_EVENT_ALARM_SEVERITY, EAtomicType.STRING, //
-            TSID_NAME, "STR_N_PARAM_PRIORITY", //
-            TSID_DESCRIPTION, "STR_D_PARAM_PRIORITY", //
+            TSID_NAME, STR_N_ALERT_SEVERITY, //
+            TSID_DESCRIPTION, STR_D_ALERT_SEVERITY, //
             OPID_EDITOR_FACTORY_NAME, ValedAvStringText.FACTORY_NAME //
         ) {
 
@@ -236,11 +239,11 @@ public class AlertRtPanel
             ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
             switch( alarm.severity() ) {
               case WARNING: {
-                retVal = avStr( "STR_HIGH_PR_ALARM" );
+                retVal = avStr( STR_WARNING_SEVERITY_ALARM );
                 break;
               }
               case CRITICAL: {
-                retVal = avStr( "STR_CRITICAL_PR_ALARM" );
+                retVal = avStr( STR_CRITICAL_SEVERITY_ALARM );
                 break;
               }
               default:
@@ -445,7 +448,6 @@ public class AlertRtPanel
     InnerModel model = new InnerModel( skConn() );
     m5().initTemporaryModel( model );
 
-    // IM5Model<SkEvent> model = m5().getModel( InnerModel.MODEL_ID, SkEvent.class );
     IM5LifecycleManager<SkEvent> lm = new InnerLifecycleManager( model, skConn() );
 
     IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_FALSE );
@@ -466,10 +468,23 @@ public class AlertRtPanel
     // eventsPanel.createControl( board );
 
     // Initializing width of columns.
+    initializeColumnsWidth();
 
     initializeAlertEvents();
 
     return board;
+  }
+
+  /**
+   * Initializing width of columns.
+   */
+  private void initializeColumnsWidth() {
+    IStringMap<IM5Column<SkEvent>> columns = componentModown.tree().columnManager().columns();
+    columns.findByKey( InnerModel.AID_EVENT_TIMESTAMP ).adjustWidth( "00.00.0000 00:00:00" );
+    columns.findByKey( InnerModel.AID_EVENT_ALARM_SEVERITY ).setWidth( 150 );
+    columns.findByKey( InnerModel.AID_ALARM_NAME ).setWidth( 400 );
+    columns.findByKey( InnerModel.AID_ALARM_EVENT_MESSAGE ).setWidth( 500 );
+    componentModown.tree().refresh();
   }
 
   // ------------------------------------------------------------------------------------

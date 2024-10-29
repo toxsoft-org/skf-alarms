@@ -1,6 +1,8 @@
 package org.toxsoft.skf.alarms.gui;
 
+import org.toxsoft.core.tsgui.dialogs.Messages;
 import org.toxsoft.skf.alarms.gui.km5.*;
+import org.toxsoft.skf.alarms.gui.panels.impl.*;
 
 /**
  * Localizable resources.
@@ -32,4 +34,27 @@ public interface ISkResources {
   String STR_D_EV_GWID      = "Green world id события";
   String STR_N_EVENT_PARAMS = "Params of event";
   String STR_D_EVENT_PARAMS = "Параметры события";
+
+  /**
+   * {@link AcknowledgeDlg}
+   */
+  String DLG_C_ALARM_ACKNOWLEDGE = "Квитирование тревоги";
+  String DLG_T_ALARM_ACKNOWLEDGE = "Квитировать тревогу";
+  String STR_L_ALARM_COMMENT     = "Комментарий";
+  String STR_N_ALARM_ACKNOWLEDGE = "Подтвердить";                             // Acknowledge
+  String STR_D_ALARM_ACKNOWLEDGE = "Подтвердить отмеченные оповещения";       // Acknowledge marked alers
+  String STR_N_EVENT_TIME        = "Время";                                   // Time
+  String STR_D_EVENT_TIME        = "Момент времени, когда произошло событие"; // Time moment when event happaned
+
+  String STR_N_ALARM_NAME = "Имя тревоги"; // Alarm name
+  String STR_D_ALARM_NAME = "Имя тревоги"; // The alarm name
+
+  String STR_N_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // Alert event message
+  String STR_D_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // The alert event message
+
+  String STR_N_ALERT_SEVERITY = "Важность";         // Severity
+  String STR_D_ALERT_SEVERITY = "Важность тревоги"; // Severity of alarm
+
+  String STR_WARNING_SEVERITY_ALARM  = "Внимание";
+  String STR_CRITICAL_SEVERITY_ALARM = "Критический";
 }

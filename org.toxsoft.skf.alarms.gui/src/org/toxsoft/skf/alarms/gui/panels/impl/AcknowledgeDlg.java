@@ -1,6 +1,6 @@
 package org.toxsoft.skf.alarms.gui.panels.impl;
 
-import static org.toxsoft.core.tsgui.dialogs.ITsGuiDialogResources.*;
+import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
@@ -29,7 +29,7 @@ public class AcknowledgeDlg {
       // comment enterer field
       Label l1 = new Label( this, SWT.LEFT );
       l1.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
-      l1.setText( "Комментарий" );// STR_L_ENTER_PASSWORD1 );
+      l1.setText( STR_L_ALARM_COMMENT );
       text1 = new Text( this, SWT.BORDER );
       text1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       text1.addModifyListener( notificationModifyListener );
@@ -81,7 +81,7 @@ public class AcknowledgeDlg {
    */
   public static final String enterComment( ITsGuiContext aContext, ITsValidator<String> aValidator ) {
     TsNullArgumentRtException.checkNulls( aContext, aValidator );
-    TsDialogInfo dialogInfo = new TsDialogInfo( aContext, DLG_C_ENTER_PASSWORD, DLG_T_ENTER_PASSWORD );
+    TsDialogInfo dialogInfo = new TsDialogInfo( aContext, DLG_C_ALARM_ACKNOWLEDGE, DLG_T_ALARM_ACKNOWLEDGE );
     dialogInfo.setMinSizeShellRelative( 10, 10 );
     return enterComment( dialogInfo, aValidator );
   }
