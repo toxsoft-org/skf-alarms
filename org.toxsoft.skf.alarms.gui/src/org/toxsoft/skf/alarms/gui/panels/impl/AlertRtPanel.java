@@ -3,18 +3,23 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
+import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 
+import org.eclipse.jface.resource.*;
 import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.plugin.*;
 import org.toxsoft.core.tsgui.bricks.actions.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
 import org.toxsoft.core.tsgui.bricks.stdevents.*;
 import org.toxsoft.core.tsgui.bricks.tstree.impl.*;
+import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
@@ -24,6 +29,8 @@ import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
 import org.toxsoft.core.tsgui.utils.checkcoll.*;
 import org.toxsoft.core.tsgui.utils.layout.*;
+import org.toxsoft.core.tsgui.valed.controls.av.*;
+import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
@@ -32,7 +39,9 @@ import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.gw.skid.*;
+import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
+import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
@@ -141,9 +150,18 @@ public class AlertRtPanel
 
     public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
 
-    public static final String AID_EVENT_TIMESTAMP     = "EventTimestamp";    //$NON-NLS-1$
-    public static final String AID_ALARM_NAME          = "EventAlarmName";    //$NON-NLS-1$
-    public static final String AID_ALARM_EVENT_MESSAGE = "EventEventMessage"; //$NON-NLS-1$
+    public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";     //$NON-NLS-1$
+    public static final String AID_ALARM_NAME           = "EventAlarmName";     //$NON-NLS-1$
+    public static final String AID_ALARM_EVENT_MESSAGE  = "AlarmEventMessage";  //$NON-NLS-1$
+    public static final String AID_EVENT_ALARM_SEVERITY = "EventAlarmSeverity"; //$NON-NLS-1$
+
+    private static final ImageDescriptor imgDescrWarning =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); //$NON-NLS-1$
+    private static final Image           warningImage    = imgDescrWarning.createImage();
+
+    private static final ImageDescriptor imgDescrCritical =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); //$NON-NLS-1$
+    private static final Image           criticalImage    = imgDescrCritical.createImage();
 
     public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
         new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
@@ -201,10 +219,61 @@ public class AlertRtPanel
           }
         };
 
+    public M5AttributeFieldDef<SkEvent> EVENT_ALARM_SEVERITY =
+        new M5AttributeFieldDef<>( AID_EVENT_ALARM_SEVERITY, EAtomicType.STRING, //
+            TSID_NAME, "STR_N_PARAM_PRIORITY", //
+            TSID_DESCRIPTION, "STR_D_PARAM_PRIORITY", //
+            OPID_EDITOR_FACTORY_NAME, ValedAvStringText.FACTORY_NAME //
+        ) {
+
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN );
+          }
+
+          protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+            IAtomicValue retVal = avStr( TsLibUtils.EMPTY_STRING );
+            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+            switch( alarm.severity() ) {
+              case WARNING: {
+                retVal = avStr( "STR_HIGH_PR_ALARM" );
+                break;
+              }
+              case CRITICAL: {
+                retVal = avStr( "STR_CRITICAL_PR_ALARM" );
+                break;
+              }
+              default:
+                break;
+            }
+            return retVal;
+          }
+
+          @Override
+          protected Image doGetFieldValueIcon( SkEvent aEntity, EIconSize aIconSize ) {
+            Image retVal = warningImage;
+            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+            switch( alarm.severity() ) {
+              case WARNING: {
+                retVal = warningImage;
+                break;
+              }
+              case CRITICAL: {
+                retVal = criticalImage;
+                break;
+              }
+              default:
+                break;
+            }
+            return retVal;
+          }
+
+        };
+
     public InnerModel( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
       setNameAndDescription( ESkClassPropKind.EVENT.nmName(), ESkClassPropKind.EVENT.description() );
-      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
+      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_SEVERITY, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
     }
 
     @Override
@@ -344,7 +413,7 @@ public class AlertRtPanel
 
   @Override
   public void onAlert( SkEvent aEvent ) {
-    ((IListEdit<SkEvent>)componentModown.tree().items()).add( aEvent );
+    ((IListEdit<SkEvent>)componentModown.tree().items()).insert( 0, aEvent );
     componentModown.tree().refresh();
   }
 
@@ -352,7 +421,7 @@ public class AlertRtPanel
   public void onAcknowledge( SkEvent aEvent ) {
     SkEvent alertEvent = findAlertEvent( aEvent );
     if( alertEvent != null ) {
-      ((IListEdit<SkEvent>)componentModown.tree().items()).remove( aEvent );
+      ((IListEdit<SkEvent>)componentModown.tree().items()).remove( alertEvent );
       componentModown.tree().refresh();
     }
   }
@@ -396,6 +465,8 @@ public class AlertRtPanel
     componentModown.createControl( board );
     // eventsPanel.createControl( board );
 
+    // Initializing width of columns.
+
     initializeAlertEvents();
 
     return board;
@@ -414,15 +485,20 @@ public class AlertRtPanel
    */
   private void initializeAlertEvents() {
     IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+    // The events, sortabled by timestamp.
+    IMapEdit<Long, SkEvent> alertEvents = new ElemMap<>();
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
         IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, 0, System.currentTimeMillis() );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
         SkEvent lastEvent = events.findOnly();
         if( lastEvent != null ) {
-          ((IListEdit<SkEvent>)eventsPanel.items()).add( lastEvent );
+          alertEvents.put( lastEvent.timestamp(), lastEvent );
         }
       }
+    }
+    for( SkEvent event : alertEvents ) {
+      ((IListEdit<SkEvent>)eventsPanel.items()).insert( 0, event );
     }
   }
 
