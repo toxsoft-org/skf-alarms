@@ -91,9 +91,9 @@ public class AlertRtPanel
       defineAction( ACDEF_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
       defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::canAcknowledge );
-      defineSeparator();
-      defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
-      defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
+      // defineSeparator();
+      // defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
+      // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
     void doCheckAll() {
