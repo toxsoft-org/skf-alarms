@@ -19,7 +19,6 @@ import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
 import org.toxsoft.core.tsgui.bricks.stdevents.*;
-import org.toxsoft.core.tsgui.bricks.tstree.impl.*;
 import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
@@ -46,6 +45,7 @@ import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
+import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
@@ -305,10 +305,51 @@ public class AlertRtPanel
     }
   }
 
+  enum SoundAlarmType {
+    NONE,
+    WARNING,
+    CRITICAL
+  }
+
+  class SoundAlarmManager {
+
+    private SoundAlarmType type           = SoundAlarmType.NONE;
+    private SoundPlayer    currentPlayer  = null;
+    private SoundPlayer    warningPlayer  = null;
+    private SoundPlayer    criticalPlayer = null;
+
+    public SoundAlarmManager() {
+      warningPlayer = new SoundPlayer( "sound/alarm-warning.wav" ); //$NON-NLS-1$
+      criticalPlayer = new SoundPlayer( "sound/alarm-critical.wav" ); //$NON-NLS-1$
+    }
+
+    public SoundAlarmType getType() {
+      return type;
+    }
+
+    public void setType( SoundAlarmType aType ) {
+      if( type == aType ) {
+        return;
+      }
+      if( currentPlayer != null ) {
+        // Отлючаем старый тип сигнализации.
+        currentPlayer.stop();
+      }
+      type = aType;
+      if( type != SoundAlarmType.NONE ) {
+        // Включаем новый тип сигнализации.
+        currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
+        currentPlayer.start();
+      }
+    }
+  }
+
   private final AspLocal asp = new AspLocal();
 
   private MultiPaneComponentModown<SkEvent> componentModown;
   private IM5CollectionPanel<SkEvent>       eventsPanel;
+
+  private SoundAlarmManager soundAlarmManager;
 
   /**
    * Constructor.
@@ -322,10 +363,14 @@ public class AlertRtPanel
     super( aContext );
     // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
+
+    soundAlarmManager = new SoundAlarmManager();
   }
 
   @Override
   protected void doDispose() {
+    soundAlarmManager.setType( SoundAlarmType.NONE );
+
     alarmService().removeAlertListener( this );
     super.doDispose();
   }
@@ -345,7 +390,7 @@ public class AlertRtPanel
 
   @Override
   public void refresh() {
-    componentModown.refresh();
+    componentModown.tree().refresh();
   }
 
   @Override
@@ -370,22 +415,22 @@ public class AlertRtPanel
 
   @Override
   public void addTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    componentModown.addTsSelectionListener( aListener );
+    // componentModown.addTsSelectionListener( aListener );
   }
 
   @Override
   public void removeTsSelectionListener( ITsSelectionChangeListener<SkEvent> aListener ) {
-    componentModown.removeTsSelectionListener( aListener );
+    // componentModown.removeTsSelectionListener( aListener );
   }
 
   @Override
   public void addTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    componentModown.addTsDoubleClickListener( aListener );
+    // componentModown.addTsDoubleClickListener( aListener );
   }
 
   @Override
   public void removeTsDoubleClickListener( ITsDoubleClickListener<SkEvent> aListener ) {
-    componentModown.removeTsDoubleClickListener( aListener );
+    // componentModown.removeTsDoubleClickListener( aListener );
   }
 
   @Override
@@ -416,16 +461,18 @@ public class AlertRtPanel
 
   @Override
   public void onAlert( SkEvent aEvent ) {
-    ((IListEdit<SkEvent>)componentModown.tree().items()).insert( 0, aEvent );
+    ((IListEdit<SkEvent>)items()).insert( 0, aEvent );
     componentModown.tree().refresh();
+    updateSoundAlarm();
   }
 
   @Override
   public void onAcknowledge( SkEvent aEvent ) {
     SkEvent alertEvent = findAlertEvent( aEvent );
     if( alertEvent != null ) {
-      ((IListEdit<SkEvent>)componentModown.tree().items()).remove( alertEvent );
+      ((IListEdit<SkEvent>)items()).remove( alertEvent );
       componentModown.tree().refresh();
+      updateSoundAlarm();
     }
   }
 
@@ -451,15 +498,12 @@ public class AlertRtPanel
     IM5LifecycleManager<SkEvent> lm = new InnerLifecycleManager( model, skConn() );
 
     IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_FALSE );
-    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( ctx.params(),
         avValobj( EBorderLayoutPlacement.SOUTH ) );
-    IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_COLUMN_HEADER.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_CHECKS.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( ctx.params(), AvUtils.AV_FALSE );
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_FALSE );
-    TsTreeViewer.OPDEF_IS_HEADER_SHOWN.setValue( ctx.params(), AvUtils.AV_TRUE );
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
     // eventsPanel = new M5CollectionPanelMpcModownWrapper<>( componentModown, false );
@@ -496,6 +540,28 @@ public class AlertRtPanel
   }
 
   /**
+   * Updating the status of the sound alarm, i.s. turning on, turning off.
+   */
+  private void updateSoundAlarm() {
+    SoundAlarmType type = SoundAlarmType.NONE;
+    for( SkEvent event : items() ) {
+      ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
+      if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
+        if( type != SoundAlarmType.WARNING ) {
+          type = SoundAlarmType.WARNING;
+        }
+      }
+      else {
+        if( alarm.severity() == ESkAlarmSeverity.CRITICAL ) {
+          type = SoundAlarmType.CRITICAL;
+          break;
+        }
+      }
+    }
+    soundAlarmManager.setType( type );
+  }
+
+  /**
    * Initializing alert event.
    */
   private void initializeAlertEvents() {
@@ -506,15 +572,18 @@ public class AlertRtPanel
       if( alarm.isAlert() ) {
         IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, 0, System.currentTimeMillis() );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
-        SkEvent lastEvent = events.findOnly();
+        // TODO Почему не работает interval
+        SkEvent lastEvent = events.last(); // events.findOnly();
         if( lastEvent != null ) {
           alertEvents.put( lastEvent.timestamp(), lastEvent );
         }
       }
     }
     for( SkEvent event : alertEvents ) {
-      ((IListEdit<SkEvent>)eventsPanel.items()).insert( 0, event );
+      ((IListEdit<SkEvent>)items()).insert( 0, event );
     }
+    refresh();
+    updateSoundAlarm();
   }
 
   /**
