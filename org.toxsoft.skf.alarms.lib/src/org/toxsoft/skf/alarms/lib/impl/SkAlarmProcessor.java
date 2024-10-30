@@ -30,6 +30,7 @@ import org.toxsoft.uskat.core.utils.msgen.*;
  * This is a {@link ICooperativeWorkerComponent} either working in server environment or operated by the serverless
  * Sk-backend.
  * <p>
+ * <p>
  * OPTIMIZE do we need to have several instances each processing subset of all alarms ?
  *
  * @author hazard157
