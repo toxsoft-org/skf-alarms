@@ -8,6 +8,7 @@ import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
+import static org.toxsoft.skf.alarms.gui.ISkfAlarmsGuiConstants.*;
 
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.*;
@@ -45,7 +46,6 @@ import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
-import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
@@ -67,7 +67,7 @@ public class AlertRtPanel
   private static final String ACTID_DEBUG2      = "debug2";      //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
-      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ARROW_LEFT_DOUBLE //
+      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERT_ACKNOWLEDGE //
   );
 
   private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
@@ -305,45 +305,6 @@ public class AlertRtPanel
     }
   }
 
-  enum SoundAlarmType {
-    NONE,
-    WARNING,
-    CRITICAL
-  }
-
-  class SoundAlarmManager {
-
-    private SoundAlarmType type           = SoundAlarmType.NONE;
-    private SoundPlayer    currentPlayer  = null;
-    private SoundPlayer    warningPlayer  = null;
-    private SoundPlayer    criticalPlayer = null;
-
-    public SoundAlarmManager() {
-      warningPlayer = new SoundPlayer( "sound/alarm-warning.wav" ); //$NON-NLS-1$
-      criticalPlayer = new SoundPlayer( "sound/alarm-critical.wav" ); //$NON-NLS-1$
-    }
-
-    public SoundAlarmType getType() {
-      return type;
-    }
-
-    public void setType( SoundAlarmType aType ) {
-      if( type == aType ) {
-        return;
-      }
-      if( currentPlayer != null ) {
-        // Отлючаем старый тип сигнализации.
-        currentPlayer.stop();
-      }
-      type = aType;
-      if( type != SoundAlarmType.NONE ) {
-        // Включаем новый тип сигнализации.
-        currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
-        currentPlayer.start();
-      }
-    }
-  }
-
   private final AspLocal asp = new AspLocal();
 
   private MultiPaneComponentModown<SkEvent> componentModown;
@@ -364,7 +325,7 @@ public class AlertRtPanel
     // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
 
-    soundAlarmManager = new SoundAlarmManager();
+    soundAlarmManager = (SoundAlarmManager)aContext.find( SoundAlarmManager.CONTEXT_ID );
   }
 
   @Override
@@ -501,6 +462,7 @@ public class AlertRtPanel
     IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( ctx.params(),
         avValobj( EBorderLayoutPlacement.SOUTH ) );
     IMultiPaneComponentConstants.OPDEF_IS_COLUMN_HEADER.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_CHECKS.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( ctx.params(), AvUtils.AV_FALSE );
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_FALSE );

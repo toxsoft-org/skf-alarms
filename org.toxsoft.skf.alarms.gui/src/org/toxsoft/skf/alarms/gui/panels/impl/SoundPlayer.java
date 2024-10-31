@@ -1,4 +1,4 @@
-package org.toxsoft.skf.alarms.gui.km5;
+package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import java.io.*;
 import java.net.*;

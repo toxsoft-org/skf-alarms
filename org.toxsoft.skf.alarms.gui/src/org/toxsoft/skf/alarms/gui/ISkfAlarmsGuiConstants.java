@@ -24,6 +24,7 @@ public interface ISkfAlarmsGuiConstants {
   String ICONID_ALARM_INFOS_LIST   = "alarm-infos-list";  //$NON-NLS-1$
   String ICONID_ALERT_INFO         = "alert-info";        //$NON-NLS-1$
   String ICONID_ALERT_INFOS_LIST   = "alert-infos-list";  //$NON-NLS-1$
+  String ICONID_ALERT_ACKNOWLEDGE  = "alert-acknowledge"; //$NON-NLS-1$
 
   /**
    * Constants registration.
