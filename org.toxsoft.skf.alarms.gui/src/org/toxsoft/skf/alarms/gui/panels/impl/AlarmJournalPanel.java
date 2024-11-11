@@ -362,7 +362,7 @@ public class AlarmJournalPanel
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     ctx.params().addAll( tsContext().params() ); // !!!
 
-    TsComposite backplane = new TsComposite( aParent );
+    TsComposite backplane = new TsComposite( board );
     backplane.setLayout( new GridLayout( 10, false ) );
     backplane.setLayoutData( BorderLayout.NORTH );
 
