@@ -22,6 +22,14 @@ public class AlarmRtPanel
   }
 
   @Override
+  protected void doDispose() {
+    super.doDispose();
+  }
+
+  // ------------------------------------------------------------------------------------
+  // IAlarmRtPanel
+
+  @Override
   public boolean isPaused() {
     return false;
   }

@@ -501,6 +501,13 @@ public class AlertRtPanel
     return coreApi().getService( ISkAlarmService.SERVICE_ID );
   }
 
+  // private void updateActionsState() {
+  // for( String actId : asp.listHandledActionIds() ) {
+  // toolbar.setActionEnabled( actId, asp.isActionEnabled( actId ) );
+  // toolbar.setActionChecked( actId, asp.isActionChecked( actId ) );
+  // }
+  // }
+
   /**
    * Updating the status of the sound alarm, i.s. turning on, turning off.
    */
@@ -532,7 +539,8 @@ public class AlertRtPanel
     IMapEdit<Long, SkEvent> alertEvents = new ElemMap<>();
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
-        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, 0, System.currentTimeMillis() );
+        long now = System.currentTimeMillis();
+        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, now, now );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
         // TODO Почему не работает interval
         SkEvent lastEvent = events.last(); // events.findOnly();
