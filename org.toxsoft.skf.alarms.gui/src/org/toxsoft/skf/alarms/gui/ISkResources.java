@@ -57,4 +57,13 @@ public interface ISkResources {
 
   String STR_WARNING_SEVERITY_ALARM  = "Внимание";
   String STR_CRITICAL_SEVERITY_ALARM = "Критический";
+
+  String STR_N_EVENT_TYPE_NAME = "Тип события";
+  String STR_D_EVENT_TYPE_NAME = "Тип события";
+
+  String STR_ALERT_EVENT_TYPE       = "Тревога";
+  String STR_ACKNOWLEDGE_EVENT_TYPE = "Внимание";
+  String STR_MUTED_EVENT_TYPE       = "Отключение";
+  String STR_UNMUTED_EVENT_TYPE     = "Включение";
+
 }

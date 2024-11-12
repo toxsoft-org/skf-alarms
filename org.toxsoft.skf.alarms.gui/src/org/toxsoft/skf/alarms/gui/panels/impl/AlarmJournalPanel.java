@@ -7,6 +7,7 @@ import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
+import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import java.util.*;
 
@@ -101,6 +102,7 @@ public class AlarmJournalPanel
     public static final String AID_ALARM_NAME           = "EventAlarmName";     //$NON-NLS-1$
     public static final String AID_ALARM_EVENT_MESSAGE  = "AlarmEventMessage";  //$NON-NLS-1$
     public static final String AID_EVENT_ALARM_SEVERITY = "EventAlarmSeverity"; //$NON-NLS-1$
+    public static final String AID_EVENT_TYPE_NAME      = "EventTypeName";      //$NON-NLS-1$
 
     private static final ImageDescriptor imgDescrNone =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); //$NON-NLS-1$
@@ -124,12 +126,12 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_DETAIL );
           }
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
-            return TimeUtils.timestampToString( aEntity.timestamp() );
+            return TimeUtils.timestampToSaneString( aEntity.timestamp() );
           }
         };
 
@@ -141,13 +143,49 @@ public class AlarmJournalPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_DETAIL );
       }
 
       @Override
       protected String doGetFieldValueName( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
         return alarm.description();
+      }
+    };
+
+    public final IM5AttributeFieldDef<SkEvent> EVENT_TYPE_NAME = new M5AttributeFieldDef<>( AID_EVENT_TYPE_NAME, STRING, //
+        TSID_NAME, STR_N_EVENT_TYPE_NAME, //
+        TSID_DESCRIPTION, STR_D_EVENT_TYPE_NAME, //
+        TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+    ) {
+
+      @Override
+      protected void doInit() {
+        setFlags( M5FF_COLUMN | M5FF_DETAIL );
+      }
+
+      @Override
+      protected String doGetFieldValueName( SkEvent aEntity ) {
+        String retVal = TsLibUtils.EMPTY_STRING;
+        switch( aEntity.eventGwid().propId() ) {
+          case ISkAlarmConstants.EVID_ALERT: {
+            retVal = STR_ALERT_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ACKNOWLEDGE: {
+            retVal = STR_ACKNOWLEDGE_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_MUTED: {
+            retVal = STR_MUTED_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_UNMUTED: {
+            retVal = STR_UNMUTED_EVENT_TYPE;
+            break;
+          }
+        }
+        return retVal;
       }
     };
 
@@ -160,13 +198,16 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_DETAIL );
           }
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
-            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-            return alarm.messageInfo().makeMessage( coreApi() );
+            // dima 12/11/24 отображаем сгенерированный в момент возникновения алерта текст
+            String retVal = aEntity.paramValues().getStr( EVPRMID_ALERT_MESSAGE );
+            return retVal;
+            // ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+            // return alarm.messageInfo().makeMessage( coreApi() );
           }
         };
 
@@ -230,7 +271,7 @@ public class AlarmJournalPanel
     public InnerModel( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
       setNameAndDescription( ESkClassPropKind.EVENT.nmName(), ESkClassPropKind.EVENT.description() );
-      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_SEVERITY, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
+      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_SEVERITY, EVENT_TYPE_NAME, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
     }
 
     @Override
@@ -261,7 +302,6 @@ public class AlarmJournalPanel
       IList<ISkAlarm> allAlarms = alarmService().listAlarms();
       IListEdit<SkEvent> allEvents = new ElemLinkedBundleList<>();
       for( ISkAlarm alarm : allAlarms ) {
-
         ITimedList<SkEvent> events = alarm.getHistory( interval );
         allEvents.addAll( events );
       }
@@ -428,11 +468,14 @@ public class AlarmJournalPanel
     IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AV_TRUE );
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
     TreeModeInfo<SkEvent> tmiByAlarm = new TreeModeInfo<>( "ByAlarm", //$NON-NLS-1$
-        "По тревогам", "Тревоги", "ByAlarm", new TreeMakerByAlarm() );
+        "Группировать по тревогам", "Тревоги", "ByAlarm", new TreeMakerByAlarm() );
     componentModown.treeModeManager().addTreeMode( tmiByAlarm );
+    componentModown.treeModeManager().setCurrentMode( "ByAlarm" ); // Default value is tree view.
     componentModown.createControl( board );
     componentModown.getControl().setLayoutData( BorderLayout.CENTER );
 
