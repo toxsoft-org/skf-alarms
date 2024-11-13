@@ -6,6 +6,7 @@ import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
+import static org.toxsoft.core.tslib.utils.TsLibUtils.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
@@ -33,6 +34,7 @@ import org.toxsoft.core.tsgui.utils.layout.BorderLayout;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tsgui.widgets.*;
 import org.toxsoft.core.tslib.av.*;
+import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.coll.*;
@@ -126,12 +128,17 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN | M5FF_DETAIL );
+            setFlags( M5FF_COLUMN );
           }
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
             return TimeUtils.timestampToSaneString( aEntity.timestamp() );
+          }
+
+          @Override
+          protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+            return AvUtils.avStr( TimeUtils.timestampToSaneString( aEntity.timestamp() ) );
           }
         };
 
@@ -143,13 +150,19 @@ public class AlarmJournalPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN | M5FF_DETAIL );
+        setFlags( M5FF_COLUMN );
       }
 
       @Override
       protected String doGetFieldValueName( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
         return alarm.description();
+      }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+        ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+        return AvUtils.avStr( alarm.description() );
       }
     };
 
@@ -161,7 +174,7 @@ public class AlarmJournalPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN | M5FF_DETAIL );
+        setFlags( M5FF_COLUMN );
       }
 
       @Override
@@ -187,6 +200,30 @@ public class AlarmJournalPanel
         }
         return retVal;
       }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+        String retVal = TsLibUtils.EMPTY_STRING;
+        switch( aEntity.eventGwid().propId() ) {
+          case ISkAlarmConstants.EVID_ALERT: {
+            retVal = STR_ALERT_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ACKNOWLEDGE: {
+            retVal = STR_ACKNOWLEDGE_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_MUTED: {
+            retVal = STR_MUTED_EVENT_TYPE;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_UNMUTED: {
+            retVal = STR_UNMUTED_EVENT_TYPE;
+            break;
+          }
+        }
+        return AvUtils.avStr( retVal );
+      }
     };
 
     public final IM5AttributeFieldDef<SkEvent> ALERT_EVENT_MESSAGE =
@@ -203,12 +240,23 @@ public class AlarmJournalPanel
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
-            // dima 12/11/24 отображаем сгенерированный в момент возникновения алерта текст
-            String retVal = aEntity.paramValues().getStr( EVPRMID_ALERT_MESSAGE );
-            return retVal;
-            // ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-            // return alarm.messageInfo().makeMessage( coreApi() );
+            return extractAlertMsg( aEntity );
           }
+
+          private String extractAlertMsg( SkEvent aEntity ) {
+            String retVal = EMPTY_STRING;
+            // dima 12/11/24 отображаем сгенерированный в момент возникновения алерта текст
+            if( aEntity.paramValues().hasKey( EVPRMID_ALERT_MESSAGE ) ) {
+              retVal = aEntity.paramValues().getStr( EVPRMID_ALERT_MESSAGE );
+            }
+            return retVal;
+          }
+
+          @Override
+          protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+            return AvUtils.avStr( extractAlertMsg( aEntity ) );
+          }
+
         };
 
     public M5AttributeFieldDef<SkEvent> EVENT_ALARM_SEVERITY =
