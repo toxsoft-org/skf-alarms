@@ -56,6 +56,7 @@ public class SkAlarmsSkatlet
     TsValobjUtils.registerKeeperIfNone( EAvCompareOp.KEEPER_ID, EAvCompareOp.KEEPER );
     // if need register rri service
     if( !coreApi.services().hasKey( ISkRegRefInfoService.SERVICE_ID ) ) {
+      SkfRriUtils.initialize();
       threadExecutor.syncExec( () -> coreApi.addService( SkRegRefInfoService.CREATOR ) );
     }
     // if need register alarm service
