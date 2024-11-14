@@ -29,12 +29,14 @@ import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
+import org.toxsoft.core.tsgui.m5.std.models.av.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
 import org.toxsoft.core.tsgui.utils.layout.BorderLayout;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tsgui.widgets.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
+import org.toxsoft.core.tslib.av.misc.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.coll.*;
@@ -100,11 +102,13 @@ public class AlarmJournalPanel
 
     public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
 
-    public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";     //$NON-NLS-1$
-    public static final String AID_ALARM_NAME           = "EventAlarmName";     //$NON-NLS-1$
-    public static final String AID_ALARM_EVENT_MESSAGE  = "AlarmEventMessage";  //$NON-NLS-1$
-    public static final String AID_EVENT_ALARM_SEVERITY = "EventAlarmSeverity"; //$NON-NLS-1$
-    public static final String AID_EVENT_TYPE_NAME      = "EventTypeName";      //$NON-NLS-1$
+    public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";          //$NON-NLS-1$
+    public static final String AID_ALARM_NAME           = "EventAlarmName";          //$NON-NLS-1$
+    public static final String AID_ALARM_EVENT_MESSAGE  = "AlarmEventMessage";       //$NON-NLS-1$
+    public static final String AID_EVENT_ALARM_SEVERITY = "EventAlarmSeverity";      //$NON-NLS-1$
+    public static final String AID_EVENT_TYPE_NAME      = "EventTypeName";           //$NON-NLS-1$
+    public static final String AID_ACKNOWLEDGE_COMMENT  = "EventAcknowledgeComment"; //$NON-NLS-1$
+    public static final String AID_ACKNOWLEDGE_AUTHOR   = "EventAcknowledgeAuthor";  //$NON-NLS-1$
 
     private static final ImageDescriptor imgDescrNone =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); //$NON-NLS-1$
@@ -316,10 +320,26 @@ public class AlarmJournalPanel
 
         };
 
+    public final IM5MultiModownFieldDef<SkEvent, IdValue> EVENT_PARAM_VALUES =
+        new M5MultiModownFieldDef<>( FID_PARAM_VALUES, IdValueM5Model.MODEL_ID ) {
+
+          @Override
+          protected void doInit() {
+            setNameAndDescription( STR_N_EVENT_PARAMETERS, STR_D_EVENT_PARAMETERS );
+            setFlags( M5FF_DETAIL );
+          }
+
+          protected IList<IdValue> doGetFieldValue( SkEvent aEntity ) {
+            return IdValue.makeIdValuesCollFromOptionSet( aEntity.paramValues() ).values();
+          }
+
+        };
+
     public InnerModel( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
       setNameAndDescription( ESkClassPropKind.EVENT.nmName(), ESkClassPropKind.EVENT.description() );
-      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_SEVERITY, EVENT_TYPE_NAME, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE );
+      addFieldDefs( EVENT_TIMESTAMP, EVENT_ALARM_SEVERITY, EVENT_TYPE_NAME, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE,
+          EVENT_PARAM_VALUES );
     }
 
     @Override

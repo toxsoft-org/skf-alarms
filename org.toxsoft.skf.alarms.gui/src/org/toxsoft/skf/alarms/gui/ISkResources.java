@@ -62,8 +62,17 @@ public interface ISkResources {
   String STR_D_EVENT_TYPE_NAME = "Тип события";
 
   String STR_ALERT_EVENT_TYPE       = "Тревога";
-  String STR_ACKNOWLEDGE_EVENT_TYPE = "Внимание";
+  String STR_ACKNOWLEDGE_EVENT_TYPE = "Подтвержение";
   String STR_MUTED_EVENT_TYPE       = "Отключение";
   String STR_UNMUTED_EVENT_TYPE     = "Включение";
+
+  String STR_N_EVENT_PARAMETERS = "Параметры";                   // Parameters
+  String STR_D_EVENT_PARAMETERS = "Значения параметров событий"; // The event parameters values
+
+  String STR_N_ACKNOWLEDGE_COMMENT = "Комментарий";
+  String STR_D_ACKNOWLEDGE_COMMENT = "Комментарий";
+
+  String STR_N_ACKNOWLEDGE_AUTHOR = "Автор";
+  String STR_D_ACKNOWLEDGE_AUTHOR = "Автор";
 
 }
