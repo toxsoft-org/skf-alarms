@@ -10,6 +10,7 @@ import static org.toxsoft.core.tslib.utils.TsLibUtils.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
+import java.text.*;
 import java.util.*;
 
 import org.eclipse.jface.resource.*;
@@ -18,11 +19,13 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.plugin.*;
+import org.toxsoft.core.jasperreports.gui.main.*;
 import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
 import org.toxsoft.core.tsgui.bricks.tsnodes.*;
 import org.toxsoft.core.tsgui.bricks.tstree.tmm.*;
+import org.toxsoft.core.tsgui.dialogs.*;
 import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
@@ -37,6 +40,7 @@ import org.toxsoft.core.tsgui.widgets.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.misc.*;
+import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.coll.*;
@@ -44,14 +48,21 @@ import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
+import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
+import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
 import org.toxsoft.uskat.core.api.sysdescr.*;
+import org.toxsoft.uskat.core.api.users.*;
 import org.toxsoft.uskat.core.connection.*;
+import org.toxsoft.uskat.core.gui.conn.*;
+
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.type.*;
 
 /**
  * @author Slavage
@@ -436,6 +447,38 @@ public class AlarmJournalPanel
     }
   }
 
+  /**
+   * Default items provider.
+   *
+   * @author hazard157
+   */
+  static class InternalItemsProvider
+      implements IM5ItemsProvider<SkEvent> {
+
+    private IList<SkEvent> items = new ElemArrayList<>();
+
+    @Override
+    public IGenericChangeEventer genericChangeEventer() {
+      return NoneGenericChangeEventer.INSTANCE;
+    }
+
+    @Override
+    public IList<SkEvent> listItems() {
+      return items;
+    }
+
+    void setItems( IList<SkEvent> aItems ) {
+      items = aItems;
+    }
+  }
+
+  /**
+   * формат для отображения метки времени
+   */
+  private static final String timestampFormatString = "dd.MM.yy HH:mm:ss"; //$NON-NLS-1$
+
+  private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
+
   private final AspLocal asp = new AspLocal();
 
   private DateTime startTime  = null;
@@ -443,7 +486,12 @@ public class AlarmJournalPanel
   private DateTime finishTime = null;
   private DateTime finishDate = null;
 
+  private InnerModel                   innerModel;
+  private IM5LifecycleManager<SkEvent> innerLifecycleManager;
+
   private MultiPaneComponentModown<SkEvent> componentModown;
+
+  // private InternalItemsProvider eventProvider;
 
   /**
    * Constructor.
@@ -522,8 +570,7 @@ public class AlarmJournalPanel
         // }
       }
       if( aActionId.equals( ACDEF_PRINT.id() ) ) {
-        // currAction = ECurrentAction.PRINT;
-        // genericChangeListenersHolder.fireChangeEvent();
+        printEvents();
       }
     } );
 
@@ -547,6 +594,9 @@ public class AlarmJournalPanel
     componentModown.createControl( board );
     componentModown.getControl().setLayoutData( BorderLayout.CENTER );
 
+    innerModel = model;
+    innerLifecycleManager = lm;
+
     return board;
   }
 
@@ -567,6 +617,53 @@ public class AlarmJournalPanel
     cal.set( Calendar.MINUTE, aTimeControl.getMinutes() );
     cal.set( Calendar.SECOND, aTimeControl.getSeconds() );
     return cal.getTimeInMillis();
+  }
+
+  private void printEvents() {
+    try {
+      ISkConnectionSupplier connectionSup = eclipseContext().get( ISkConnectionSupplier.class );
+      ISkConnection connection = connectionSup.defConn();
+      InnerModel printEventsModel = new InnerModel( connection );
+
+      m5().initTemporaryModel( printEventsModel );
+
+      ITsGuiContext printContext = new TsGuiContext( tsContext() );
+
+      long startTime2 = getTimeInMillis( startTime, startDate );
+      long endTime2 = getTimeInMillis( finishTime, finishDate );
+
+      String PRINT_EVENT_LIST_TITLE_FORMAT = "Events of alarms from %s to %s";
+      String AUTHOR_STR = "Author: ";
+      String DATE_STR = "Creation date: ";
+
+      String title = String.format( PRINT_EVENT_LIST_TITLE_FORMAT, timestampFormat.format( new Date( startTime2 ) ),
+          timestampFormat.format( new Date( endTime2 ) ) );
+
+      IJasperReportConstants.REPORT_TITLE_M5_ID.setValue( printContext.params(), AvUtils.avStr( title ) );
+
+      // выясняем текущего пользователя
+
+      Skid currUser = connection.coreApi().getCurrentUserInfo().userSkid();
+      ISkUser user = connection.coreApi().userService().getUser( currUser.strid() );
+      String userName = user.nmName().trim().length() > 0 ? user.nmName() : user.login();
+
+      IJasperReportConstants.LEFT_BOTTOM_STR_M5_ID.setValue( printContext.params(),
+          AvUtils.avStr( AUTHOR_STR + userName ) );
+      IJasperReportConstants.RIGHT_BOTTOM_STR_M5_ID.setValue( printContext.params(),
+          AvUtils.avStr( DATE_STR + timestampFormat.format( new Date() ) ) );
+
+      printContext.params().setStr( IJasperReportConstants.REPORT_DATA_HORIZONTAL_TEXT_ALIGN_ID,
+          HorizontalTextAlignEnum.LEFT.getName() );
+
+      final JasperPrint jasperPrint =
+          ReportGenerator.generateJasperPrint( printContext, printEventsModel, innerLifecycleManager.itemsProvider() );
+      JasperReportDialog.showPrint( printContext, jasperPrint );
+    }
+    catch( Exception ex ) {
+      LoggerUtils.errorLogger().error( ex );
+      TsDialogUtils.error( getShell(), ex );
+    }
+
   }
 
 }
