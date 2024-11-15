@@ -91,20 +91,6 @@ public class AlarmJournalPanel
       extends MethodPerActionTsActionSetProvider {
 
     public AspLocal() {
-      defineAction( ACDEF_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
-      defineAction( ACDEF_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
-    }
-
-    void doCheckAll() {
-      componentModown.tree().checks().setAllItemsCheckState( true );
-    }
-
-    void doUnCheckAll() {
-      componentModown.tree().checks().setAllItemsCheckState( false );
-    }
-
-    boolean isNotEmpty() {
-      return !componentModown.tree().items().isEmpty();
     }
   }
 
@@ -250,7 +236,7 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN | M5FF_DETAIL );
+            setFlags( M5FF_COLUMN );
           }
 
           @Override
