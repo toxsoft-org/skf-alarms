@@ -30,6 +30,6 @@ import org.toxsoft.skf.alarms.lib.*;
  * @author hazard157
  */
 public interface IAlarmRtPanel
-    extends IMultiPaneComponent<ISkAlarm>, IPausableAnimation {
-
+    extends IPausableAnimation {
+  // extends IMultiPaneComponent<ISkAlarm>, IPausableAnimation {
 }

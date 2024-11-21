@@ -30,7 +30,7 @@ public class SkMessageInfoM5Model
   /**
    * The model ID.
    */
-  static final String MODEL_ID = USKAT_FULL_ID + ".m5.SkMessageInfo"; //$NON-NLS-1$
+  public static final String MODEL_ID = USKAT_FULL_ID + ".m5.SkMessageInfo"; //$NON-NLS-1$
 
   /**
    * ID of attribute {@link ISkMessageInfo#fmtStr()}.

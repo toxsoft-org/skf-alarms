@@ -75,4 +75,13 @@ public interface ISkResources {
   String STR_N_ACKNOWLEDGE_AUTHOR = "Автор";
   String STR_D_ACKNOWLEDGE_AUTHOR = "Автор";
 
+  String STR_N_ALARM_SEVERITY = "Важность";         // Severity
+  String STR_D_ALARM_SEVERITY = "Важность тревоги"; // Severity of alarm
+
+  String STR_N_ALARM_ISALERT = "Сигнал тревоги";
+  String STR_D_ALARM_ISALERT = "Сигнал тревоги";
+
+  String STR_N_ALARM_ISMUTED = "Отключена";
+  String STR_D_ALARM_ISMUTED = "Тревога отключена";
+
 }
