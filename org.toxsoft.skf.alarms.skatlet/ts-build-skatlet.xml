@@ -35,7 +35,7 @@
 
   <target name="2_build">
     <mkdir dir="target/classes"/>
-    <javac includeantruntime="false" srcdir="src" destdir="target/classes" >
+    <javac includeantruntime="false" srcdir="src" destdir="target/classes" debug="true" debuglevel="source,lines,vars" >
        <classpath>
           <fileset dir="../../ts4-targets/ts4-target-extlibs/lib">
              <include name="**/*.jar" />
