@@ -137,7 +137,7 @@ public class AlarmRtPanel
     }
   }
 
-  class InnerM3Model
+  class InnerM5Model
       extends KM5ModelBasic<ISkAlarm> {
 
     public static final String AID_ALARM_NAME     = "AlarmName";     //$NON-NLS-1$
@@ -291,7 +291,7 @@ public class AlarmRtPanel
 
         };
 
-    public InnerM3Model( ISkConnection aConn ) {
+    public InnerM5Model( ISkConnection aConn ) {
       super( "LocalM3Model", ISkAlarm.class, aConn );
       addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED, ALARM_MESSAGE_INFO,
           ALARM_ALERT_CONDITION );
@@ -358,7 +358,7 @@ public class AlarmRtPanel
     toolbar.addListener( asp );
 
     // Using temporary model.
-    InnerM3Model model = new InnerM3Model( skConn() );
+    InnerM5Model model = new InnerM5Model( skConn() );
     m5().initTemporaryModel( model );
     // IM5Model<ISkAlarm> model = m5().getModel( ISkAlarmConstants.CLSID_ALARM, ISkAlarm.class );
 
