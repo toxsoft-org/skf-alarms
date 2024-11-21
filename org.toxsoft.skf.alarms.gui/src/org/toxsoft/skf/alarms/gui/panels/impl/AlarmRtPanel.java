@@ -161,12 +161,17 @@ public class AlarmRtPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
       protected String doGetFieldValueName( ISkAlarm aAlarm ) {
         return aAlarm.description();
+      }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+        return AvUtils.avStr( aEntity.description() );
       }
     };
 
@@ -179,7 +184,7 @@ public class AlarmRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           protected IAtomicValue doGetFieldValue( ISkAlarm aAlarm ) {
@@ -226,12 +231,17 @@ public class AlarmRtPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
       protected String doGetFieldValueName( ISkAlarm aAlarm ) {
         return Boolean.toString( aAlarm.isAlert() );
+      }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+        return AvUtils.avBool( aEntity.isAlert() );
       }
     };
 
@@ -243,12 +253,17 @@ public class AlarmRtPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
       protected String doGetFieldValueName( ISkAlarm aAlarm ) {
         return Boolean.toString( aAlarm.isMuted() );
+      }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+        return AvUtils.avBool( aEntity.isMuted() );
       }
     };
 
@@ -261,13 +276,12 @@ public class AlarmRtPanel
             setDescription( CLBINF_MESSAGE_INFO.description() );
             setDefaultValue( ISkMessageInfo.NONE );
             params().setBool( TSID_IS_NULL_ALLOWED, false );
-            setFlags( M5FF_DETAIL );
+            setFlags( M5FF_DETAIL | M5FF_READ_ONLY );
           }
 
           protected ISkMessageInfo doGetFieldValue( ISkAlarm aEntity ) {
             return aEntity.messageInfo();
           }
-
         };
 
     public final IM5FieldDef<ISkAlarm, ITsCombiCondInfo> ALARM_ALERT_CONDITION =
@@ -377,6 +391,9 @@ public class AlarmRtPanel
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
     componentModown.createControl( board );
+
+    // componentModown.summaryPane().
+    // updateSummary( null, null, null, null );
 
     guiTimersService().slowTimers().addListener( this );
 

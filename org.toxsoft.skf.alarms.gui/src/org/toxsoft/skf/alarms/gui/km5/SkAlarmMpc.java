@@ -23,7 +23,7 @@ import org.toxsoft.skf.alarms.lib.*;
  *
  * @author dima
  */
-class SkAlarmMpc
+public class SkAlarmMpc
     extends MultiPaneComponentModown<ISkAlarm> {
 
   public SkAlarmMpc( ITsGuiContext aContext, IM5Model<ISkAlarm> aModel, IM5ItemsProvider<ISkAlarm> aItemsProvider,
