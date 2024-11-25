@@ -36,7 +36,6 @@ public class SkfAlarmUtils {
    */
   public static void initialize() {
     TsValobjUtils.registerKeeper( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
-    TsValobjUtils.registerKeeper( ESkTechnologyObjOperationMode.KEEPER_ID, ESkTechnologyObjOperationMode.KEEPER );
     SkCoreUtils.registerSkServiceCreator( SkAlarmService.CREATOR );
     SkCoreUtils.registerCoreApiHandler( coreRegistrationHandler );
   }
