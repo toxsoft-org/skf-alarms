@@ -58,6 +58,16 @@ public interface ISkAlarmSharedResources {
   String STR_ALSEV_CRITICAL_D = Messages.getString( "STR_ALSEV_CRITICAL_D" ); //$NON-NLS-1$
 
   /**
+   * {@link ESkTechnologyObjOperationMode}
+   */
+  String STR_WORKING   = "в работе";
+  String STR_WORKING_D = "технологическое оборудование в рабочем состоянии";
+  String STR_REPAIR    = "в ремонте";
+  String STR_REPAIR_D  = "технологическое оборудование в ремонте";
+  String STR_RESERVE   = "в резерве";
+  String STR_RESERVE_D = "технологическое оборудование в резерве";
+
+  /**
    * {@link SkAlarmService}
    */
   String FMT_NO_ALARM_ID_TO_REMOVE = Messages.getString( "FMT_NO_ALARM_ID_TO_REMOVE" ); //$NON-NLS-1$
