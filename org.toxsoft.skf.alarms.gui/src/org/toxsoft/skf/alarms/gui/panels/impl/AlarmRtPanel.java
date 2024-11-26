@@ -3,6 +3,7 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
+import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
 import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
@@ -13,6 +14,7 @@ import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.plugin.*;
@@ -21,11 +23,13 @@ import org.toxsoft.core.tsgui.bricks.actions.asp.*;
 import org.toxsoft.core.tsgui.bricks.cond.valed.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
+import org.toxsoft.core.tsgui.bricks.tsnodes.*;
 import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
@@ -309,6 +313,20 @@ public class AlarmRtPanel
       super( "LocalM3Model", ISkAlarm.class, aConn );
       addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED, ALARM_MESSAGE_INFO,
           ALARM_ALERT_CONDITION );
+
+      setPanelCreator( new M5DefaultPanelCreator<>() {
+
+        @Override
+        protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
+            IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
+          OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_TRUE );
+          OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
+          MultiPaneComponentModown<ISkAlarm> mpc =
+              new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
+          return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
+        }
+      } );
+
     }
 
     @Override
@@ -328,6 +346,66 @@ public class AlarmRtPanel
     protected IList<ISkAlarm> doListEntities() {
       IList<ISkAlarm> allAlarms = alarmService().listAlarms();
       return allAlarms;
+    }
+  }
+
+  class InnerHistoryPanel
+      extends AbstractSkLazyControl {
+
+    public InnerHistoryPanel( ITsGuiContext aContext ) {
+      super( aContext );
+    }
+
+    @Override
+    protected Control doCreateControl( Composite aParent ) {
+      Composite board = new Composite( aParent, SWT.NONE );
+      board.setLayout( new BorderLayout() );
+
+      return board;
+    }
+  }
+
+  class InnerPane
+      extends MpcAbstractPane<ISkAlarm, Control>
+      implements IMpcDetailsPane<ISkAlarm> {
+
+    private IM5EntityPanel<ISkAlarm> detailPanel;
+    private InnerHistoryPanel        historyPanel;
+
+    public InnerPane( MultiPaneComponent<ISkAlarm> aOwner ) {
+      super( aOwner );
+    }
+
+    @Override
+    public void setValues( ITsNode aSelectedNode, IM5Bunch<ISkAlarm> aValues ) {
+      detailPanel.setValues( aValues );
+    }
+
+    @Override
+    protected Control doCreateControl( Composite aParent ) {
+      Composite board = new Composite( aParent, SWT.NONE );
+      board.setLayout( new BorderLayout() );
+
+      CTabFolder tabFolder = new CTabFolder( board, SWT.NONE );
+
+      CTabItem tabItem = new CTabItem( tabFolder, SWT.NONE );
+      tabItem.setText( "Общее" );
+      tabFolder.setSelection( 0 );
+
+      // Taking the existing detail panel.
+      detailPanel = componentModown.model().panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() ) );
+      detailPanel.createControl( tabFolder );
+      tabItem.setControl( detailPanel.getControl() );
+
+      CTabItem tabItem2 = new CTabItem( tabFolder, SWT.NONE );
+      tabItem2.setText( "История" );
+
+      // Alarm history panel.
+      historyPanel = new InnerHistoryPanel( new TsGuiContext( tsContext() ) );
+      historyPanel.createControl( tabFolder );
+      tabItem2.setControl( historyPanel.getControl() );
+
+      return board;
     }
   }
 
@@ -389,11 +467,15 @@ public class AlarmRtPanel
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_TRUE );
     // IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_HIDE_PANES.setValue( ctx.params(), AvUtils.AV_TRUE );
 
-    componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
-    componentModown.createControl( board );
+    componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm ) {
 
-    // componentModown.summaryPane().
-    // updateSummary( null, null, null, null );
+      @Override
+      protected IMpcDetailsPane<ISkAlarm> doCreateDetailsPane() {
+        InnerPane innerPane = new InnerPane( this );
+        return innerPane;
+      }
+    };
+    componentModown.createControl( board );
 
     guiTimersService().slowTimers().addListener( this );
 

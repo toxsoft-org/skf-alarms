@@ -217,10 +217,7 @@ public class SkAlarmM5Model
    */
   public SkAlarmM5Model( ISkConnection aConn ) {
     super( CLSID_ALARM, ISkAlarm.class, aConn );
-    addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED,
-        ALERT_CONDITION/*
-                        * , ALARM_MESSAGE_INFO, ALARM_ALERT_CONDITION
-                        */ );
+    addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED, ALERT_CONDITION );
     setPanelCreator( new M5DefaultPanelCreator<>() {
 
       @Override
