@@ -6,6 +6,7 @@ import static org.toxsoft.skf.alarms.skatlet.ISkResources.*;
 import org.toxsoft.core.tslib.av.math.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.ctx.*;
+import org.toxsoft.core.tslib.bricks.ctx.impl.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.threadexec.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
@@ -18,6 +19,7 @@ import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.skf.rri.lib.*;
 import org.toxsoft.skf.rri.lib.impl.*;
 import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.connection.*;
 import org.toxsoft.uskat.core.impl.*;
 
 /**
@@ -30,6 +32,7 @@ public class SkAlarmsSkatlet
 
   private ITsThreadExecutor threadExecutor;
   private SkAlarmProcessor  alarmProcecessor;
+  private ISkConnection     connection;
 
   /**
    * Constructor.
@@ -47,7 +50,8 @@ public class SkAlarmsSkatlet
   @Override
   protected ValidationResult doInit( ITsContextRo aEnviron ) {
     super.doInit( aEnviron );
-    ISkCoreApi coreApi = connection().coreApi();
+    connection = createConnection( getClass().getSimpleName(), new TsContext() );
+    ISkCoreApi coreApi = connection.coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
 
     // 2024-10-20 mvk на существующем API нельзя использовать SkfAlarmUtils.initialize(): соединение уже существует(!)
@@ -98,6 +102,7 @@ public class SkAlarmsSkatlet
   public boolean queryStop() {
     super.queryStop();
     threadExecutor.syncExec( () -> alarmProcecessor.queryStop() );
+    SkThreadExecutorService.getExecutor( connection.coreApi() ).syncExec( () -> connection.close() );
     return alarmProcecessor.isStopped();
   }
 
