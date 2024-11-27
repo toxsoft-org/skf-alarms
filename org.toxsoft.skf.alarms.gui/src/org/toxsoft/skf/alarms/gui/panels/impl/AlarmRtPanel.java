@@ -349,28 +349,17 @@ public class AlarmRtPanel
     }
   }
 
-  class InnerHistoryPanel
-      extends AbstractSkLazyControl {
-
-    public InnerHistoryPanel( ITsGuiContext aContext ) {
-      super( aContext );
-    }
-
-    @Override
-    protected Control doCreateControl( Composite aParent ) {
-      Composite board = new Composite( aParent, SWT.NONE );
-      board.setLayout( new BorderLayout() );
-
-      return board;
-    }
-  }
-
+  /**
+   * Detail panel.
+   *
+   * @author Slavage
+   */
   class InnerPane
       extends MpcAbstractPane<ISkAlarm, Control>
       implements IMpcDetailsPane<ISkAlarm> {
 
     private IM5EntityPanel<ISkAlarm> detailPanel;
-    private InnerHistoryPanel        historyPanel;
+    private AlarmHistoryPanel        historyPanel;
 
     public InnerPane( MultiPaneComponent<ISkAlarm> aOwner ) {
       super( aOwner );
@@ -379,12 +368,14 @@ public class AlarmRtPanel
     @Override
     public void setValues( ITsNode aSelectedNode, IM5Bunch<ISkAlarm> aValues ) {
       detailPanel.setValues( aValues );
+      historyPanel.setAlarm( aValues.originalEntity() );
     }
 
     @Override
     protected Control doCreateControl( Composite aParent ) {
       Composite board = new Composite( aParent, SWT.NONE );
       board.setLayout( new BorderLayout() );
+      // board.setBounds( 0, 0, 100, 100 );
 
       CTabFolder tabFolder = new CTabFolder( board, SWT.NONE );
 
@@ -401,7 +392,7 @@ public class AlarmRtPanel
       tabItem2.setText( "История" );
 
       // Alarm history panel.
-      historyPanel = new InnerHistoryPanel( new TsGuiContext( tsContext() ) );
+      historyPanel = new AlarmHistoryPanel( new TsGuiContext( tsContext() ) );
       historyPanel.createControl( tabFolder );
       tabItem2.setControl( historyPanel.getControl() );
 
@@ -479,6 +470,8 @@ public class AlarmRtPanel
 
     guiTimersService().slowTimers().addListener( this );
 
+    // componentModown.detailsPane().getControl().setSize( 0, 500 );
+
     return board;
   }
 
@@ -530,5 +523,4 @@ public class AlarmRtPanel
   private ISkAlarmService alarmService() {
     return coreApi().getService( ISkAlarmService.SERVICE_ID );
   }
-
 }
