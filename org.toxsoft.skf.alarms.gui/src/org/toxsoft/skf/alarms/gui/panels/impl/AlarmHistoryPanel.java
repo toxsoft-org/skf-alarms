@@ -28,6 +28,7 @@ import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.m5.std.models.av.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
 import org.toxsoft.core.tsgui.utils.layout.BorderLayout;
+import org.toxsoft.core.tsgui.valed.api.*;
 import org.toxsoft.core.tsgui.widgets.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
@@ -209,6 +210,8 @@ class AlarmHistoryPanel
           protected void doInit() {
             setNameAndDescription( STR_N_EVENT_PARAMETERS, STR_D_EVENT_PARAMETERS );
             setFlags( M5FF_DETAIL );
+            // задаем нормальный размер!
+            params().setInt( IValedControlConstants.OPDEF_VERTICAL_SPAN, 10 );
           }
 
           protected IList<IdValue> doGetFieldValue( SkEvent aEntity ) {
@@ -268,15 +271,13 @@ class AlarmHistoryPanel
 
   public void setAlarm( ISkAlarm aAlarm ) {
     alarm = aAlarm;
+    componentModown.tree().items().clear();
   }
 
   @Override
   protected Control doCreateControl( Composite aParent ) {
-    Composite board = new Composite( aParent, SWT.NONE );
-
-    // GridData gridData = new GridData( GridData.FILL_VERTICAL );
-    // gridData.minimumHeight = 500;
-    // board.setLayoutData( gridData );
+    TsComposite board = new TsComposite( aParent, SWT.NONE );
+    board.setMinimumHeight( 600 );
     board.setLayout( new BorderLayout() );
 
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
@@ -346,7 +347,7 @@ class AlarmHistoryPanel
 
     IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
-    IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( ctx.params(), AV_FALSE );
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AV_TRUE );
 

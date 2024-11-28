@@ -375,7 +375,6 @@ public class AlarmRtPanel
     protected Control doCreateControl( Composite aParent ) {
       Composite board = new Composite( aParent, SWT.NONE );
       board.setLayout( new BorderLayout() );
-      // board.setBounds( 0, 0, 100, 100 );
 
       CTabFolder tabFolder = new CTabFolder( board, SWT.NONE );
 
