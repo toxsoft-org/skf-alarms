@@ -21,7 +21,8 @@ public class UipartAlarmSettings
   protected void doCreateContent( TsComposite aParent ) {
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     // TODO Slava insert panel
-    // panel = new AlarmRtPanel( aParent, ctx );
+    panel = new AlarmRtPanel( ctx );
+    panel.createControl( aParent );
     // panel.setLayoutData( BorderLayout.CENTER );
   }
 
