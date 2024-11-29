@@ -25,7 +25,7 @@ public class QuantSkfAlarmsGui
   public QuantSkfAlarmsGui() {
     super( QuantSkfAlarmsGui.class.getSimpleName() );
     SkfAlarmUtils.initialize();
-    TsValobjUtils.registerKeeper( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
+    TsValobjUtils.registerKeeperIfNone( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
     // GUI initialization
     KM5Utils.registerContributorCreator( KM5AlarmsContributor.CREATOR );
   }
