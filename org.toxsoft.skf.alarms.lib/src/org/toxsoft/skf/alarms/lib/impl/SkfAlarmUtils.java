@@ -35,7 +35,7 @@ public class SkfAlarmUtils {
    * The plugin initialization must be called before any action to access classes in this plugin.
    */
   public static void initialize() {
-    TsValobjUtils.registerKeeper( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
+    TsValobjUtils.registerKeeperIfNone( ESkAlarmSeverity.KEEPER_ID, ESkAlarmSeverity.KEEPER );
     SkCoreUtils.registerSkServiceCreator( SkAlarmService.CREATOR );
     SkCoreUtils.registerCoreApiHandler( coreRegistrationHandler );
   }
