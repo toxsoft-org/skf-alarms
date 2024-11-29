@@ -8,17 +8,17 @@
     <elements xsi:type="application:Addon" xmi:id="_TIYBsK4dEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.addon.0" contributionURI="bundleclass://org.toxsoft.skf.alarms.mws/org.toxsoft.skf.alarms.mws.addons.AddonAlarmViewer"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_kz62YK4dEe-S98QRZkoa0w" featurename="children" parentElementId="org.toxsoft.mws.perspectivestack.main">
-    <elements xsi:type="advanced:Perspective" xmi:id="_w4FL0K4dEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.perspective.alarmssettings" label="Alarms settings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="Vew alarms properties">
+    <elements xsi:type="advanced:Perspective" xmi:id="_w4FL0K4dEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.perspective.alarmssettings" label="%Persp_AlarmsSettings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="%Persp_AlarmsSettings_D">
       <children xsi:type="basic:Part" xmi:id="_EGuGwK4lEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.part.alarmsViewer" contributionURI="bundleclass://org.toxsoft.skf.alarms.mws/org.toxsoft.skf.alarms.mws.e4.uiparts.UipartAlarmSettings" label="Alarms viewer" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="View alarms settittings"/>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_PtojsK4eEe-S98QRZkoa0w" featurename="children" parentElementId="org.toxsoft.mws.menu.main.perspectives">
-    <elements xsi:type="menu:HandledMenuItem" xmi:id="_XsZxEK4eEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.handledmenuitem.alarmssettings" label="Alarms settings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="View alarm settings" type="Radio" command="_NdB9kK4fEe-S98QRZkoa0w">
+    <elements xsi:type="menu:HandledMenuItem" xmi:id="_XsZxEK4eEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.handledmenuitem.alarmssettings" label="%Persp_AlarmsSettings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="%%Persp_AlarmsSettings_D" type="Radio" command="_NdB9kK4fEe-S98QRZkoa0w">
       <parameters xmi:id="_HcYNQK4gEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.parameter.0" name="org.toxsoft.mws.cmd.switch_persp.arg.perspId" value="org.toxsoft.skf.alarms.mws.perspective.alarmssettings"/>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_gwGmMK4eEe-S98QRZkoa0w" featurename="children" parentElementId="org.toxsoft.mws.toolbar.main">
-    <elements xsi:type="menu:HandledToolItem" xmi:id="_qyxlAK4eEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.handledtoolitem.alarmsettings" label="Alarm settings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="View alarm settings" type="Radio" command="_NdB9kK4fEe-S98QRZkoa0w">
+    <elements xsi:type="menu:HandledToolItem" xmi:id="_qyxlAK4eEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.handledtoolitem.alarmsettings" label="%Persp_AlarmsSettings" iconURI="platform:/plugin/org.toxsoft.skf.alarms.mws/icons/is24x24/app-alarms-editor.png" tooltip="%Persp_AlarmsSettings_D" type="Radio" command="_NdB9kK4fEe-S98QRZkoa0w">
       <parameters xmi:id="_R1gkQK4gEe-S98QRZkoa0w" elementId="org.toxsoft.skf.alarms.mws.parameter.1" name="org.toxsoft.mws.cmd.switch_persp.arg.perspId" value="org.toxsoft.skf.alarms.mws.perspective.alarmssettings"/>
     </elements>
   </fragments>
