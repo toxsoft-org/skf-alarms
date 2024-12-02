@@ -24,7 +24,7 @@ public interface ISkfAlarmsGuiConstants {
   String ICONID_ALARM_INFOS_LIST   = "alarm-infos-list";  //$NON-NLS-1$
   String ICONID_ALERT_INFO         = "alert-info";        //$NON-NLS-1$
   String ICONID_ALERT_INFOS_LIST   = "alert-infos-list";  //$NON-NLS-1$
-  String ICONID_ALERT_ACKNOWLEDGE  = "kvitirovanie";      //$NON-NLS-1$
+  String ICONID_ALERT_ACKNOWLEDGE  = "check_green";       //$NON-NLS-1$
   String ICONID_ALERTS_CHECK_GREEN = "check_green";       //$NON-NLS-1$
   String ICONID_ALERTS_CHECK_ALL   = "check_all_on";      //$NON-NLS-1$
   String ICONID_ALERTS_UNCHECK_ALL = "check_all_off";     //$NON-NLS-1$
