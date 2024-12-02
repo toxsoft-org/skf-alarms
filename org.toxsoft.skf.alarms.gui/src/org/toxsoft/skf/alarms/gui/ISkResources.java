@@ -43,6 +43,10 @@ public interface ISkResources {
   String STR_L_ALARM_COMMENT     = "Комментарий";
   String STR_N_ALARM_ACKNOWLEDGE = "Подтвердить";                             // Acknowledge
   String STR_D_ALARM_ACKNOWLEDGE = "Подтвердить отмеченные оповещения";       // Acknowledge marked alers
+  String STR_N_ALARM_CHECK_ALL   = "Пометить все";                            // Acknowledge
+  String STR_D_ALARM_CHECK_ALL   = "Пометить все тревоги";                    // Acknowledge marked alers
+  String STR_N_ALARM_UNCHECK_ALL = "Сборосить все";                           // Acknowledge
+  String STR_D_ALARM_UNCHECK_ALL = "Сборосить все пометки тревог";            // Acknowledge marked alers
   String STR_N_EVENT_TIME        = "Время";                                   // Time
   String STR_D_EVENT_TIME        = "Момент времени, когда произошло событие"; // Time moment when event happaned
 
