@@ -36,11 +36,15 @@ public interface ISkResources {
   String STR_D_EVENT_PARAMS = "Параметры события";
 
   /**
-   * {@link AcknowledgeDlg}
+   * {@link ConfirmDlg}
    */
   String DLG_C_ALARM_ACKNOWLEDGE = "Квитирование тревоги";
   String DLG_T_ALARM_ACKNOWLEDGE = "Квитировать тревогу";
+  String DLG_C_ALARM_REASON      = "Остановить тревоги";
+  String DLG_T_ALARM_REASON      = "Остановить тревоги";
+
   String STR_L_ALARM_COMMENT     = "Комментарий";
+  String STR_L_ALARM_REASON      = "Причина";
   String STR_N_ALARM_ACKNOWLEDGE = "Подтвердить";                             // Acknowledge
   String STR_D_ALARM_ACKNOWLEDGE = "Подтвердить отмеченные оповещения";       // Acknowledge marked alers
   String STR_N_ALARM_CHECK_ALL   = "Пометить все";                            // Acknowledge

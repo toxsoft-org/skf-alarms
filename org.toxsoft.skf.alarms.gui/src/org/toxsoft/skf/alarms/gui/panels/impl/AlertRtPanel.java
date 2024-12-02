@@ -102,7 +102,7 @@ public class AlertRtPanel
 
     void doAcknowledge() {
       ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
-      String comment = AcknowledgeDlg.enterComment( tsContext(), commentValidator );
+      String comment = ConfirmDlg.enterComment( tsContext(), commentValidator );
       if( comment != null ) {
         ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
 

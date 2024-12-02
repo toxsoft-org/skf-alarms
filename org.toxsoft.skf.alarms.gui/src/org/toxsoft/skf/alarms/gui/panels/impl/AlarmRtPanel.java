@@ -1,6 +1,5 @@
 package org.toxsoft.skf.alarms.gui.panels.impl;
 
-import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
@@ -37,9 +36,11 @@ import org.toxsoft.core.tsgui.utils.layout.*;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
+import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.bricks.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
+import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.skf.alarms.gui.*;
@@ -60,12 +61,22 @@ public class AlarmRtPanel
     extends AbstractSkLazyControl
     implements IAlarmRtPanel, ISkAlertListener, IRealTimeSensitive {
 
-  private static final String ACTID_ACKNOWLEDGE = "acknowledge"; //$NON-NLS-1$
-  private static final String ACTID_MUTED       = "muted";       //$NON-NLS-1$
-  private static final String ACTID_UNMUTED     = "unmuted";     //$NON-NLS-1$
+  private static final String ACTID_ALARMS_CHECK_ALL   = "checkAll";    //$NON-NLS-1$
+  private static final String ACTID_ALARMS_UNCHECK_ALL = "uncheckAll";  //$NON-NLS-1$
+  private static final String ACTID_ACKNOWLEDGE        = "acknowledge"; //$NON-NLS-1$
+  private static final String ACTID_MUTED              = "muted";       //$NON-NLS-1$
+  private static final String ACTID_UNMUTED            = "unmuted";     //$NON-NLS-1$
+
+  private static final ITsActionDef ACDEF_ALERTS_CHECK_ALL = TsActionDef.ofPush2( ACTID_ALARMS_CHECK_ALL, //
+      STR_N_ALARM_CHECK_ALL, STR_D_ALARM_CHECK_ALL, ICONID_ALERTS_CHECK_ALL //
+  );
+
+  private static final ITsActionDef ACDEF_ALERTS_UNCHECK_ALL = TsActionDef.ofPush2( ACTID_ALARMS_UNCHECK_ALL, //
+      STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
+  );
 
   private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
-      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERT_ACKNOWLEDGE //
+      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
   );
 
   private static final ITsActionDef ACDEF_MUTED = TsActionDef.ofPush2( ACTID_MUTED, //
@@ -83,8 +94,8 @@ public class AlarmRtPanel
       extends MethodPerActionTsActionSetProvider {
 
     public AspLocal() {
-      defineAction( ACDEF_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
-      defineAction( ACDEF_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
+      defineAction( ACDEF_ALERTS_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
+      defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
       defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::isCheckedNotEmpty );
       defineSeparator();
@@ -106,7 +117,7 @@ public class AlarmRtPanel
 
     void doAcknowledge() {
       ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
-      String comment = AcknowledgeDlg.enterComment( tsContext(), commentValidator );
+      String comment = ConfirmDlg.enterComment( tsContext(), commentValidator );
       if( comment != null ) { // Сomment is required.
         ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
         IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
@@ -119,7 +130,7 @@ public class AlarmRtPanel
 
     void doMuted() {
       ITsValidator<String> validator = aValue -> ValidationResult.SUCCESS;
-      String reason = AcknowledgeDlg.enterComment( tsContext(), validator );
+      String reason = ConfirmDlg.enterReason( tsContext(), validator );
       ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
       IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
       for( int i = 0; i < checkedAlarms.size(); i++ ) {
@@ -227,49 +238,51 @@ public class AlarmRtPanel
           }
         };
 
-    public final IM5AttributeFieldDef<ISkAlarm> ALARM_ISALERT = new M5AttributeFieldDef<>( AID_ALARM_ISALERT, BOOLEAN, //
-        TSID_NAME, STR_N_ALARM_ISALERT, //
-        TSID_DESCRIPTION, STR_D_ALARM_ISALERT, //
-        TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
-    ) {
+    public final IM5AttributeFieldDef<ISkAlarm> ALARM_ISALERT =
+        new M5AttributeFieldDef<>( AID_ALARM_ISALERT, IAvMetaConstants.DDEF_TS_BOOL, //
+            TSID_NAME, STR_N_ALARM_ISALERT, //
+            TSID_DESCRIPTION, STR_D_ALARM_ISALERT, //
+            TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+        ) {
 
-      @Override
-      protected void doInit() {
-        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
-      }
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
+          }
 
-      @Override
-      protected String doGetFieldValueName( ISkAlarm aAlarm ) {
-        return Boolean.toString( aAlarm.isAlert() );
-      }
+          // @Override
+          // protected String doGetFieldValueName( ISkAlarm aAlarm ) {
+          // return Boolean.toString( aAlarm.isAlert() );
+          // }
 
-      @Override
-      protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
-        return AvUtils.avBool( aEntity.isAlert() );
-      }
-    };
+          @Override
+          protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+            return AvUtils.avBool( aEntity.isAlert() );
+          }
+        };
 
-    public final IM5AttributeFieldDef<ISkAlarm> ALARM_ISMUTED = new M5AttributeFieldDef<>( AID_ALARM_ISMUTED, BOOLEAN, //
-        TSID_NAME, STR_N_ALARM_ISMUTED, //
-        TSID_DESCRIPTION, STR_D_ALARM_ISMUTED, //
-        TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
-    ) {
+    public final IM5AttributeFieldDef<ISkAlarm> ALARM_ISMUTED =
+        new M5AttributeFieldDef<>( AID_ALARM_ISMUTED, IAvMetaConstants.DDEF_TS_BOOL, //
+            TSID_NAME, STR_N_ALARM_ISMUTED, //
+            TSID_DESCRIPTION, STR_D_ALARM_ISMUTED, //
+            TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+        ) {
 
-      @Override
-      protected void doInit() {
-        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
-      }
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
+          }
 
-      @Override
-      protected String doGetFieldValueName( ISkAlarm aAlarm ) {
-        return Boolean.toString( aAlarm.isMuted() );
-      }
+          // @Override
+          // protected String doGetFieldValueName( ISkAlarm aAlarm ) {
+          // return Boolean.toString( aAlarm.isMuted() );
+          // }
 
-      @Override
-      protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
-        return AvUtils.avBool( aEntity.isMuted() );
-      }
-    };
+          @Override
+          protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+            return AvUtils.avBool( aEntity.isMuted() );
+          }
+        };
 
     public final IM5SingleModownFieldDef<ISkAlarm, ISkMessageInfo> ALARM_MESSAGE_INFO =
         new M5SingleModownFieldDef<>( CLBID_MESSAGE_INFO, SkMessageInfoM5Model.MODEL_ID ) {
@@ -408,6 +421,15 @@ public class AlarmRtPanel
 
   private boolean paused = false;
 
+  class AlarmData {
+
+    public String  srid;
+    public boolean isAlert;
+    public boolean isMuted;
+  }
+
+  private IMapEdit<String, AlarmData> alarmsDatas = new ElemMap<String, AlarmData>();
+
   public AlarmRtPanel( ITsGuiContext aContext ) {
     super( aContext );
 
@@ -515,7 +537,7 @@ public class AlarmRtPanel
     if( paused ) {
       return;
     }
-    // componentModown.tree().refresh();
+    update();
   }
 
   // ------------------------------------------------------------------------------------
@@ -524,4 +546,45 @@ public class AlarmRtPanel
   private ISkAlarmService alarmService() {
     return coreApi().getService( ISkAlarmService.SERVICE_ID );
   }
+
+  private void update() {
+    boolean needRefresh = false;
+    for( int i = 0; i < componentModown.tree().items().size(); i++ ) {
+      ISkAlarm alarm = componentModown.tree().items().get( i );
+
+      boolean isAlert = alarm.isAlert();
+      boolean isMuted = alarm.isMuted();
+
+      AlarmData alarmData = findAlarmData( alarm.strid() );
+      if( alarmData != null ) {
+        if( alarmData.isAlert != isAlert ) {
+          alarmData.isAlert = isAlert;
+          needRefresh = true;
+        }
+        if( alarmData.isMuted != isMuted ) {
+          alarmData.isMuted = isMuted;
+          needRefresh = true;
+        }
+      }
+      else {
+        alarmData = new AlarmData();
+        alarmData.srid = alarm.strid();
+        alarmData.isAlert = isAlert;
+        alarmData.isMuted = isMuted;
+        addAlarmData( alarmData );
+      }
+    }
+    if( needRefresh ) {
+      componentModown.tree().refresh();
+    }
+  }
+
+  private AlarmData findAlarmData( String aStrid ) {
+    return alarmsDatas.findByKey( aStrid );
+  }
+
+  private void addAlarmData( AlarmData aAlarmData ) {
+    alarmsDatas.put( aAlarmData.srid, aAlarmData );
+  }
+
 }
