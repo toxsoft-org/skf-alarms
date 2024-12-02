@@ -55,6 +55,7 @@ import org.toxsoft.uskat.core.connection.*;
  * {@link IAlertRtPanel} implementation.
  *
  * @author hazard157
+ * @author Slavage
  */
 public class AlertRtPanel
     extends AbstractSkLazyControl
@@ -69,11 +70,11 @@ public class AlertRtPanel
   );
 
   private static final ITsActionDef ACDEF_ALERTS_CHECK_ALL = TsActionDef.ofPush2( ACTID_ALERTS_CHECK_ALL, //
-      "Check all", "Check all alerts", ICONID_ALERTS_CHECK_ALL //
+      STR_N_ALARM_CHECK_ALL, STR_D_ALARM_CHECK_ALL, ICONID_ALERTS_CHECK_ALL //
   );
 
   private static final ITsActionDef ACDEF_ALERTS_UNCHECK_ALL = TsActionDef.ofPush2( ACTID_ALERTS_UNCHECK_ALL, //
-      "Uncheck all", "Uncheck all alerts", ICONID_ALERTS_UNCHECK_ALL //
+      STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
   );
 
   /**
