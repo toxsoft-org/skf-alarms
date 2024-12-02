@@ -1,7 +1,5 @@
 package org.toxsoft.skf.alarms.gui.panels.impl;
 
-import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
-import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
@@ -62,20 +60,20 @@ public class AlertRtPanel
     extends AbstractSkLazyControl
     implements IAlertRtPanel, ISkAlertListener {
 
-  private static final String ACTID_ACKNOWLEDGE = "acknowledge"; //$NON-NLS-1$
-  private static final String ACTID_DEBUG       = "debug";       //$NON-NLS-1$
-  private static final String ACTID_DEBUG2      = "debug2";      //$NON-NLS-1$
+  private static final String ACTID_CONFIRM            = "confirm";    //$NON-NLS-1$
+  private static final String ACTID_ALERTS_CHECK_ALL   = "checkAll";   //$NON-NLS-1$
+  private static final String ACTID_ALERTS_UNCHECK_ALL = "uncheckAll"; //$NON-NLS-1$
 
-  private static final ITsActionDef ACDEF_ACKNOWLEDGE = TsActionDef.ofPush2( ACTID_ACKNOWLEDGE, //
-      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERT_ACKNOWLEDGE //
+  private static final ITsActionDef ACDEF_CONFIRM = TsActionDef.ofPush2( ACTID_CONFIRM, //
+      STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
   );
 
-  private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
-      "Set acknowledge", "Set acknowledge", ICONID_ARROW_DOWN //
+  private static final ITsActionDef ACDEF_ALERTS_CHECK_ALL = TsActionDef.ofPush2( ACTID_ALERTS_CHECK_ALL, //
+      "Check all", "Check all alerts", ICONID_ALERTS_CHECK_ALL //
   );
 
-  private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
-      "Clear acknowledge", "Clear acknowledge", ICONID_ARROW_UP //
+  private static final ITsActionDef ACDEF_ALERTS_UNCHECK_ALL = TsActionDef.ofPush2( ACTID_ALERTS_UNCHECK_ALL, //
+      "Uncheck all", "Uncheck all alerts", ICONID_ALERTS_UNCHECK_ALL //
   );
 
   /**
@@ -87,13 +85,10 @@ public class AlertRtPanel
       extends MethodPerActionTsActionSetProvider {
 
     public AspLocal() {
-      defineAction( ACDEF_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
-      defineAction( ACDEF_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
+      defineAction( ACDEF_ALERTS_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
+      defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
-      defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::canAcknowledge );
-      // defineSeparator();
-      // defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
-      // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
+      defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
     }
 
     void doCheckAll() {
