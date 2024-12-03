@@ -1,6 +1,5 @@
 package org.toxsoft.skf.alarms.gui.panels.impl;
 
-import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
 import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
@@ -78,11 +77,11 @@ public class AlarmRtPanel
   );
 
   private static final ITsActionDef ACDEF_MUTED = TsActionDef.ofPush2( ACTID_MUTED, //
-      STR_N_ALARM_MUTED_ALL, STR_D_ALARM_MUTED_ALL, ICONID_ARROW_DOWN //
+      STR_N_ALARM_MUTED_ALL, STR_D_ALARM_MUTED_ALL, ICONID_ALARM_MUTE_ALL //
   );
 
   private static final ITsActionDef ACDEF_UNMUTED = TsActionDef.ofPush2( ACTID_UNMUTED, //
-      STR_N_ALARM_UNMUTED_ALL, STR_D_ALARM_UNMUTED_ALL, ICONID_ARROW_DOWN //
+      STR_N_ALARM_UNMUTED_ALL, STR_D_ALARM_UNMUTED_ALL, ICONID_ALARM_UNMUTE_ALL //
   );
 
   /**

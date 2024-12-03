@@ -28,6 +28,8 @@ public interface ISkfAlarmsGuiConstants {
   String ICONID_ALERTS_CHECK_GREEN = "check_green";       //$NON-NLS-1$
   String ICONID_ALERTS_CHECK_ALL   = "check_all_on";      //$NON-NLS-1$
   String ICONID_ALERTS_UNCHECK_ALL = "check_all_off";     //$NON-NLS-1$
+  String ICONID_ALARM_MUTE_ALL     = "rupor";             //$NON-NLS-1$
+  String ICONID_ALARM_UNMUTE_ALL   = "rupor-none";        //$NON-NLS-1$
 
   /**
    * Constants registration.
