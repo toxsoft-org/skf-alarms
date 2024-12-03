@@ -2,7 +2,6 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
 
 import static org.toxsoft.core.tsgui.graphics.icons.ITsStdIconIds.*;
 import static org.toxsoft.core.tsgui.m5.IM5Constants.*;
-import static org.toxsoft.core.tsgui.m5.gui.mpc.IMultiPaneComponentConstants.*;
 import static org.toxsoft.core.tsgui.valed.api.IValedControlConstants.*;
 import static org.toxsoft.core.tslib.av.EAtomicType.*;
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
@@ -28,7 +27,6 @@ import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
-import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
@@ -80,11 +78,11 @@ public class AlarmRtPanel
   );
 
   private static final ITsActionDef ACDEF_MUTED = TsActionDef.ofPush2( ACTID_MUTED, //
-      "Muted", "Set muted", ICONID_ARROW_DOWN //
+      STR_N_ALARM_MUTED_ALL, STR_D_ALARM_MUTED_ALL, ICONID_ARROW_DOWN //
   );
 
   private static final ITsActionDef ACDEF_UNMUTED = TsActionDef.ofPush2( ACTID_UNMUTED, //
-      "Unmuted", "Set unmuted", ICONID_ARROW_DOWN //
+      STR_N_ALARM_UNMUTED_ALL, STR_D_ALARM_UNMUTED_ALL, ICONID_ARROW_DOWN //
   );
 
   /**
@@ -131,11 +129,13 @@ public class AlarmRtPanel
     void doMuted() {
       ITsValidator<String> validator = aValue -> ValidationResult.SUCCESS;
       String reason = ConfirmDlg.enterReason( tsContext(), validator );
-      ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
-      IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
-      for( int i = 0; i < checkedAlarms.size(); i++ ) {
-        ISkAlarm alarm = checkedAlarms.get( i );
-        alarm.muteAlert( author.userSkid(), reason );
+      if( reason != null ) {
+        ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+        IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+        for( int i = 0; i < checkedAlarms.size(); i++ ) {
+          ISkAlarm alarm = checkedAlarms.get( i );
+          alarm.muteAlert( author.userSkid(), reason );
+        }
       }
     }
 
@@ -313,7 +313,7 @@ public class AlarmRtPanel
             ISkAlarmService alarmService = coreApi().getService( ISkAlarmService.SERVICE_ID );
             ITsConditionsTopicManager tm = alarmService.getAlarmCheckersTopicManager();
             valedRefs().put( ValedCombiCondInfo.REFDEF_TOPIC_MANAGER.refKey(), tm );
-            setFlags( M5FF_DETAIL );
+            setFlags( M5FF_DETAIL | M5FF_READ_ONLY );
           }
 
           protected ITsCombiCondInfo doGetFieldValue( ISkAlarm aEntity ) {
@@ -323,22 +323,22 @@ public class AlarmRtPanel
         };
 
     public InnerM5Model( ISkConnection aConn ) {
-      super( "LocalM3Model", ISkAlarm.class, aConn );
+      super( "AlarmRtPanel.LocalM3Model", ISkAlarm.class, aConn );
       addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED, ALARM_MESSAGE_INFO,
           ALARM_ALERT_CONDITION );
 
-      setPanelCreator( new M5DefaultPanelCreator<>() {
-
-        @Override
-        protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
-            IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
-          OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_TRUE );
-          OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
-          MultiPaneComponentModown<ISkAlarm> mpc =
-              new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
-          return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
-        }
-      } );
+      // setPanelCreator( new M5DefaultPanelCreator<>() {
+      //
+      // @Override
+      // protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
+      // IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
+      // OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_FALSE );
+      // OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
+      // MultiPaneComponentModown<ISkAlarm> mpc =
+      // new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
+      // return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
+      // }
+      // } );
 
     }
 

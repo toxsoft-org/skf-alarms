@@ -69,6 +69,7 @@ public interface ISkResources {
   String STR_N_EVENT_TYPE_NAME = "Тип события";
   String STR_D_EVENT_TYPE_NAME = "Тип события";
 
+  String STR_QUERY_INTERVAL         = "Интервал запроса: "; // Query interval:
   String STR_ALERT_EVENT_TYPE       = "Тревога";
   String STR_ACKNOWLEDGE_EVENT_TYPE = "Подтвержение";
   String STR_MUTED_EVENT_TYPE       = "Отключение";
@@ -92,4 +93,9 @@ public interface ISkResources {
   String STR_N_ALARM_ISMUTED = "Отключена";
   String STR_D_ALARM_ISMUTED = "Тревога отключена";
 
+  String STR_N_ALARM_MUTED_ALL = "Отключить тревоги";
+  String STR_D_ALARM_MUTED_ALL = "Отключить помеченные тревоги";
+
+  String STR_N_ALARM_UNMUTED_ALL = "Включить тревоги";
+  String STR_D_ALARM_UNMUTED_ALL = "Включить помеченные тревоги";
 }

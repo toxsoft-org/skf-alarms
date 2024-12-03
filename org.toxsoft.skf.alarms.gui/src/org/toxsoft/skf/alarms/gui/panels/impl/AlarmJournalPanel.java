@@ -86,7 +86,7 @@ public class AlarmJournalPanel
   class InnerModel
       extends SkEventM5ModelBase {
 
-    public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
+    public static final String MODEL_ID = "AlarmJournalPanel.M5Model"; //$NON-NLS-1$
 
     public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";          //$NON-NLS-1$
     public static final String AID_ALARM_NAME           = "EventAlarmName";          //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -140,7 +140,7 @@ public class AlarmJournalPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
@@ -164,7 +164,7 @@ public class AlarmJournalPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
@@ -225,7 +225,7 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -258,7 +258,7 @@ public class AlarmJournalPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
@@ -498,7 +498,7 @@ public class AlarmJournalPanel
     backplane.setLayoutData( BorderLayout.NORTH );
 
     Label l = new Label( backplane, SWT.CENTER );
-    l.setText( "Query interval:" );
+    l.setText( STR_QUERY_INTERVAL );
     //
     startTime = new DateTime( backplane, SWT.BORDER | SWT.TIME );
     startDate = new DateTime( backplane, SWT.BORDER | SWT.DATE | SWT.CALENDAR | SWT.DROP_DOWN );

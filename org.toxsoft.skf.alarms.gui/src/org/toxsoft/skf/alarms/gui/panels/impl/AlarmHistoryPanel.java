@@ -72,6 +72,7 @@ class AlarmHistoryPanel
     public static final String AID_ALARM_EVENT_MESSAGE  = "AlarmEventMessage";       //$NON-NLS-1$
     public static final String AID_EVENT_ALARM_SEVERITY = "EventAlarmSeverity";      //$NON-NLS-1$
     public static final String AID_EVENT_TYPE_NAME      = "EventTypeName";           //$NON-NLS-1$
+    public static final String AID_ALARM_NAME           = "EventAlarmName";          //$NON-NLS-1$
     public static final String AID_ACKNOWLEDGE_COMMENT  = "EventAcknowledgeComment"; //$NON-NLS-1$
     public static final String AID_ACKNOWLEDGE_AUTHOR   = "EventAcknowledgeAuthor";  //$NON-NLS-1$
 
@@ -97,7 +98,7 @@ class AlarmHistoryPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -119,7 +120,7 @@ class AlarmHistoryPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
@@ -171,6 +172,30 @@ class AlarmHistoryPanel
       }
     };
 
+    public final IM5AttributeFieldDef<SkEvent> EVENT_ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
+        TSID_NAME, STR_N_ALARM_NAME, //
+        TSID_DESCRIPTION, STR_D_ALARM_NAME, //
+        TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+    ) {
+
+      @Override
+      protected void doInit() {
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
+      }
+
+      @Override
+      protected String doGetFieldValueName( SkEvent aEntity ) {
+        ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+        return alarm.description();
+      }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+        ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+        return AvUtils.avStr( alarm.description() );
+      }
+    };
+
     public final IM5AttributeFieldDef<SkEvent> ALERT_EVENT_MESSAGE =
         new M5AttributeFieldDef<>( AID_ALARM_EVENT_MESSAGE, STRING, //
             TSID_NAME, STR_N_ALERT_EVENT_MESSAGE, //
@@ -180,7 +205,7 @@ class AlarmHistoryPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -209,7 +234,7 @@ class AlarmHistoryPanel
           @Override
           protected void doInit() {
             setNameAndDescription( STR_N_EVENT_PARAMETERS, STR_D_EVENT_PARAMETERS );
-            setFlags( M5FF_DETAIL );
+            setFlags( M5FF_DETAIL | M5FF_READ_ONLY );
             // задаем нормальный размер!
             params().setInt( IValedControlConstants.OPDEF_VERTICAL_SPAN, 10 );
           }
@@ -223,7 +248,7 @@ class AlarmHistoryPanel
     public InnerM5Model( ISkConnection aConn ) {
       super( MODEL_ID, aConn );
       setNameAndDescription( ESkClassPropKind.EVENT.nmName(), ESkClassPropKind.EVENT.description() );
-      addFieldDefs( EVENT_TIMESTAMP, EVENT_TYPE_NAME, ALERT_EVENT_MESSAGE, EVENT_PARAM_VALUES );
+      addFieldDefs( EVENT_TIMESTAMP, EVENT_TYPE_NAME, EVENT_ALARM_NAME, ALERT_EVENT_MESSAGE, EVENT_PARAM_VALUES );
     }
 
     @Override
@@ -288,7 +313,7 @@ class AlarmHistoryPanel
     backplane.setLayoutData( BorderLayout.NORTH );
 
     Label l = new Label( backplane, SWT.CENTER );
-    l.setText( "Query interval:" );
+    l.setText( STR_QUERY_INTERVAL );
     //
     startTime = new DateTime( backplane, SWT.BORDER | SWT.TIME );
     startDate = new DateTime( backplane, SWT.BORDER | SWT.DATE | SWT.CALENDAR | SWT.DROP_DOWN );
@@ -310,7 +335,7 @@ class AlarmHistoryPanel
     finishTime = new DateTime( backplane, SWT.BORDER | SWT.TIME );
     finishDate = new DateTime( backplane, SWT.BORDER | SWT.DATE | SWT.CALENDAR | SWT.DROP_DOWN );
 
-    // Заголовок
+    // Heading.
     TsToolbar toolBar = new TsToolbar( ctx );
     toolBar.setIconSize( EIconSize.IS_24X24 );
 
@@ -363,6 +388,10 @@ class AlarmHistoryPanel
     innerLifecycleManager = lm;
 
     return board;
+  }
+
+  private ISkAlarmService alarmService() {
+    return coreApi().getService( ISkAlarmService.SERVICE_ID );
   }
 
   public static long getTimeInMillis( DateTime aTimeControl, DateTime aDateControl ) {
