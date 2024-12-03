@@ -147,7 +147,7 @@ public class AlertRtPanel
   class InnerModel
       extends SkEventM5ModelBase {
 
-    public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
+    public static final String MODEL_ID = "AlertRtPanel.M5Model"; //$NON-NLS-1$
 
     public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";     //$NON-NLS-1$
     public static final String AID_ALARM_NAME           = "EventAlarmName";     //$NON-NLS-1$
@@ -172,7 +172,7 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -189,13 +189,13 @@ public class AlertRtPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
       protected String doGetFieldValueName( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-        return alarm.description();
+        return alarm.nmName();
       }
     };
 
@@ -208,7 +208,7 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -227,7 +227,7 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {

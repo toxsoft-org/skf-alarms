@@ -400,14 +400,14 @@ public class AlarmJournalPanel
         ISkAlarm alarm = skConn().coreApi().objService().find( event.eventGwid().skid() );
 
         // Grouping by alarm.
-        CacheNode alarmCacheNode = rootCacheNode.findChild( alarm.description() );
+        CacheNode alarmCacheNode = rootCacheNode.findChild( alarm.nmName() );
         if( alarmCacheNode == null ) {
-          DefaultTsNode<String> alarmNode = new DefaultTsNode<>( NK_ALARM, aRootNode, alarm.description() );
+          DefaultTsNode<String> alarmNode = new DefaultTsNode<>( NK_ALARM, aRootNode, alarm.nmName() );
           ((DefaultTsNode<String>)aRootNode).addNode( alarmNode );
-          roots.put( alarm.description(), alarmNode );
+          roots.put( alarm.nmName(), alarmNode );
 
           alarmCacheNode = new CacheNode( alarmNode );
-          rootCacheNode.addChild( alarm.description(), alarmCacheNode );
+          rootCacheNode.addChild( alarm.nmName(), alarmCacheNode );
         }
 
         DefaultTsNode<SkEvent> eventNode = new DefaultTsNode<SkEvent>( NK_EVENT, alarmCacheNode.node, event );
