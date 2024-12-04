@@ -9,6 +9,7 @@ import static org.toxsoft.core.tslib.utils.TsLibUtils.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
+import java.text.*;
 import java.util.*;
 
 import org.eclipse.jface.resource.*;
@@ -104,6 +105,10 @@ class AlarmHistoryPanel
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/unmutedAlarm.png" ); //$NON-NLS-1$
     private static final Image           unmutedImage    = imgDescrUnmuted.createImage();
 
+    private static final String timestampFormatString = "yyyy.MM.dd  HH:mm:ss .SSS"; //$NON-NLS-1$
+
+    private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
+
     public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
         new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
             TSID_NAME, STR_N_EVENT_TIME, //
@@ -119,7 +124,9 @@ class AlarmHistoryPanel
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
-            return TimeUtils.timestampToSaneString( aEntity.timestamp() );
+            Date dt = new Date( aEntity.timestamp() );
+            return timestampFormat.format( dt );
+            // return TimeUtils.timestampToSaneString( aEntity.timestamp() );
           }
 
           @Override
