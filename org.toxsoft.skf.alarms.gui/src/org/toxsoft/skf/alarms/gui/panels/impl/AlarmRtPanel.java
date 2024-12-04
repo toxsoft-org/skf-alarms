@@ -77,11 +77,11 @@ public class AlarmRtPanel
   );
 
   private static final ITsActionDef ACDEF_MUTED = TsActionDef.ofPush2( ACTID_MUTED, //
-      STR_N_ALARM_MUTED_ALL, STR_D_ALARM_MUTED_ALL, ICONID_ALARM_MUTE_ALL //
+      STR_N_ALARM_MUTED_ALL, STR_D_ALARM_MUTED_ALL, ICONID_ALARM_MUTED_ALL //
   );
 
   private static final ITsActionDef ACDEF_UNMUTED = TsActionDef.ofPush2( ACTID_UNMUTED, //
-      STR_N_ALARM_UNMUTED_ALL, STR_D_ALARM_UNMUTED_ALL, ICONID_ALARM_UNMUTE_ALL //
+      STR_N_ALARM_UNMUTED_ALL, STR_D_ALARM_UNMUTED_ALL, ICONID_ALARM_UNMUTED_ALL //
   );
 
   /**
@@ -154,10 +154,11 @@ public class AlarmRtPanel
   class InnerM5Model
       extends KM5ModelBasic<ISkAlarm> {
 
-    public static final String AID_ALARM_NAME     = "AlarmName";     //$NON-NLS-1$
-    public static final String AID_ALARM_SEVERITY = "AlarmSeverity"; //$NON-NLS-1$
-    public static final String AID_ALARM_ISALERT  = "AlarmIsAlert";  //$NON-NLS-1$
-    public static final String AID_ALARM_ISMUTED  = "AlarmIsMuted";  //$NON-NLS-1$
+    public static final String AID_ALARM_NAME        = "AlarmName";        //$NON-NLS-1$
+    public static final String AID_ALARM_DESCRIPTION = "AlarmDescription"; //$NON-NLS-1$
+    public static final String AID_ALARM_SEVERITY    = "AlarmSeverity";    //$NON-NLS-1$
+    public static final String AID_ALARM_ISALERT     = "AlarmIsAlert";     //$NON-NLS-1$
+    public static final String AID_ALARM_ISMUTED     = "AlarmIsMuted";     //$NON-NLS-1$
 
     private static final ImageDescriptor imgDescrWarning =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); // $NON-NLS-1$
@@ -166,6 +167,22 @@ public class AlarmRtPanel
     private static final ImageDescriptor imgDescrCritical =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); // $NON-NLS-1$
     private static final Image           criticalImage    = imgDescrCritical.createImage();
+
+    private static final ImageDescriptor imgDescrAlert =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/alertAlarm.png" ); //$NON-NLS-1$
+    private static final Image           alertImage    = imgDescrAlert.createImage();
+
+    private static final ImageDescriptor imgDescrAcknowledge =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/acknowledgeAlarm.png" ); //$NON-NLS-1$
+    private static final Image           acknowledgeImage    = imgDescrAcknowledge.createImage();
+
+    private static final ImageDescriptor imgDescrMuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/mutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           mutedImage    = imgDescrMuted.createImage();
+
+    private static final ImageDescriptor imgDescrUnmuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/unmutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           unmutedImage    = imgDescrUnmuted.createImage();
 
     public final IM5AttributeFieldDef<ISkAlarm> ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
         TSID_NAME, STR_N_ALARM_NAME, //
@@ -180,14 +197,37 @@ public class AlarmRtPanel
 
       @Override
       protected String doGetFieldValueName( ISkAlarm aAlarm ) {
-        return aAlarm.description();
+        return aAlarm.nmName();
       }
 
       @Override
       protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
-        return AvUtils.avStr( aEntity.description() );
+        return AvUtils.avStr( aEntity.nmName() );
       }
     };
+
+    public final IM5AttributeFieldDef<ISkAlarm> ALARM_DESCRIPTION =
+        new M5AttributeFieldDef<>( AID_ALARM_DESCRIPTION, STRING, //
+            TSID_NAME, STR_N_ALARM_DESCRIPTION, //
+            TSID_DESCRIPTION, STR_D_ALARM_DESCRIPTION, //
+            TSID_DEFAULT_VALUE, avStr( NONE_ID ) //
+        ) {
+
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_DETAIL | M5FF_READ_ONLY );
+          }
+
+          @Override
+          protected String doGetFieldValueName( ISkAlarm aAlarm ) {
+            return aAlarm.description();
+          }
+
+          @Override
+          protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
+            return AvUtils.avStr( aEntity.description() );
+          }
+        };
 
     public M5AttributeFieldDef<ISkAlarm> ALARM_SEVERITY =
         new M5AttributeFieldDef<>( AID_ALARM_SEVERITY, EAtomicType.STRING, //
@@ -249,11 +289,6 @@ public class AlarmRtPanel
             setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
-          // @Override
-          // protected String doGetFieldValueName( ISkAlarm aAlarm ) {
-          // return Boolean.toString( aAlarm.isAlert() );
-          // }
-
           @Override
           protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
             return AvUtils.avBool( aEntity.isAlert() );
@@ -271,11 +306,6 @@ public class AlarmRtPanel
           protected void doInit() {
             setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
-
-          // @Override
-          // protected String doGetFieldValueName( ISkAlarm aAlarm ) {
-          // return Boolean.toString( aAlarm.isMuted() );
-          // }
 
           @Override
           protected IAtomicValue doGetFieldValue( ISkAlarm aEntity ) {
@@ -323,8 +353,8 @@ public class AlarmRtPanel
 
     public InnerM5Model( ISkConnection aConn ) {
       super( "AlarmRtPanel.LocalM3Model", ISkAlarm.class, aConn );
-      addFieldDefs( STRID, ALARM_NAME, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED, ALARM_MESSAGE_INFO,
-          ALARM_ALERT_CONDITION );
+      addFieldDefs( STRID, ALARM_NAME, ALARM_DESCRIPTION, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED,
+          ALARM_MESSAGE_INFO, ALARM_ALERT_CONDITION );
 
       // setPanelCreator( new M5DefaultPanelCreator<>() {
       //
@@ -393,7 +423,7 @@ public class AlarmRtPanel
       CTabFolder tabFolder = new CTabFolder( board, SWT.NONE );
 
       CTabItem tabItem = new CTabItem( tabFolder, SWT.NONE );
-      tabItem.setText( "Общее" );
+      tabItem.setText( "Общая информация" );
       tabFolder.setSelection( 0 );
 
       // Taking the existing detail panel.
@@ -402,7 +432,7 @@ public class AlarmRtPanel
       tabItem.setControl( detailPanel.getControl() );
 
       CTabItem tabItem2 = new CTabItem( tabFolder, SWT.NONE );
-      tabItem2.setText( "История" );
+      tabItem2.setText( "История событий" );
 
       // Alarm history panel.
       historyPanel = new AlarmHistoryPanel( new TsGuiContext( tsContext() ) );

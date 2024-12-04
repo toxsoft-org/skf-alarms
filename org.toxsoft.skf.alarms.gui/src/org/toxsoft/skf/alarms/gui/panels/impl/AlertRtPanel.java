@@ -8,6 +8,9 @@ import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.gui.ISkfAlarmsGuiConstants.*;
 
+import java.text.*;
+import java.util.*;
+
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
@@ -147,7 +150,7 @@ public class AlertRtPanel
   class InnerModel
       extends SkEventM5ModelBase {
 
-    public static final String MODEL_ID = "SkAlertM5Model"; //$NON-NLS-1$
+    public static final String MODEL_ID = "AlertRtPanel.M5Model"; //$NON-NLS-1$
 
     public static final String AID_EVENT_TIMESTAMP      = "EventTimestamp";     //$NON-NLS-1$
     public static final String AID_ALARM_NAME           = "EventAlarmName";     //$NON-NLS-1$
@@ -162,6 +165,10 @@ public class AlertRtPanel
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); //$NON-NLS-1$
     private static final Image           criticalImage    = imgDescrCritical.createImage();
 
+    private static final String timestampFormatString = "yyyy.MM.dd  HH:mm:ss .SSS"; //$NON-NLS-1$
+
+    private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
+
     public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
         new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
             TSID_NAME, STR_N_EVENT_TIME, //
@@ -172,12 +179,14 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
-            return TimeUtils.timestampToString( aEntity.timestamp() );
+            Date dt = new Date( aEntity.timestamp() );
+            return timestampFormat.format( dt );
+            // return TimeUtils.timestampToString( aEntity.timestamp() );
           }
         };
 
@@ -189,13 +198,13 @@ public class AlertRtPanel
 
       @Override
       protected void doInit() {
-        setFlags( M5FF_COLUMN );
+        setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
       }
 
       @Override
       protected String doGetFieldValueName( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-        return alarm.description();
+        return alarm.nmName();
       }
     };
 
@@ -208,7 +217,7 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           @Override
@@ -227,7 +236,7 @@ public class AlertRtPanel
 
           @Override
           protected void doInit() {
-            setFlags( M5FF_COLUMN );
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
           }
 
           protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {

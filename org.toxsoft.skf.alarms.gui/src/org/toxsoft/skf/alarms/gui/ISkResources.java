@@ -57,6 +57,9 @@ public interface ISkResources {
   String STR_N_ALARM_NAME = "Имя тревоги"; // Alarm name
   String STR_D_ALARM_NAME = "Имя тревоги"; // The alarm name
 
+  String STR_N_ALARM_DESCRIPTION = "Описание тревоги";
+  String STR_D_ALARM_DESCRIPTION = "Описание тревоги";
+
   String STR_N_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // Alert event message
   String STR_D_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // The alert event message
 
