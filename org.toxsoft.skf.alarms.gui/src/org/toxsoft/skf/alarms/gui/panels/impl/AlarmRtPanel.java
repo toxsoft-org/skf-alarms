@@ -168,6 +168,22 @@ public class AlarmRtPanel
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); // $NON-NLS-1$
     private static final Image           criticalImage    = imgDescrCritical.createImage();
 
+    private static final ImageDescriptor imgDescrAlert =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/alertAlarm.png" ); //$NON-NLS-1$
+    private static final Image           alertImage    = imgDescrAlert.createImage();
+
+    private static final ImageDescriptor imgDescrAcknowledge =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/acknowledgeAlarm.png" ); //$NON-NLS-1$
+    private static final Image           acknowledgeImage    = imgDescrAcknowledge.createImage();
+
+    private static final ImageDescriptor imgDescrMuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/mutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           mutedImage    = imgDescrMuted.createImage();
+
+    private static final ImageDescriptor imgDescrUnmuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/unmutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           unmutedImage    = imgDescrUnmuted.createImage();
+
     public final IM5AttributeFieldDef<ISkAlarm> ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
         TSID_NAME, STR_N_ALARM_NAME, //
         TSID_DESCRIPTION, STR_D_ALARM_NAME, //

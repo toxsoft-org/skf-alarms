@@ -88,6 +88,22 @@ class AlarmHistoryPanel
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); //$NON-NLS-1$
     private static final Image           criticalImage    = imgDescrCritical.createImage();
 
+    private static final ImageDescriptor imgDescrAlert =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/alertAlarm.png" ); //$NON-NLS-1$
+    private static final Image           alertImage    = imgDescrAlert.createImage();
+
+    private static final ImageDescriptor imgDescrAcknowledge =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/acknowledgeAlarm.png" ); //$NON-NLS-1$
+    private static final Image           acknowledgeImage    = imgDescrAcknowledge.createImage();
+
+    private static final ImageDescriptor imgDescrMuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/mutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           mutedImage    = imgDescrMuted.createImage();
+
+    private static final ImageDescriptor imgDescrUnmuted =
+        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/unmutedAlarm.png" ); //$NON-NLS-1$
+    private static final Image           unmutedImage    = imgDescrUnmuted.createImage();
+
     public final IM5AttributeFieldDef<SkEvent> EVENT_TIMESTAMP =
         new M5AttributeFieldDef<>( AID_EVENT_TIMESTAMP, TIMESTAMP, //
             TSID_NAME, STR_N_EVENT_TIME, //
@@ -170,6 +186,33 @@ class AlarmHistoryPanel
         }
         return AvUtils.avStr( retVal );
       }
+
+      @Override
+      protected Image doGetFieldValueIcon( SkEvent aEntity, EIconSize aIconSize ) {
+        Image retVal = null;
+        switch( aEntity.eventGwid().propId() ) {
+          case ISkAlarmConstants.EVID_ALERT: {
+            retVal = alertImage;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ACKNOWLEDGE: {
+            retVal = acknowledgeImage;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_MUTED: {
+            retVal = mutedImage;
+            break;
+          }
+          case ISkAlarmConstants.EVID_ALARM_UNMUTED: {
+            retVal = unmutedImage;
+            break;
+          }
+          default:
+            break;
+        }
+        return retVal;
+      }
+
     };
 
     public final IM5AttributeFieldDef<SkEvent> EVENT_ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
