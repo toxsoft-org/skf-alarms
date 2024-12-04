@@ -113,7 +113,7 @@ public interface ISkAlarmConstants {
           ) //
       ), //
       OptionSetUtils.createOpSet( //
-          TSID_NAME, STR_ACKNOWLEDGE_D, //
+          TSID_NAME, STR_ACKNOWLEDGE, //
           TSID_DESCRIPTION, STR_ACKNOWLEDGE_D //
       ) );
 
