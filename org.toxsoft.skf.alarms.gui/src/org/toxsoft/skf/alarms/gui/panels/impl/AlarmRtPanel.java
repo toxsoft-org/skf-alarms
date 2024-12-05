@@ -410,7 +410,7 @@ public class AlarmRtPanel
     @Override
     public void setValues( ITsNode aSelectedNode, IM5Bunch<ISkAlarm> aValues ) {
       detailPanel.setValues( aValues );
-      if( aValues.originalEntity() != null ) {
+      if( (aValues != null) && (aValues.originalEntity() != null) ) {
         historyPanel.setAlarm( aValues.originalEntity() );
       }
     }
