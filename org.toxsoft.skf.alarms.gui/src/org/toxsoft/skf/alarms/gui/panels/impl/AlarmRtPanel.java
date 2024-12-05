@@ -430,6 +430,8 @@ public class AlarmRtPanel
       detailPanel = componentModown.model().panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() ) );
       detailPanel.createControl( tabFolder );
       tabItem.setControl( detailPanel.getControl() );
+      // componentModown.addTsSelectionListener( ( aSource, aSelectedItem ) -> {} );
+      // componentModown.addTsDoubleClickListener( ( aSource, aSelectedItem ) -> {} );
 
       CTabItem tabItem2 = new CTabItem( tabFolder, SWT.NONE );
       tabItem2.setText( "История событий" );
@@ -508,7 +510,8 @@ public class AlarmRtPanel
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_CHECKS.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( ctx.params(), AvUtils.AV_FALSE );
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_TRUE );
-    // IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_HIDE_PANES.setValue( ctx.params(), AvUtils.AV_TRUE );
+    // Reset the default action on dbl click.
+    IMultiPaneComponentConstants.OPDEF_DBLCLICK_ACTION_ID.setValue( ctx.params(), AvUtils.AV_STR_EMPTY );
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm ) {
 
@@ -519,10 +522,9 @@ public class AlarmRtPanel
       }
     };
     componentModown.createControl( board );
+    componentModown.addTsDoubleClickListener( ( aSource, aSelectedItem ) -> {} );
 
     guiTimersService().slowTimers().addListener( this );
-
-    // componentModown.detailsPane().getControl().setSize( 0, 500 );
 
     return board;
   }

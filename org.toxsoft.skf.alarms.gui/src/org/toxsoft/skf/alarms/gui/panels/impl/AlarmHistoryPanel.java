@@ -18,8 +18,10 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.plugin.*;
+import org.toxsoft.core.jasperreports.gui.main.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
+import org.toxsoft.core.tsgui.dialogs.*;
 import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
@@ -39,13 +41,20 @@ import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
+import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
+import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
 import org.toxsoft.uskat.core.api.sysdescr.*;
+import org.toxsoft.uskat.core.api.users.*;
 import org.toxsoft.uskat.core.connection.*;
+import org.toxsoft.uskat.core.gui.conn.*;
+
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.type.*;
 
 /**
  * @author Slavage
@@ -236,13 +245,13 @@ class AlarmHistoryPanel
       @Override
       protected String doGetFieldValueName( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-        return alarm.description();
+        return alarm.nmName();
       }
 
       @Override
       protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-        return AvUtils.avStr( alarm.description() );
+        return AvUtils.avStr( alarm.nmName() );
       }
     };
 
@@ -340,6 +349,10 @@ class AlarmHistoryPanel
     }
   }
 
+  private static final String timestampFormatString = "dd.MM.yy HH:mm:ss"; //$NON-NLS-1$
+
+  private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
+
   public AlarmHistoryPanel( ITsGuiContext aContext ) {
     super( aContext );
   }
@@ -391,7 +404,7 @@ class AlarmHistoryPanel
 
     toolBar.addSeparator();
     toolBar.addActionDef( ACDEF_REFRESH );
-    toolBar.addActionDef( ACDEF_FILTER );
+    // toolBar.addActionDef( ACDEF_FILTER ); // Not required.
     toolBar.addSeparator();
     toolBar.addActionDef( ACDEF_PRINT );
 
@@ -410,7 +423,7 @@ class AlarmHistoryPanel
         // }
       }
       if( aActionId.equals( ACDEF_PRINT.id() ) ) {
-        // printEvents();
+        printEvents();
       }
     } );
 
@@ -425,6 +438,8 @@ class AlarmHistoryPanel
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_TREE.setValue( ctx.params(), AV_FALSE );
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AV_TRUE );
+    // Reset the default action on dbl click.
+    IMultiPaneComponentConstants.OPDEF_DBLCLICK_ACTION_ID.setValue( ctx.params(), AvUtils.AV_STR_EMPTY );
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
     // TreeModeInfo<SkEvent> tmiByAlarm = new TreeModeInfo<>( "ByAlarm", //$NON-NLS-1$
@@ -453,6 +468,53 @@ class AlarmHistoryPanel
     cal.set( Calendar.MINUTE, aTimeControl.getMinutes() );
     cal.set( Calendar.SECOND, aTimeControl.getSeconds() );
     return cal.getTimeInMillis();
+  }
+
+  private void printEvents() {
+    try {
+      ISkConnectionSupplier connectionSup = eclipseContext().get( ISkConnectionSupplier.class );
+      ISkConnection connection = connectionSup.defConn();
+      InnerM5Model printEventsModel = new InnerM5Model( connection );
+
+      m5().initTemporaryModel( printEventsModel );
+
+      ITsGuiContext printContext = new TsGuiContext( tsContext() );
+
+      long startTime2 = getTimeInMillis( startTime, startDate );
+      long endTime2 = getTimeInMillis( finishTime, finishDate );
+
+      String PRINT_EVENT_LIST_TITLE_FORMAT = "Events of alarms from %s to %s";
+      String AUTHOR_STR = "Author: ";
+      String DATE_STR = "Creation date: ";
+
+      String title = String.format( PRINT_EVENT_LIST_TITLE_FORMAT, timestampFormat.format( new Date( startTime2 ) ),
+          timestampFormat.format( new Date( endTime2 ) ) );
+
+      IJasperReportConstants.REPORT_TITLE_M5_ID.setValue( printContext.params(), AvUtils.avStr( title ) );
+
+      // выясняем текущего пользователя
+
+      Skid currUser = connection.coreApi().getCurrentUserInfo().userSkid();
+      ISkUser user = connection.coreApi().userService().getUser( currUser.strid() );
+      String userName = user.nmName().trim().length() > 0 ? user.nmName() : user.login();
+
+      IJasperReportConstants.LEFT_BOTTOM_STR_M5_ID.setValue( printContext.params(),
+          AvUtils.avStr( AUTHOR_STR + userName ) );
+      IJasperReportConstants.RIGHT_BOTTOM_STR_M5_ID.setValue( printContext.params(),
+          AvUtils.avStr( DATE_STR + timestampFormat.format( new Date() ) ) );
+
+      printContext.params().setStr( IJasperReportConstants.REPORT_DATA_HORIZONTAL_TEXT_ALIGN_ID,
+          HorizontalTextAlignEnum.LEFT.getName() );
+
+      final JasperPrint jasperPrint =
+          ReportGenerator.generateJasperPrint( printContext, printEventsModel, innerLifecycleManager.itemsProvider() );
+      JasperReportDialog.showPrint( printContext, jasperPrint );
+    }
+    catch( Exception ex ) {
+      LoggerUtils.errorLogger().error( ex );
+      TsDialogUtils.error( getShell(), ex );
+    }
+
   }
 
 }

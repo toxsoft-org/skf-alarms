@@ -497,9 +497,6 @@ public class AlarmJournalPanel
     }
   }
 
-  /**
-   * формат для отображения метки времени
-   */
   private static final String timestampFormatString = "dd.MM.yy HH:mm:ss"; //$NON-NLS-1$
 
   private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
@@ -576,7 +573,7 @@ public class AlarmJournalPanel
 
     toolBar.addSeparator();
     toolBar.addActionDef( ACDEF_REFRESH );
-    toolBar.addActionDef( ACDEF_FILTER );
+    // toolBar.addActionDef( ACDEF_FILTER );
     toolBar.addSeparator();
     toolBar.addActionDef( ACDEF_PRINT );
 
@@ -587,12 +584,6 @@ public class AlarmJournalPanel
         componentModown.refresh();
       }
       if( aActionId.equals( ACDEF_FILTER.id() ) ) {
-        // IConcerningEventsParams retVal = chooseFilterParams();
-        // if( retVal != null ) {
-        // selectedParams = retVal;
-        // currAction = ECurrentAction.QUERY_SELECTED;
-        // genericChangeListenersHolder.fireChangeEvent();
-        // }
       }
       if( aActionId.equals( ACDEF_PRINT.id() ) ) {
         printEvents();
@@ -618,6 +609,7 @@ public class AlarmJournalPanel
     componentModown.treeModeManager().setCurrentMode( "ByAlarm" ); // Default value is tree view.
     componentModown.createControl( board );
     componentModown.getControl().setLayoutData( BorderLayout.CENTER );
+    componentModown.setEditable( false );
 
     innerModel = model;
     innerLifecycleManager = lm;
