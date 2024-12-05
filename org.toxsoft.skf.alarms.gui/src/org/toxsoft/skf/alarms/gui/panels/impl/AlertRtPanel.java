@@ -188,6 +188,13 @@ public class AlertRtPanel
             return timestampFormat.format( dt );
             // return TimeUtils.timestampToString( aEntity.timestamp() );
           }
+
+          @Override
+          protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+            Date dt = new Date( aEntity.timestamp() );
+            return AvUtils.avStr( timestampFormat.format( dt ) );
+          }
+
         };
 
     public final IM5AttributeFieldDef<SkEvent> EVENT_ALARM_NAME = new M5AttributeFieldDef<>( AID_ALARM_NAME, STRING, //
@@ -206,6 +213,13 @@ public class AlertRtPanel
         ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
         return alarm.nmName();
       }
+
+      @Override
+      protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+        ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+        return AvUtils.avStr( alarm.nmName() );
+      }
+
     };
 
     public final IM5AttributeFieldDef<SkEvent> ALERT_EVENT_MESSAGE =
@@ -225,6 +239,13 @@ public class AlertRtPanel
             ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
             return alarm.messageInfo().makeMessage( coreApi() );
           }
+
+          @Override
+          protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
+            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
+            return AvUtils.avStr( alarm.messageInfo().makeMessage( coreApi() ) );
+          }
+
         };
 
     public M5AttributeFieldDef<SkEvent> EVENT_ALARM_SEVERITY =
