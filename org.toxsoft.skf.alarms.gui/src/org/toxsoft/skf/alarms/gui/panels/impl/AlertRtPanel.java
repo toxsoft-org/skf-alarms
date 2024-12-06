@@ -68,6 +68,9 @@ public class AlertRtPanel
   private static final String ACTID_ALERTS_CHECK_ALL   = "checkAll";   //$NON-NLS-1$
   private static final String ACTID_ALERTS_UNCHECK_ALL = "uncheckAll"; //$NON-NLS-1$
 
+  private static final String ACTID_DEBUG  = "debug";  //$NON-NLS-1$
+  private static final String ACTID_DEBUG2 = "debug2"; //$NON-NLS-1$
+
   private static final ITsActionDef ACDEF_CONFIRM = TsActionDef.ofPush2( ACTID_CONFIRM, //
       STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
   );
@@ -78,6 +81,14 @@ public class AlertRtPanel
 
   private static final ITsActionDef ACDEF_ALERTS_UNCHECK_ALL = TsActionDef.ofPush2( ACTID_ALERTS_UNCHECK_ALL, //
       STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
+  );
+
+  private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
+      "setAlert", "Set alarm alert", ICONID_ALERT_ACKNOWLEDGE //
+  );
+
+  private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
+      "setAcknowledge", "Set alarm acknowledge", ICONID_ALERT_ACKNOWLEDGE //
   );
 
   /**
@@ -93,6 +104,9 @@ public class AlertRtPanel
       defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
+      // defineSeparator();
+      // defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
+      // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
     void doCheckAll() {
@@ -569,7 +583,9 @@ public class AlertRtPanel
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
         long now = System.currentTimeMillis();
-        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSCE, now, now );
+        long begingTime = now - (24 * 60 * 60 * 1000);
+        // TimeUtils.readTimestamp();
+        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
         // TODO Почему не работает interval
         SkEvent lastEvent = events.last(); // events.findOnly();
