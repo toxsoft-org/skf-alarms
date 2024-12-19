@@ -100,4 +100,7 @@ public interface ISkResources {
 
   String STR_N_ALARM_UNMUTED_ALL = Messages.getString( "STR_N_ALARM_UNMUTED_ALL" ); //$NON-NLS-1$
   String STR_D_ALARM_UNMUTED_ALL = Messages.getString( "STR_D_ALARM_UNMUTED_ALL" ); //$NON-NLS-1$
+
+  String STR_COMMON_INFORMATION = Messages.getString( "STR_COMMON_INFORMATION" ); //$NON-NLS-1$
+  String STR_EVENTS_HISTORY     = Messages.getString( "STR_EVENTS_HISTORY" );     //$NON-NLS-1$
 }

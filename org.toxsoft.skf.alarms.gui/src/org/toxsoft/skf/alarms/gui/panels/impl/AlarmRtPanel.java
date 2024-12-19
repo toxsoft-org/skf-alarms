@@ -423,18 +423,16 @@ public class AlarmRtPanel
       CTabFolder tabFolder = new CTabFolder( board, SWT.NONE );
 
       CTabItem tabItem = new CTabItem( tabFolder, SWT.NONE );
-      tabItem.setText( "Общая информация" );
+      tabItem.setText( STR_COMMON_INFORMATION );
       tabFolder.setSelection( 0 );
 
       // Taking the existing detail panel.
       detailPanel = componentModown.model().panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() ) );
       detailPanel.createControl( tabFolder );
       tabItem.setControl( detailPanel.getControl() );
-      // componentModown.addTsSelectionListener( ( aSource, aSelectedItem ) -> {} );
-      // componentModown.addTsDoubleClickListener( ( aSource, aSelectedItem ) -> {} );
 
       CTabItem tabItem2 = new CTabItem( tabFolder, SWT.NONE );
-      tabItem2.setText( "История событий" );
+      tabItem2.setText( STR_EVENTS_HISTORY );
 
       // Alarm history panel.
       historyPanel = new AlarmHistoryPanel( new TsGuiContext( tsContext() ) );
