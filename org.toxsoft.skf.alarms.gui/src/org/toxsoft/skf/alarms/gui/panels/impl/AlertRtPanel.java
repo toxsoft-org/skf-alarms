@@ -584,11 +584,9 @@ public class AlertRtPanel
       if( alarm.isAlert() ) {
         long now = System.currentTimeMillis();
         long begingTime = now - (24 * 60 * 60 * 1000);
-        // TimeUtils.readTimestamp();
         IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
-        // TODO Почему не работает interval
-        SkEvent lastEvent = events.last(); // events.findOnly();
+        SkEvent lastEvent = events.last();
         if( lastEvent != null ) {
           alertEvents.put( lastEvent.timestamp(), lastEvent );
         }

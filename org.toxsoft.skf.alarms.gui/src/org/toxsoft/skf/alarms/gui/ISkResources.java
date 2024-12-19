@@ -1,6 +1,5 @@
 package org.toxsoft.skf.alarms.gui;
 
-import org.toxsoft.core.tsgui.dialogs.Messages;
 import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.impl.*;
 
@@ -38,67 +37,67 @@ public interface ISkResources {
   /**
    * {@link ConfirmDlg}
    */
-  String DLG_C_ALARM_ACKNOWLEDGE = "Квитирование тревоги";
-  String DLG_T_ALARM_ACKNOWLEDGE = "Квитировать тревогу";
-  String DLG_C_ALARM_REASON      = "Остановить тревоги";
-  String DLG_T_ALARM_REASON      = "Остановить тревоги";
+  String DLG_C_ALARM_ACKNOWLEDGE = Messages.getString( "DLG_C_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
+  String DLG_T_ALARM_ACKNOWLEDGE = Messages.getString( "DLG_T_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
+  String STR_L_ALARM_COMMENT     = Messages.getString( "STR_L_ALARM_COMMENT" );     //$NON-NLS-1$
+  String DLG_C_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
+  String DLG_T_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
 
-  String STR_L_ALARM_COMMENT     = "Комментарий";
-  String STR_L_ALARM_REASON      = "Причина";
-  String STR_N_ALARM_ACKNOWLEDGE = "Подтвердить";                             // Acknowledge
-  String STR_D_ALARM_ACKNOWLEDGE = "Подтвердить отмеченные оповещения";       // Acknowledge marked alers
-  String STR_N_ALARM_CHECK_ALL   = "Пометить все";                            // Acknowledge
-  String STR_D_ALARM_CHECK_ALL   = "Пометить все тревоги";                    // Acknowledge marked alers
-  String STR_N_ALARM_UNCHECK_ALL = "Сборосить все";                           // Acknowledge
-  String STR_D_ALARM_UNCHECK_ALL = "Сборосить все пометки тревог";            // Acknowledge marked alers
-  String STR_N_EVENT_TIME        = "Время";                                   // Time
-  String STR_D_EVENT_TIME        = "Момент времени, когда произошло событие"; // Time moment when event happaned
+  String STR_L_ALARM_REASON      = Messages.getString( "STR_L_ALARM_REASON" );      //$NON-NLS-1$
+  String STR_N_ALARM_ACKNOWLEDGE = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
+  String STR_D_ALARM_ACKNOWLEDGE = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
+  String STR_N_ALARM_CHECK_ALL   = Messages.getString( "STR_N_ALARM_CHECK_ALL" );   //$NON-NLS-1$
+  String STR_D_ALARM_CHECK_ALL   = Messages.getString( "STR_D_ALARM_CHECK_ALL" );   //$NON-NLS-1$
+  String STR_N_ALARM_UNCHECK_ALL = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" ); //$NON-NLS-1$
+  String STR_D_ALARM_UNCHECK_ALL = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" ); //$NON-NLS-1$
+  String STR_N_EVENT_TIME        = Messages.getString( "STR_N_EVENT_TIME" );        //$NON-NLS-1$
+  String STR_D_EVENT_TIME        = Messages.getString( "STR_D_EVENT_TIME" );        //$NON-NLS-1$
 
-  String STR_N_ALARM_NAME = "Имя тревоги"; // Alarm name
-  String STR_D_ALARM_NAME = "Имя тревоги"; // The alarm name
+  String STR_N_ALARM_NAME = Messages.getString( "STR_N_ALARM_NAME" ); //$NON-NLS-1$
+  String STR_D_ALARM_NAME = Messages.getString( "STR_D_ALARM_NAME" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_DESCRIPTION = "Описание тревоги";
-  String STR_D_ALARM_DESCRIPTION = "Описание тревоги";
+  String STR_N_ALARM_DESCRIPTION = Messages.getString( "STR_N_ALARM_DESCRIPTION" ); //$NON-NLS-1$
+  String STR_D_ALARM_DESCRIPTION = Messages.getString( "STR_D_ALARM_DESCRIPTION" ); //$NON-NLS-1$
 
-  String STR_N_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // Alert event message
-  String STR_D_ALERT_EVENT_MESSAGE = "Оповещение о событии"; // The alert event message
+  String STR_N_ALERT_EVENT_MESSAGE = Messages.getString( "STR_N_ALERT_EVENT_MESSAGE" ); //$NON-NLS-1$
+  String STR_D_ALERT_EVENT_MESSAGE = Messages.getString( "STR_D_ALERT_EVENT_MESSAGE" ); //$NON-NLS-1$
 
-  String STR_N_ALERT_SEVERITY = "Важность";         // Severity
-  String STR_D_ALERT_SEVERITY = "Важность тревоги"; // Severity of alarm
+  String STR_N_ALERT_SEVERITY = Messages.getString( "STR_N_ALERT_SEVERITY" ); //$NON-NLS-1$
+  String STR_D_ALERT_SEVERITY = Messages.getString( "STR_D_ALERT_SEVERITY" ); //$NON-NLS-1$
 
-  String STR_WARNING_SEVERITY_ALARM  = "Внимание";
-  String STR_CRITICAL_SEVERITY_ALARM = "Критический";
+  String STR_WARNING_SEVERITY_ALARM  = Messages.getString( "STR_WARNING_SEVERITY_ALARM" );  //$NON-NLS-1$
+  String STR_CRITICAL_SEVERITY_ALARM = Messages.getString( "STR_CRITICAL_SEVERITY_ALARM" ); //$NON-NLS-1$
 
-  String STR_N_EVENT_TYPE_NAME = "Тип события";
-  String STR_D_EVENT_TYPE_NAME = "Тип события";
+  String STR_N_EVENT_TYPE_NAME = Messages.getString( "STR_N_EVENT_TYPE_NAME" ); //$NON-NLS-1$
+  String STR_D_EVENT_TYPE_NAME = Messages.getString( "STR_D_EVENT_TYPE_NAME" ); //$NON-NLS-1$
 
-  String STR_QUERY_INTERVAL         = "Интервал запроса: "; // Query interval:
-  String STR_ALERT_EVENT_TYPE       = "Тревога";
-  String STR_ACKNOWLEDGE_EVENT_TYPE = "Подтвержение";
-  String STR_MUTED_EVENT_TYPE       = "Отключение";
-  String STR_UNMUTED_EVENT_TYPE     = "Включение";
+  String STR_QUERY_INTERVAL         = Messages.getString( "STR_QUERY_INTERVAL" );         //$NON-NLS-1$
+  String STR_ALERT_EVENT_TYPE       = Messages.getString( "STR_ALERT_EVENT_TYPE" );       //$NON-NLS-1$
+  String STR_ACKNOWLEDGE_EVENT_TYPE = Messages.getString( "STR_ACKNOWLEDGE_EVENT_TYPE" ); //$NON-NLS-1$
+  String STR_MUTED_EVENT_TYPE       = Messages.getString( "STR_MUTED_EVENT_TYPE" );       //$NON-NLS-1$
+  String STR_UNMUTED_EVENT_TYPE     = Messages.getString( "STR_UNMUTED_EVENT_TYPE" );     //$NON-NLS-1$
 
-  String STR_N_EVENT_PARAMETERS = "Параметры";                   // Parameters
-  String STR_D_EVENT_PARAMETERS = "Значения параметров событий"; // The event parameters values
+  String STR_N_EVENT_PARAMETERS = Messages.getString( "STR_N_EVENT_PARAMETERS" ); //$NON-NLS-1$
+  String STR_D_EVENT_PARAMETERS = Messages.getString( "STR_D_EVENT_PARAMETERS" ); //$NON-NLS-1$
 
-  String STR_N_ACKNOWLEDGE_COMMENT = "Комментарий";
-  String STR_D_ACKNOWLEDGE_COMMENT = "Комментарий";
+  String STR_N_ACKNOWLEDGE_COMMENT = Messages.getString( "STR_N_ACKNOWLEDGE_COMMENT" ); //$NON-NLS-1$
+  String STR_D_ACKNOWLEDGE_COMMENT = Messages.getString( "STR_D_ACKNOWLEDGE_COMMENT" ); //$NON-NLS-1$
 
-  String STR_N_ACKNOWLEDGE_AUTHOR = "Автор";
-  String STR_D_ACKNOWLEDGE_AUTHOR = "Автор";
+  String STR_N_ACKNOWLEDGE_AUTHOR = Messages.getString( "STR_N_ACKNOWLEDGE_AUTHOR" ); //$NON-NLS-1$
+  String STR_D_ACKNOWLEDGE_AUTHOR = Messages.getString( "STR_D_ACKNOWLEDGE_AUTHOR" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_SEVERITY = "Важность";         // Severity
-  String STR_D_ALARM_SEVERITY = "Важность тревоги"; // Severity of alarm
+  String STR_N_ALARM_SEVERITY = Messages.getString( "STR_N_ALARM_SEVERITY" ); //$NON-NLS-1$
+  String STR_D_ALARM_SEVERITY = Messages.getString( "STR_D_ALARM_SEVERITY" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_ISALERT = "Сигнал тревоги";
-  String STR_D_ALARM_ISALERT = "Сигнал тревоги";
+  String STR_N_ALARM_ISALERT = Messages.getString( "STR_N_ALARM_ISALERT" ); //$NON-NLS-1$
+  String STR_D_ALARM_ISALERT = Messages.getString( "STR_D_ALARM_ISALERT" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_ISMUTED = "Отключена";
-  String STR_D_ALARM_ISMUTED = "Тревога отключена";
+  String STR_N_ALARM_ISMUTED = Messages.getString( "STR_N_ALARM_ISMUTED" ); //$NON-NLS-1$
+  String STR_D_ALARM_ISMUTED = Messages.getString( "STR_D_ALARM_ISMUTED" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_MUTED_ALL = "Отключить тревоги";
-  String STR_D_ALARM_MUTED_ALL = "Отключить помеченные тревоги";
+  String STR_N_ALARM_MUTED_ALL = Messages.getString( "STR_N_ALARM_MUTED_ALL" ); //$NON-NLS-1$
+  String STR_D_ALARM_MUTED_ALL = Messages.getString( "STR_D_ALARM_MUTED_ALL" ); //$NON-NLS-1$
 
-  String STR_N_ALARM_UNMUTED_ALL = "Включить тревоги";
-  String STR_D_ALARM_UNMUTED_ALL = "Включить помеченные тревоги";
+  String STR_N_ALARM_UNMUTED_ALL = Messages.getString( "STR_N_ALARM_UNMUTED_ALL" ); //$NON-NLS-1$
+  String STR_D_ALARM_UNMUTED_ALL = Messages.getString( "STR_D_ALARM_UNMUTED_ALL" ); //$NON-NLS-1$
 }

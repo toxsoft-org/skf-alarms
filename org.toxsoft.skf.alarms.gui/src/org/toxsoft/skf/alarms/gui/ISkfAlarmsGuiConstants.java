@@ -40,5 +40,4 @@ public interface ISkfAlarmsGuiConstants {
     ITsIconManager iconManager = aWinContext.get( ITsIconManager.class );
     iconManager.registerStdIconByIds( Activator.PLUGIN_ID, ISkfAlarmsGuiConstants.class, PREFIX_OF_ICON_FIELD_NAME );
   }
-
 }
