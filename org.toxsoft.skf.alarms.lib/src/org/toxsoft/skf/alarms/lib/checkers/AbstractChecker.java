@@ -20,7 +20,7 @@ import org.toxsoft.uskat.core.api.rtdserv.*;
  * @author dima
  * @author hazard157
  */
-abstract class AbstractChecker
+public abstract class AbstractChecker
     extends AbstractAlertChecker {
 
   private final ISkReadCurrDataChannel channel;

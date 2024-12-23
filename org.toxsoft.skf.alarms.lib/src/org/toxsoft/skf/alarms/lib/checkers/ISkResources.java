@@ -27,20 +27,6 @@ interface ISkResources {
   String STR_RTDVC_ATTR_GWID   = Messages.getString( "STR_RTDVC_ATTR_GWID" );   //$NON-NLS-1$
   String STR_RTDVC_ATTR_GWID_D = Messages.getString( "STR_RTDVC_ATTR_GWID_D" ); //$NON-NLS-1$
 
-  /**
-   * {@link AlertCheckerRtdataVsRriType}
-   */
-  String STR_RTD_VC_RRI       = Messages.getString( "STR_RTD_VC_RRI" );       //$NON-NLS-1$
-  String STR_RTD_VC_RRI_D     = Messages.getString( "STR_RTD_VC_RRI_D" );     //$NON-NLS-1$
-  String STR_RTDVC_RRI_GWID   = Messages.getString( "STR_RTDVC_RRI_GWID" );   //$NON-NLS-1$
-  String STR_RTDVC_RRI_GWID_D = Messages.getString( "STR_RTDVC_RRI_GWID_D" ); //$NON-NLS-1$
-
-  /**
-   * {@link AlertCheckerRriTypeGtZero}
-   */
-  String STR_RRI_GT_ZERO   = "RRI value > 0";
-  String STR_RRI_GT_ZERO_D = "RRI value > 0";
-
   // ------------------------------------------------------------------------------------
   // Log messages, no need to localize
 
