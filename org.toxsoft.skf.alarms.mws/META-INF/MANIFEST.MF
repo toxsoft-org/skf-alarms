@@ -3,6 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: USkat Alarms Workstation MWS Module
 Bundle-SymbolicName: org.toxsoft.skf.alarms.mws;singleton:=true
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.toxsoft.skf.alarms.mws,
+ org.toxsoft.skf.alarms.mws.addons,
+ org.toxsoft.skf.alarms.mws.e4,
+ org.toxsoft.skf.alarms.mws.e4.uiparts
 Bundle-Activator: org.toxsoft.skf.alarms.mws.Activator
 Bundle-Vendor: toxsoft.ge
 Require-Bundle: jakarta.inject.jakarta.inject-api,

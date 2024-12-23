@@ -9,7 +9,7 @@ Export-Package: org.toxsoft.skf.alarms.lib,
  org.toxsoft.skf.alarms.lib.l10n
 Bundle-Vendor: toxsoft.org
 Automatic-Module-Name: org.toxsoft.skf.alarms.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.toxsoft.core.tslib,
  org.toxsoft.uskat.core,
  org.toxsoft.uskat.core.inner,
