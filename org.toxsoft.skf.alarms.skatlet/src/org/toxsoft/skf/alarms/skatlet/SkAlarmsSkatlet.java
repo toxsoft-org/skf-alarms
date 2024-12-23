@@ -17,6 +17,7 @@ import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.checkers.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.skf.rri.lib.*;
+import org.toxsoft.skf.rri.lib.checkers.*;
 import org.toxsoft.skf.rri.lib.impl.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.connection.*;
