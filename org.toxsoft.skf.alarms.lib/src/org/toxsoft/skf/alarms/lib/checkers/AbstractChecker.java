@@ -10,6 +10,7 @@ import org.toxsoft.core.tslib.av.math.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
+import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.rtdserv.*;
@@ -26,6 +27,13 @@ public abstract class AbstractChecker
   private final ISkReadCurrDataChannel channel;
   private final EAvCompareOp           op;
 
+  /**
+   * Constructor.
+   *
+   * @param aEnviron {@link ISkCoreApi} - Core API as a checker environment
+   * @param aParams {@link IOptionSet} - configuration params
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   */
   public AbstractChecker( ISkCoreApi aEnviron, IOptionSet aParams ) {
     super( aEnviron, aParams );
     Gwid rtdGwid = params().getValobj( AlertCheckerRtdataVsXxxBaseType.OPDEF_RTDATA_GWID );
