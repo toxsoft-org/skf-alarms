@@ -10,7 +10,6 @@ Require-Bundle: org.toxsoft.extlibs.log4j,
  org.toxsoft.core.tslib,
  org.toxsoft.core.log4j,
  org.toxsoft.uskat.core,
- org.toxsoft.skf.rri.lib,
  org.toxsoft.skf.alarms.lib
 Export-Package: org.toxsoft.skf.alarms.skatlet
 TsPluginContainerVersion: 2

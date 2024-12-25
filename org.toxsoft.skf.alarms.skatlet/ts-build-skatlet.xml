@@ -2,7 +2,7 @@
 
 <!-- skatlet -->
 <project name="org.toxsoft.skf.alarms.skatlet" default="4_deploy">
-  <loadproperties srcFile="ts-build-commons.properties"/>
+  <loadproperties srcFile="ts-build-skatlet.properties"/>
   <basename file="${basedir}" property="project.name"/>
   <!-- каталог для размещения собираемой библиотеки скатлета -->
   <property name="lib.dir" value="../zz-targets/lib"/>
@@ -92,7 +92,11 @@
   </target>
   
   <target name="4_deploy" description="Формирование и размещение *-deploy-jar в wildfly">
-    <copy todir="${wildfly-home.dir}/skatlets/deployments" file="${deploy.dir}/${deploy.jar}" overwrite="true" />
+    <copy todir="${wildfly-home.dir}/skatlets/deployments" file="${deploy.dir}/${deploy.jar}" overwrite="true" verbose="true" />
   </target>
-  
+
+  <target name="5_undeploy" >
+    <delete file="${wildfly-home.dir}/skatlets/deployments/${deploy.jar}" verbose="true" />
+  </target>
+	
 </project>
