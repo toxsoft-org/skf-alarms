@@ -4,6 +4,7 @@ import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 
+import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.*;
@@ -189,8 +190,10 @@ public class SkAlarmProcessor
     IListEdit<SkEvent> llEvents = null;
     // process all alarms
     for( AlarmItem alit : alarmItems ) {
-      boolean isMute = alit.chReadMute.getValue().asBool();
-      if( isMute || alit.chReadAlert.getValue().asBool() ) {
+      IAtomicValue muteValue = alit.chReadMute.getValue();
+      IAtomicValue alertValue = alit.chReadAlert.getValue();
+      boolean isMute = (!muteValue.isAssigned() || muteValue.asBool());
+      if( isMute || !alertValue.isAssigned() || alertValue.asBool() ) {
         continue; // alert muted or is already set, nothing to do with this alarm
       }
       // if alert, set RtData and fire event
