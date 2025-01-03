@@ -46,12 +46,6 @@
           <fileset dir="../../ts4-targets/ts4-target-uskat/lib">
              <include name="**/*.jar" />
           </fileset>
-        <fileset dir="../../ts4-targets/ts4-target-skf-rri/lib">
-           <include name="**/*.jar" />
-        </fileset>
-        <fileset dir="../../ts4-targets/ts4-target-skf-dq/lib">
-           <include name="**/*.jar" />
-        </fileset>
         <fileset dir="../../ts4-targets/ts4-target-skf-alarms/lib">
            <include name="**/*.jar" />
         </fileset>
@@ -79,12 +73,6 @@
           <attribute name="Built-Date" value="${TODAY}" />
         </manifest>
 
-        <zipfileset src="../../ts4-targets/ts4-target-core/lib/org.toxsoft.core.tslib-lib.jar" />
-        <zipfileset src="../../ts4-targets/ts4-target-core/lib/org.toxsoft.core.tsgui-lib.jar" />
-        <zipfileset src="../../ts4-targets/ts4-target-uskat/lib/org.toxsoft.uskat.core-lib.jar" />
-      	<zipfileset src="../../ts4-targets/ts4-target-uskat/lib/org.toxsoft.uskat.core.gui-lib.jar" />
-        <zipfileset src="../../ts4-targets/ts4-target-skf-rri/lib/org.toxsoft.skf.rri.lib-lib.jar" />
-        <zipfileset src="../../ts4-targets/ts4-target-skf-reports/lib/org.toxsoft.skf.reports.gui-lib.jar" />
         <zipfileset src="../../ts4-targets/ts4-target-skf-alarms/lib/org.toxsoft.skf.alarms.lib-lib.jar" />
       	
       	<zipfileset src="${lib.dir}/${lib.jar}" />

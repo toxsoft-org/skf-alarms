@@ -39,8 +39,8 @@ public class SkAlarmsSkatlet
   // SkatletBase
   //
   @Override
-  protected ValidationResult doInit( ITsContextRo aEnviron ) {
-    super.doInit( aEnviron );
+  protected ValidationResult doSetContext( ITsContextRo aEnviron ) {
+    super.doSetContext( aEnviron );
     connection = createConnection( getClass().getSimpleName(), new TsContext() );
     ISkCoreApi coreApi = connection.coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
