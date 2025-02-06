@@ -62,7 +62,7 @@ public class QuantSkfAlarmsGui
   @Override
   public void processSkCoreInitialization( IDevCoreApi aCoreApi ) {
     // register abilities
-    aCoreApi.userService().abilityManager().removeAbility( ABILITYID_EDIT_ALARMS );
+    //aCoreApi.userService().abilityManager().removeAbility( ABILITYID_EDIT_ALARMS );
 
     aCoreApi.userService().abilityManager().defineKind( ABKIND_ALARMS );
     aCoreApi.userService().abilityManager().defineAbility( ABILITY_EDIT_ALARMS );
