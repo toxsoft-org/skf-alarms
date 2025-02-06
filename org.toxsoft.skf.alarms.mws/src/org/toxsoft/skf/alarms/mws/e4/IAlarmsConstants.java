@@ -17,6 +17,11 @@ public interface IAlarmsConstants {
 
   String PERSPID_RTBROWSER = "org.toxsoft.skf.alarms.mws.perspective.alarmssettings"; //$NON-NLS-1$
 
+  // visual elements ids
+  String E4_VISUAL_ELEM_ID_PERSP_ALARMS_VALUES      = "org.toxsoft.skf.alarms.mws.perspective.alarmssettings"; //$NON-NLS-1$
+  String E4_VISUAL_ELEM_ID_MENU_ITEEM_ALARMS_VALUES = "org.toxsoft.skf.alarms.mws.perspective.alarmssettings"; // $NON-NLS-1$
+  String E4_VISUAL_ELEM_ID_TOOL_ITEEM_ALARMS_VALUES = "org.toxsoft.skf.alarms.mws.perspective.alarmssettings"; // $NON-NLS-1$
+
   // ------------------------------------------------------------------------------------
   // Icons
 

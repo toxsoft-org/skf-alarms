@@ -1,5 +1,7 @@
 package org.toxsoft.skf.alarms.gui;
 
+import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
+
 import org.eclipse.e4.core.contexts.*;
 import org.eclipse.e4.ui.model.application.ui.basic.*;
 import org.toxsoft.core.tsgui.bricks.quant.*;
@@ -7,7 +9,10 @@ import org.toxsoft.core.tslib.utils.valobj.*;
 import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.impl.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
+import org.toxsoft.uskat.core.api.*;
+import org.toxsoft.uskat.core.devapi.*;
 import org.toxsoft.uskat.core.gui.km5.*;
+import org.toxsoft.uskat.core.impl.*;
 
 /**
  * The GUI library quant.
@@ -15,7 +20,8 @@ import org.toxsoft.uskat.core.gui.km5.*;
  * @author hazard157
  */
 public class QuantSkfAlarmsGui
-    extends AbstractQuant {
+    extends AbstractQuant
+    implements ISkCoreExternalHandler {
 
   private SoundAlarmManager soundAlarmManager;
 
@@ -28,6 +34,7 @@ public class QuantSkfAlarmsGui
     TsValobjUtils.registerKeeperIfNone( UsedUgwi4MessageInfo.KEEPER_ID, UsedUgwi4MessageInfo.KEEPER );
     // GUI initialization
     KM5Utils.registerContributorCreator( KM5AlarmsContributor.CREATOR );
+    SkCoreUtils.registerCoreApiHandler( this );
   }
 
   // ------------------------------------------------------------------------------------
@@ -52,4 +59,12 @@ public class QuantSkfAlarmsGui
     soundAlarmManager.setType( SoundAlarmType.NONE );
   }
 
+  @Override
+  public void processSkCoreInitialization( IDevCoreApi aCoreApi ) {
+    // register abilities
+    aCoreApi.userService().abilityManager().removeAbility( ABILITYID_EDIT_ALARMS );
+
+    aCoreApi.userService().abilityManager().defineKind( ABKIND_ALARMS );
+    aCoreApi.userService().abilityManager().defineAbility( ABILITY_EDIT_ALARMS );
+  }
 }

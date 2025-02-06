@@ -1,9 +1,13 @@
 package org.toxsoft.skf.alarms.gui;
 
+import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
 
 import org.eclipse.e4.core.contexts.*;
 import org.toxsoft.core.tsgui.graphics.icons.*;
+import org.toxsoft.skf.alarms.lib.*;
+import org.toxsoft.uskat.core.api.users.ability.*;
+import org.toxsoft.uskat.core.impl.dto.*;
 
 /**
  * Plugin common constants.
@@ -30,6 +34,18 @@ public interface ISkfAlarmsGuiConstants {
   String ICONID_ALERTS_UNCHECK_ALL = "check_all_off";     //$NON-NLS-1$
   String ICONID_ALARM_MUTED_ALL    = "rupor-none";        //$NON-NLS-1$
   String ICONID_ALARM_UNMUTED_ALL  = "rupor";             //$NON-NLS-1$
+
+  /**
+   * Create id ability to access values editor
+   */
+  String ABILITYID_ALARM_VALUES_EDITOR = ISkAlarmService.SERVICE_ID + ".ability.alarm.values.editor"; //$NON-NLS-1$
+
+  /**
+   * Create ability to access values editor
+   */
+  IDtoSkAbility ABILITY_ACCESS_ALARM_VALUES_EDITOR = //
+      DtoSkAbility.create( ABILITYID_ALARM_VALUES_EDITOR, ISkAlarmConstants.ABKINDID_ALARMS,
+          STR_ACCESS_ALARM_VALUES_EDITOR, STR_ACCESS_ALARM_VALUES_EDITOR_D );
 
   /**
    * Constants registration.
