@@ -1,11 +1,17 @@
 package org.toxsoft.skf.alarms.mws.addons;
 
+import static org.toxsoft.skf.alarms.gui.ISkfAlarmsGuiConstants.*;
+import static org.toxsoft.skf.alarms.mws.e4.IAlarmsConstants.*;
+
 import org.eclipse.e4.core.contexts.*;
+import org.toxsoft.core.tsgui.bricks.ctx.impl.*;
 import org.toxsoft.core.tsgui.bricks.quant.*;
 import org.toxsoft.core.tsgui.mws.bases.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.mws.Activator;
 import org.toxsoft.skf.alarms.mws.e4.*;
+import org.toxsoft.uskat.core.gui.utils.*;
+import org.toxsoft.uskat.core.impl.*;
 
 /**
  * Plugin addon.
@@ -34,6 +40,13 @@ public class AddonAlarmViewer
   @Override
   protected void initWin( IEclipseContext aWinContext ) {
     IAlarmsConstants.init( aWinContext );
+
+    // implement access rights ABILITYID_ALARM_VALUES_EDITOR
+    GuiE4ElementsToAbilitiesBinder binder = new GuiE4ElementsToAbilitiesBinder( new TsGuiContext( aWinContext ) );
+    binder.bindPerspective( ABILITYID_ALARM_VALUES_EDITOR, E4_VISUAL_ELEM_ID_PERSP_ALARMS_VALUES );
+    binder.bindMenuElement( ABILITYID_ALARM_VALUES_EDITOR, E4_VISUAL_ELEM_ID_MENU_ITEEM_ALARMS_VALUES );
+    binder.bindToolItem( ABILITYID_ALARM_VALUES_EDITOR, E4_VISUAL_ELEM_ID_TOOL_ITEEM_ALARMS_VALUES );
+    SkCoreUtils.registerCoreApiHandler( binder );
   }
 
   @Override

@@ -103,4 +103,8 @@ public interface ISkResources {
 
   String STR_COMMON_INFORMATION = Messages.getString( "STR_COMMON_INFORMATION" ); //$NON-NLS-1$
   String STR_EVENTS_HISTORY     = Messages.getString( "STR_EVENTS_HISTORY" );     //$NON-NLS-1$
+
+  String STR_ACCESS_ALARM_VALUES_EDITOR   = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR" );   //$NON-NLS-1$
+  String STR_ACCESS_ALARM_VALUES_EDITOR_D = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR_D" ); //$NON-NLS-1$
+
 }

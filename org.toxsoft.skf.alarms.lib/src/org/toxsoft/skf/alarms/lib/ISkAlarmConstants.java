@@ -15,6 +15,7 @@ import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.math.cond.impl.*;
 import org.toxsoft.uskat.core.api.sysdescr.dto.*;
+import org.toxsoft.uskat.core.api.users.ability.*;
 import org.toxsoft.uskat.core.impl.dto.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
@@ -53,6 +54,11 @@ public interface ISkAlarmConstants {
   String EVPRMID_MUTE_REASON = "muteReason"; //$NON-NLS-1$
 
   String EVID_ALARM_UNMUTED = "evUnmuted"; //$NON-NLS-1$
+
+  // id kind of alarm editor
+  String ABKINDID_ALARMS = ISkAlarmService.SERVICE_ID + ".abkind.alarms"; //$NON-NLS-1$
+  // id ability of editing
+  String ABILITYID_EDIT_ALARMS = ISkAlarmService.SERVICE_ID + ".ability.edit_alarms"; //$NON-NLS-1$
 
   // ------------------------------------------------------------------------------------
   // Alarm class properties INFOs
@@ -191,4 +197,9 @@ public interface ISkAlarmConstants {
       new StridablesList<>( EVINF_ALERT, EVINF_ACKNOWLEDGE, EVINF_ALARM_MUTED, EVINF_ALARM_UNMUTED )//
   );
 
+  IDtoSkAbilityKind ABKIND_ALARMS = DtoSkAbilityKind.create( ABKINDID_ALARMS, //
+      STR_ABKIND_ALARMS, STR_ABKIND_ALARMS_D );
+
+  IDtoSkAbility ABILITY_EDIT_ALARMS = DtoSkAbility.create( ABILITYID_EDIT_ALARMS, ABKINDID_ALARMS, //
+      STR_ABILITY_EDIT_ALARMS, STR_ABILITY_EDIT_ALARMS_D );
 }
