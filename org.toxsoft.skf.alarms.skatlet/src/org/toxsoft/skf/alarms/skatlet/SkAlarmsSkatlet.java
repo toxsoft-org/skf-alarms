@@ -22,7 +22,7 @@ public class SkAlarmsSkatlet
     extends SkatletBase {
 
   private ITsThreadExecutor threadExecutor;
-  private SkAlarmProcessor  alarmProcecessor;
+  private SkAlarmProcessor  alarmProcessor;
   private ISkConnection     connection;
 
   /**
@@ -44,37 +44,39 @@ public class SkAlarmsSkatlet
     connection = createConnection( getClass().getSimpleName(), new TsContext() );
     ISkCoreApi coreApi = connection.coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
-    alarmProcecessor = new SkAlarmProcessor( coreApi );
+    alarmProcessor = new SkAlarmProcessor( coreApi );
     return ValidationResult.SUCCESS;
   }
 
   @Override
   public void start() {
-    threadExecutor.syncExec( () -> alarmProcecessor.start() );
+    super.start();
+    threadExecutor.syncExec( () -> alarmProcessor.start() );
+    logger().info( MSG_ALARM_PROCESSOR_IS_RUNNING, id() );
   }
 
   @Override
   public void doJob() {
     super.doJob();
-    threadExecutor.syncExec( () -> alarmProcecessor.doJob() );
+    threadExecutor.syncExec( () -> alarmProcessor.doJob() );
   }
 
   @Override
   public boolean queryStop() {
     super.queryStop();
-    threadExecutor.syncExec( () -> alarmProcecessor.queryStop() );
+    threadExecutor.syncExec( () -> alarmProcessor.queryStop() );
     SkThreadExecutorService.getExecutor( connection.coreApi() ).syncExec( () -> connection.close() );
-    return alarmProcecessor.isStopped();
+    return alarmProcessor.isStopped();
   }
 
   @Override
   public boolean isStopped() {
-    return alarmProcecessor.isStopped();
+    return alarmProcessor.isStopped();
   }
 
   @Override
   public void destroy() {
     super.destroy();
-    threadExecutor.syncExec( () -> alarmProcecessor.destroy() );
+    threadExecutor.syncExec( () -> alarmProcessor.destroy() );
   }
 }
