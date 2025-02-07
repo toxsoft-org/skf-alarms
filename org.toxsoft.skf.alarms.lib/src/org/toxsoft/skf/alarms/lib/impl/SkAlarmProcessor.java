@@ -189,7 +189,8 @@ public class SkAlarmProcessor
     long time = System.currentTimeMillis();
     IListEdit<SkEvent> llEvents = null;
     // process all alarms
-    for( AlarmItem alit : alarmItems ) {
+    for( String alarmId : alarmItems.keys() ) {
+      AlarmItem alit = alarmItems.getByKey( alarmId );
       IAtomicValue muteValue = alit.chReadMute.getValue();
       IAtomicValue alertValue = alit.chReadAlert.getValue();
       boolean isMute = (!muteValue.isAssigned() || muteValue.asBool());
@@ -197,16 +198,22 @@ public class SkAlarmProcessor
         continue; // alert muted or is already set, nothing to do with this alarm
       }
       // if alert, set RtData and fire event
-      if( alit.alertChecker.checkCondition() ) {
-        alit.chWriteAlert.setValue( AV_TRUE );
-        IOptionSetEdit params = new OptionSet();
-        String msg = alit.messageInfo.makeMessage( coreApi );
-        params.setStr( EVPRMID_ALERT_MESSAGE, msg );
-        SkEvent event = new SkEvent( time, alit.alertEventGwid, params );
-        if( llEvents == null ) {
-          llEvents = new ElemArrayList<>();
+      try {
+        if( alit.alertChecker.checkCondition() ) {
+          alit.chWriteAlert.setValue( AV_TRUE );
+          IOptionSetEdit params = new OptionSet();
+          String msg = alit.messageInfo.makeMessage( coreApi );
+          params.setStr( EVPRMID_ALERT_MESSAGE, msg );
+          SkEvent event = new SkEvent( time, alit.alertEventGwid, params );
+          if( llEvents == null ) {
+            llEvents = new ElemArrayList<>();
+          }
+          llEvents.add( event );
         }
-        llEvents.add( event );
+      }
+      catch( Throwable e ) {
+        // unexpected checker error
+        throw new TsInternalErrorRtException( e, FMT_ERR_UNEXPECTED_CHECKER, alarmId, e.getLocalizedMessage() );
       }
     }
     // fire all alert events at once
