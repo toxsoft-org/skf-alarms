@@ -95,6 +95,9 @@ public interface ISkResources {
   String STR_N_ALARM_ISMUTED = Messages.getString( "STR_N_ALARM_ISMUTED" ); //$NON-NLS-1$
   String STR_D_ALARM_ISMUTED = Messages.getString( "STR_D_ALARM_ISMUTED" ); //$NON-NLS-1$
 
+  String STR_N_ALARM_MUTEREASON = Messages.getString( "STR_N_ALARM_MUTEREASON" ); //$NON-NLS-1$
+  String STR_D_ALARM_MUTEREASON = Messages.getString( "STR_D_ALARM_MUTEREASON" ); //$NON-NLS-1$
+
   String STR_N_ALARM_MUTED_ALL = Messages.getString( "STR_N_ALARM_MUTED_ALL" ); //$NON-NLS-1$
   String STR_D_ALARM_MUTED_ALL = Messages.getString( "STR_D_ALARM_MUTED_ALL" ); //$NON-NLS-1$
 
