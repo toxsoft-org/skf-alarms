@@ -10,7 +10,6 @@ import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
-import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
@@ -23,6 +22,7 @@ import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.cmdserv.*;
 import org.toxsoft.uskat.core.api.evserv.*;
 import org.toxsoft.uskat.core.api.rtdserv.*;
+import org.toxsoft.uskat.core.impl.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
 /**
@@ -187,7 +187,7 @@ public class SkAlarmProcessor
       return; // not yet started or already stopped
     }
     long time = System.currentTimeMillis();
-    IListEdit<SkEvent> llEvents = null;
+    SkEventList llEvents = null;
     // process all alarms
     for( String alarmId : alarmItems.keys() ) {
       AlarmItem alit = alarmItems.getByKey( alarmId );
@@ -206,7 +206,7 @@ public class SkAlarmProcessor
           params.setStr( EVPRMID_ALERT_MESSAGE, msg );
           SkEvent event = new SkEvent( time, alit.alertEventGwid, params );
           if( llEvents == null ) {
-            llEvents = new ElemArrayList<>();
+            llEvents = new SkEventList();
           }
           llEvents.add( event );
         }
