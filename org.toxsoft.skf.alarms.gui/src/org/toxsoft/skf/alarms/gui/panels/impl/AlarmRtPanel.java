@@ -35,6 +35,8 @@ import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.bricks.*;
+import org.toxsoft.core.tslib.bricks.time.*;
+import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
@@ -159,6 +161,7 @@ public class AlarmRtPanel
     public static final String AID_ALARM_SEVERITY    = "AlarmSeverity";    //$NON-NLS-1$
     public static final String AID_ALARM_ISALERT     = "AlarmIsAlert";     //$NON-NLS-1$
     public static final String AID_ALARM_ISMUTED     = "AlarmIsMuted";     //$NON-NLS-1$
+    public static final String AID_ALARM_MUTEREASON  = "AlarmMuteReason";  //$NON-NLS-1$
 
     private static final ImageDescriptor imgDescrWarning =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); // $NON-NLS-1$
@@ -313,6 +316,36 @@ public class AlarmRtPanel
           }
         };
 
+    public M5AttributeFieldDef<ISkAlarm> ALARM_MUTEREASON =
+        new M5AttributeFieldDef<>( AID_ALARM_MUTEREASON, EAtomicType.STRING, //
+            TSID_NAME, STR_N_ALARM_MUTEREASON, //
+            TSID_DESCRIPTION, STR_D_ALARM_MUTEREASON, //
+            OPID_EDITOR_FACTORY_NAME, ValedAvStringText.FACTORY_NAME //
+        ) {
+
+          @Override
+          protected void doInit() {
+            setFlags( M5FF_COLUMN | M5FF_READ_ONLY );
+          }
+
+          protected IAtomicValue doGetFieldValue( ISkAlarm aAlarm ) {
+            IAtomicValue retVal = avStr( TsLibUtils.EMPTY_STRING );
+            if( aAlarm.isMuted() ) {
+              // Тревого остановлена, отобразим причину.
+              long now = System.currentTimeMillis();
+              long begingTime = now - (24 * 60 * 60 * 1000);
+              IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
+              ITimedList<SkEvent> events = aAlarm.getHistory( interval );
+              SkEvent lastEvent = events.last();
+              if( lastEvent != null ) {
+                retVal = avStr( lastEvent.paramValues().getStr( EVPRMID_MUTE_REASON ) );
+              }
+            }
+            return retVal;
+          }
+
+        };
+
     public final IM5SingleModownFieldDef<ISkAlarm, ISkMessageInfo> ALARM_MESSAGE_INFO =
         new M5SingleModownFieldDef<>( CLBID_MESSAGE_INFO, SkMessageInfoM5Model.MODEL_ID ) {
 
@@ -354,7 +387,7 @@ public class AlarmRtPanel
     public InnerM5Model( ISkConnection aConn ) {
       super( "AlarmRtPanel.LocalM3Model", ISkAlarm.class, aConn );
       addFieldDefs( STRID, ALARM_NAME, ALARM_DESCRIPTION, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED,
-          ALARM_MESSAGE_INFO, ALARM_ALERT_CONDITION );
+          ALARM_MUTEREASON, ALARM_MESSAGE_INFO, ALARM_ALERT_CONDITION );
 
       // setPanelCreator( new M5DefaultPanelCreator<>() {
       //
