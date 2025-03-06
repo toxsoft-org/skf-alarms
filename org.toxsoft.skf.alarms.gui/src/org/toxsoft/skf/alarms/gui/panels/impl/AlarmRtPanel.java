@@ -331,15 +331,22 @@ public class AlarmRtPanel
           protected IAtomicValue doGetFieldValue( ISkAlarm aAlarm ) {
             IAtomicValue retVal = avStr( TsLibUtils.EMPTY_STRING );
             if( aAlarm.isMuted() ) {
-              // Тревого остановлена, отобразим причину.
+              // Тревога остановлена, отобразим причину.
               long now = System.currentTimeMillis();
-              long begingTime = now - (24 * 60 * 60 * 1000);
+              long begingTime = now - (30 * 24 * 60 * 60 * 1000);
               IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
               ITimedList<SkEvent> events = aAlarm.getHistory( interval );
-              SkEvent lastEvent = events.last();
-              if( lastEvent != null ) {
-                retVal = avStr( lastEvent.paramValues().getStr( EVPRMID_MUTE_REASON ) );
+              // dima 06.03.25 search list from the end to begin
+              for( int i = events.size() - 1; i >= 0; i-- ) {
+                SkEvent currEvent = events.get( i );
+                if( currEvent.paramValues().hasKey( EVPRMID_MUTE_REASON ) ) {
+                  return avStr( currEvent.paramValues().getStr( EVPRMID_MUTE_REASON ) );
+                }
               }
+              // SkEvent lastEvent = events.last();
+              // if( lastEvent != null ) {
+              // retVal = avStr( lastEvent.paramValues().getStr( EVPRMID_MUTE_REASON ) );
+              // }
             }
             return retVal;
           }
