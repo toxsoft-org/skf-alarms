@@ -7,6 +7,7 @@ import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.gui.ISkfAlarmsGuiConstants.*;
+import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import java.text.*;
 import java.util.*;
@@ -251,13 +252,28 @@ public class AlertRtPanel
           @Override
           protected String doGetFieldValueName( SkEvent aEntity ) {
             ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-            return alarm.messageInfo().makeMessage( coreApi() );
+            // dima 07.03.25 display history event instead of current values
+            String retVal = TsLibUtils.EMPTY_STRING;
+            long now = System.currentTimeMillis();
+            long begingTime = now - (1 * 24 * 60 * 60 * 1000);
+            IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
+            ITimedList<SkEvent> events = alarm.getHistory( interval );
+            alarm.getHistory( interval );
+            // get last event
+            for( int i = events.size() - 1; i >= 0; i-- ) {
+              SkEvent lastEvent = events.get( i );
+              if( lastEvent.paramValues().hasKey( EVPRMID_ALERT_MESSAGE ) ) {
+                retVal = lastEvent.paramValues().getStr( EVPRMID_ALERT_MESSAGE );
+                break;
+              }
+            }
+            return retVal;
           }
 
           @Override
           protected IAtomicValue doGetFieldValue( SkEvent aEntity ) {
-            ISkAlarm alarm = alarmService().findAlarm( aEntity.eventGwid().strid() );
-            return AvUtils.avStr( alarm.messageInfo().makeMessage( coreApi() ) );
+            // dima 07.03.25 display history event instead of current values
+            return AvUtils.avStr( doGetFieldValueName( aEntity ) );
           }
 
         };
