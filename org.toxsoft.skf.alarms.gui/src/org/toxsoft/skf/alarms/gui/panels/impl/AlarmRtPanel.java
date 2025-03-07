@@ -333,7 +333,7 @@ public class AlarmRtPanel
             if( aAlarm.isMuted() ) {
               // Тревога остановлена, отобразим причину.
               long now = System.currentTimeMillis();
-              long begingTime = now - (24 * 60 * 60 * 1000L);
+              long begingTime = now - (30 * 24 * 60 * 60 * 1000L);
               IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
               ITimedList<SkEvent> events = aAlarm.getHistory( interval );
               // dima 06.03.25 search list from the end to begin

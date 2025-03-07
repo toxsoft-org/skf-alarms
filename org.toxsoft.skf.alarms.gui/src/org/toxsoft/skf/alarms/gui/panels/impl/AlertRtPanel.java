@@ -255,7 +255,7 @@ public class AlertRtPanel
             // dima 07.03.25 display history event instead of current values
             String retVal = TsLibUtils.EMPTY_STRING;
             long now = System.currentTimeMillis();
-            long begingTime = now - (1 * 24 * 60 * 60 * 1000);
+            long begingTime = now - (1 * 24 * 60 * 60 * 1000L);
             IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
             ITimedList<SkEvent> events = alarm.getHistory( interval );
             alarm.getHistory( interval );
