@@ -180,7 +180,7 @@ public class AlertRtPanel
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/criticalSeverityAlarm.png" ); //$NON-NLS-1$
     private static final Image           criticalImage    = imgDescrCritical.createImage();
 
-    private static final String timestampFormatString = "yyyy.MM.dd  HH:mm:ss .SSS"; //$NON-NLS-1$
+    private static final String timestampFormatString = "dd.MM  HH:mm:ss .SSS"; //$NON-NLS-1$
 
     private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
 
