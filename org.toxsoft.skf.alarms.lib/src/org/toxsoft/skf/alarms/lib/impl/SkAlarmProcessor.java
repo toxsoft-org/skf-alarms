@@ -54,6 +54,14 @@ public class SkAlarmProcessor
     private final Gwid                    alertEventGwid;
     private final ISkMessageInfo          messageInfo;
 
+    /**
+     * This value is used to generate an alert only on the edge ("the front") of the alarm triggering.
+     */
+
+    // FIXME reset state!
+
+    public boolean previousCondCheckState = false;
+
     public AlarmItem( ISkReadCurrDataChannel aChRead, ISkWriteCurrDataChannel aChWrite,
         ISkReadCurrDataChannel aChReadMute, ITsChecker aChecker, ISkAlarm aAlarm ) {
       chReadAlert = aChRead;
@@ -194,12 +202,18 @@ public class SkAlarmProcessor
       IAtomicValue muteValue = alit.chReadMute.getValue();
       IAtomicValue alertValue = alit.chReadAlert.getValue();
       boolean isMute = (!muteValue.isAssigned() || muteValue.asBool());
-      if( isMute || !alertValue.isAssigned() || alertValue.asBool() ) {
-        continue; // alert muted or is already set, nothing to do with this alarm
-      }
-      // if alert, set RtData and fire event
+      boolean isAlert = (!alertValue.isAssigned() || alertValue.asBool());
       try {
-        if( alit.alertChecker.checkCondition() ) {
+        boolean condCheckState = alit.alertChecker.checkCondition();
+        /**
+         * Alert generation condition:<br>
+         * - generation is not muted;<br>
+         * - alert is not set right now;<br>
+         * - alarm check condition is met;<br>
+         * - and alarm condition appears first time (that is, ignore continuous alarm)
+         */
+        if( !isMute && !isAlert && condCheckState && !alit.previousCondCheckState ) {
+          // if alert, set RtData and fire event
           alit.chWriteAlert.setValue( AV_TRUE );
           IOptionSetEdit params = new OptionSet();
           String msg = alit.messageInfo.makeMessage( coreApi );
@@ -210,10 +224,13 @@ public class SkAlarmProcessor
           }
           llEvents.add( event );
         }
+        alit.previousCondCheckState = condCheckState;
       }
       catch( Throwable e ) {
         // unexpected checker error
         throw new TsInternalErrorRtException( e, FMT_ERR_UNEXPECTED_CHECKER, alarmId, e.getLocalizedMessage() );
+      }
+      finally {
       }
     }
     // fire all alert events at once
