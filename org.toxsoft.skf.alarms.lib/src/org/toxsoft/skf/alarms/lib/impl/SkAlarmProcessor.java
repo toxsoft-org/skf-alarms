@@ -2,6 +2,7 @@ package org.toxsoft.skf.alarms.lib.impl;
 
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
@@ -186,7 +187,7 @@ public class SkAlarmProcessor
          */
         if( !isMute && !isAlert && condCheckState && !alit.previousCondCheckState ) {
           // if alert, set RtData and fire event
-          alarm.setAlert();
+          alarm.writeRtdataIfOpen( RTDID_IS_ALERT, AV_TRUE );
           IOptionSetEdit params = new OptionSet();
           String msg = alit.messageInfo.makeMessage( coreApi );
           params.setStr( EVPRMID_ALERT_MESSAGE, msg );
@@ -243,7 +244,7 @@ public class SkAlarmProcessor
       return;
     }
     // reset alert and fire an event
-    alarm.setAlert();
+    alarm.writeRtdataIfOpen( RTDID_IS_ALERT, AV_FALSE );
     String comment = aCmd.argValues().getStr( CMDARGID_ACK_COMMENT );
     changeCommandState( commandInstanceId, ESkCommandState.SUCCESS, authorGwid, comment );
     // fire an event
