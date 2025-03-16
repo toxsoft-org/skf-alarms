@@ -1,14 +1,11 @@
 package org.toxsoft.skf.alarms.lib.impl;
 
-import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
 
-import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.*;
-import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
@@ -21,7 +18,6 @@ import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.cmdserv.*;
 import org.toxsoft.uskat.core.api.evserv.*;
-import org.toxsoft.uskat.core.api.rtdserv.*;
 import org.toxsoft.uskat.core.impl.*;
 import org.toxsoft.uskat.core.utils.msgen.*;
 
@@ -47,12 +43,10 @@ public class SkAlarmProcessor
   static class AlarmItem
       implements ICloseable {
 
-    private final ISkReadCurrDataChannel  chReadAlert;
-    private final ISkWriteCurrDataChannel chWriteAlert;
-    private final ISkReadCurrDataChannel  chReadMute;
-    private final ITsChecker              alertChecker;
-    private final Gwid                    alertEventGwid;
-    private final ISkMessageInfo          messageInfo;
+    private final ISkAlarm       alarm;
+    private final ITsChecker     alertChecker;
+    private final Gwid           alertEventGwid;
+    private final ISkMessageInfo messageInfo;
 
     /**
      * This value is used to generate an alert only on the edge ("the front") of the alarm triggering.
@@ -62,11 +56,8 @@ public class SkAlarmProcessor
 
     public boolean previousCondCheckState = false;
 
-    public AlarmItem( ISkReadCurrDataChannel aChRead, ISkWriteCurrDataChannel aChWrite,
-        ISkReadCurrDataChannel aChReadMute, ITsChecker aChecker, ISkAlarm aAlarm ) {
-      chReadAlert = aChRead;
-      chWriteAlert = aChWrite;
-      chReadMute = aChReadMute;
+    public AlarmItem( ISkAlarm aAlarm, ITsChecker aChecker ) {
+      alarm = aAlarm;
       alertChecker = aChecker;
       alertEventGwid = Gwid.createEvent( aAlarm.classId(), aAlarm.strid(), EVID_ALERT );
       messageInfo = aAlarm.messageInfo();
@@ -75,9 +66,6 @@ public class SkAlarmProcessor
     @Override
     public void close() {
       alertChecker.close();
-      chReadAlert.close();
-      chWriteAlert.close();
-      chReadMute.close();
     }
 
   }
@@ -105,26 +93,11 @@ public class SkAlarmProcessor
   private void internalStart() {
     GwidList cmdGwidsToRegister = new GwidList();
     ISkAlarmService alarmService = coreApi.getService( ISkAlarmService.SERVICE_ID );
-    // create RtData channels for all alarm objects
-    GwidList llAlertGwids = new GwidList();
-    GwidList llMuteGwids = new GwidList();
-    for( ISkAlarm alarm : alarmService.listAlarms() ) {
-      Gwid alertGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_ALERT );
-      llAlertGwids.add( alertGwid );
-      Gwid muteGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_MUTED );
-      llMuteGwids.add( muteGwid );
-    }
-    IMap<Gwid, ISkReadCurrDataChannel> mmChRead = coreApi.rtdService().createReadCurrDataChannels( llAlertGwids );
-    IMap<Gwid, ISkWriteCurrDataChannel> mmChWrite = coreApi.rtdService().createWriteCurrDataChannels( llAlertGwids );
-    IMap<Gwid, ISkReadCurrDataChannel> mmChMutes = coreApi.rtdService().createReadCurrDataChannels( llMuteGwids );
     // create items for alarmItems
     for( ISkAlarm alarm : alarmService.listAlarms() ) {
-      Gwid alertGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_ALERT );
-      Gwid muteGwid = Gwid.createRtdata( CLSID_ALARM, alarm.strid(), RTDID_IS_MUTED );
       ITsChecker checker =
           alarmService.getAlarmCheckersTopicManager().createCombiChecker( alarm.alertCondition(), coreApi );
-      AlarmItem alit = new AlarmItem( mmChRead.getByKey( alertGwid ), mmChWrite.getByKey( alertGwid ),
-          mmChMutes.getByKey( muteGwid ), checker, alarm );
+      AlarmItem alit = new AlarmItem( alarm, checker );
       alarmItems.put( alarm.strid(), alit );
       // alarm need to register command executor for it
       Gwid acknowledgementCmdGwid = Gwid.createCmd( alarm.classId(), alarm.strid(), CMDID_ACKNOWLEDGE );
@@ -199,10 +172,9 @@ public class SkAlarmProcessor
     // process all alarms
     for( String alarmId : alarmItems.keys() ) {
       AlarmItem alit = alarmItems.getByKey( alarmId );
-      IAtomicValue muteValue = alit.chReadMute.getValue();
-      IAtomicValue alertValue = alit.chReadAlert.getValue();
-      boolean isMute = (!muteValue.isAssigned() || muteValue.asBool());
-      boolean isAlert = (!alertValue.isAssigned() || alertValue.asBool());
+      ISkAlarm alarm = alit.alarm;
+      boolean isMute = alarm.isMuted();
+      boolean isAlert = alarm.isAlert();
       try {
         boolean condCheckState = alit.alertChecker.checkCondition();
         /**
@@ -214,7 +186,7 @@ public class SkAlarmProcessor
          */
         if( !isMute && !isAlert && condCheckState && !alit.previousCondCheckState ) {
           // if alert, set RtData and fire event
-          alit.chWriteAlert.setValue( AV_TRUE );
+          alarm.setAlert();
           IOptionSetEdit params = new OptionSet();
           String msg = alit.messageInfo.makeMessage( coreApi );
           params.setStr( EVPRMID_ALERT_MESSAGE, msg );
@@ -229,8 +201,6 @@ public class SkAlarmProcessor
       catch( Throwable e ) {
         // unexpected checker error
         throw new TsInternalErrorRtException( e, FMT_ERR_UNEXPECTED_CHECKER, alarmId, e.getLocalizedMessage() );
-      }
-      finally {
       }
     }
     // fire all alert events at once
@@ -265,14 +235,15 @@ public class SkAlarmProcessor
       changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
-    if( !alit.chReadAlert.getValue().asBool() ) {
+    ISkAlarm alarm = alit.alarm;
+    if( !alarm.isAlert() ) {
       String comment = String.format( FMT_LOG_WARN_ACK_CMD_NO_ALERT, aCmd.cmdGwid().toString() );
       LoggerUtils.errorLogger().warning( comment );
       changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
     // reset alert and fire an event
-    alit.chWriteAlert.setValue( AV_FALSE );
+    alarm.setAlert();
     String comment = aCmd.argValues().getStr( CMDARGID_ACK_COMMENT );
     changeCommandState( commandInstanceId, ESkCommandState.SUCCESS, authorGwid, comment );
     // fire an event
