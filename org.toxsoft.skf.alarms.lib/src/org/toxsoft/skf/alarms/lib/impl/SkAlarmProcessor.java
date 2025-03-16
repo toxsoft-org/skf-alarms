@@ -1,8 +1,8 @@
 package org.toxsoft.skf.alarms.lib.impl;
 
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 import static org.toxsoft.skf.alarms.lib.l10n.ISkAlarmSharedResources.*;
-import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
@@ -14,6 +14,7 @@ import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.math.cond.checker.*;
 import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
+import org.toxsoft.core.tslib.utils.logs.*;
 import org.toxsoft.core.tslib.utils.logs.impl.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.*;
@@ -73,6 +74,8 @@ public class SkAlarmProcessor
 
   private final ISkCoreApi coreApi;
 
+  private final ILogger logger;
+
   private final IStringMapEdit<AlarmItem> alarmItems = new StringMap<>();
 
   private boolean stopped = true;
@@ -83,8 +86,19 @@ public class SkAlarmProcessor
    * @param aCoreApi {@link ISkCoreApi} - the USkat to be processed
    */
   public SkAlarmProcessor( ISkCoreApi aCoreApi ) {
+    this( aCoreApi, LoggerUtils.defaultLogger() );
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param aCoreApi {@link ISkCoreApi} - the USkat to be processed
+   * @param aLogger {@link ILogger} - logger
+   */
+  public SkAlarmProcessor( ISkCoreApi aCoreApi, ILogger aLogger ) {
     TsNullArgumentRtException.checkNull( aCoreApi );
     coreApi = aCoreApi;
+    logger = aLogger;
   }
 
   // ------------------------------------------------------------------------------------
@@ -196,6 +210,7 @@ public class SkAlarmProcessor
             llEvents = new SkEventList();
           }
           llEvents.add( event );
+          logger.info( FMT_LOG_SET_ALARM_ALERT, alarm );
         }
         alit.previousCondCheckState = condCheckState;
       }
@@ -204,6 +219,10 @@ public class SkAlarmProcessor
         throw new TsInternalErrorRtException( e, FMT_ERR_UNEXPECTED_CHECKER, alarmId, e.getLocalizedMessage() );
       }
     }
+    Integer count = Integer.valueOf( alarmItems.keys().size() );
+    Long dt = Long.valueOf( System.currentTimeMillis() - time );
+    logger.debug( FMT_LOG_DOJOB_IS_COMPETED, count, dt );
+
     // fire all alert events at once
     // 2024-06-19 mvk +++ if( != null )
     if( llEvents != null ) {
@@ -218,11 +237,11 @@ public class SkAlarmProcessor
   @Override
   public void executeCommand( IDtoCommand aCmd ) {
     if( !aCmd.cmdGwid().classId().equals( CLSID_ALARM ) ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_INV_CMD_DEST_CLASS, aCmd.cmdGwid().classId() );
+      logger.warning( FMT_LOG_WARN_INV_CMD_DEST_CLASS, aCmd.cmdGwid().classId() );
       return;
     }
     if( !aCmd.cmdGwid().propId().equals( CMDID_ACKNOWLEDGE ) ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_INV_CMD_ID, aCmd.cmdGwid().propId() );
+      logger.warning( FMT_LOG_WARN_INV_CMD_ID, aCmd.cmdGwid().propId() );
       return;
     }
     // confirm command execution
@@ -232,14 +251,14 @@ public class SkAlarmProcessor
     AlarmItem alit = alarmItems.findByKey( alarmStrid );
     if( alit == null ) {
       String comment = String.format( FMT_LOG_WARN_INV_CMD_STRID, alarmStrid );
-      LoggerUtils.errorLogger().warning( comment );
+      logger.warning( comment );
       changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
     ISkAlarm alarm = alit.alarm;
     if( !alarm.isAlert() ) {
       String comment = String.format( FMT_LOG_WARN_ACK_CMD_NO_ALERT, aCmd.cmdGwid().toString() );
-      LoggerUtils.errorLogger().warning( comment );
+      logger.warning( comment );
       changeCommandState( commandInstanceId, ESkCommandState.FAILED, authorGwid, comment );
       return;
     }
@@ -254,6 +273,7 @@ public class SkAlarmProcessor
     params.setValobj( EVPRMID_ACK_AUTHOR, authorGwid );
     SkEvent event = new SkEvent( System.currentTimeMillis(), eventGwid, params );
     coreApi.eventService().fireEvent( event );
+    logger.info( FMT_LOG_RESET_ALARM_ALERT, alarm, aCmd.cmdGwid() );
   }
 
   // ------------------------------------------------------------------------------------

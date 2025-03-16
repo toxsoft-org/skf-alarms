@@ -72,12 +72,15 @@ public interface ISkAlarmSharedResources {
   /**
    * {@link SkAlarmProcessor}
    */
-  String FMT_LOG_WARN_NOT_ALARM_FOR_MUTE = "SlAlarmProcessor: does not knows about alarm with STRID '%s'";          //$NON-NLS-1$
-  String FMT_LOG_WARN_INV_CMD_DEST_CLASS = "SlAlarmProcessor: invalid command class ID '%s'";                       //$NON-NLS-1$
-  String FMT_LOG_WARN_INV_CMD_ID         = "SlAlarmProcessor: invalid command ID '%s'";                             //$NON-NLS-1$
-  String FMT_LOG_WARN_INV_CMD_STRID      = "SlAlarmProcessor: invalid command STRID '%s'";                          //$NON-NLS-1$
-  String FMT_LOG_WARN_ACK_CMD_NO_ALERT   = "SlAlarmProcessor: ACK command on alarm with no alert '%s'";             //$NON-NLS-1$
-  String FMT_ERR_UNEXPECTED_CHECKER      = "SlAlarmProcessor: unexpected checker error. alarmId = %s. Cause = %s."; //$NON-NLS-1$
+  String FMT_LOG_WARN_NOT_ALARM_FOR_MUTE = "does not knows about alarm with STRID '%s'";          //$NON-NLS-1$
+  String FMT_LOG_WARN_INV_CMD_DEST_CLASS = "invalid command class ID '%s'";                       //$NON-NLS-1$
+  String FMT_LOG_WARN_INV_CMD_ID         = "invalid command ID '%s'";                             //$NON-NLS-1$
+  String FMT_LOG_WARN_INV_CMD_STRID      = "invalid command STRID '%s'";                          //$NON-NLS-1$
+  String FMT_LOG_WARN_ACK_CMD_NO_ALERT   = "ACK command on alarm with no alert '%s'";             //$NON-NLS-1$
+  String FMT_ERR_UNEXPECTED_CHECKER      = "unexpected checker error. alarmId = %s. Cause = %s."; //$NON-NLS-1$
+  String FMT_LOG_DOJOB_IS_COMPETED       = "doJob is completed. alarms = %d, time = %d (msec).";  //$NON-NLS-1$
+  String FMT_LOG_SET_ALARM_ALERT         = "%s: sets alert state.";                               //$NON-NLS-1$
+  String FMT_LOG_RESET_ALARM_ALERT       = "%s: reset alert state by command %s.";                //$NON-NLS-1$
 
   /**
    * {@link SkAlarm}
