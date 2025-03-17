@@ -26,7 +26,6 @@ import org.toxsoft.core.tsgui.graphics.icons.*;
 import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
-import org.toxsoft.core.tsgui.m5.gui.panels.*;
 import org.toxsoft.core.tsgui.m5.gui.viewers.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
@@ -41,6 +40,7 @@ import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.coll.*;
+import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.gw.skid.*;
@@ -69,8 +69,8 @@ public class AlertRtPanel
   private static final String ACTID_ALERTS_CHECK_ALL   = "checkAll";   //$NON-NLS-1$
   private static final String ACTID_ALERTS_UNCHECK_ALL = "uncheckAll"; //$NON-NLS-1$
 
-  private static final String ACTID_DEBUG  = "debug";  //$NON-NLS-1$
-  private static final String ACTID_DEBUG2 = "debug2"; //$NON-NLS-1$
+  private static final String ACTID_MUTE_ALL = "muteAll"; //$NON-NLS-1$
+  private static final String ACTID_DEBUG2   = "debug2";  //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_CONFIRM = TsActionDef.ofPush2( ACTID_CONFIRM, //
       STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
@@ -84,8 +84,8 @@ public class AlertRtPanel
       STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
   );
 
-  private static final ITsActionDef ACDEF_DEBUG = TsActionDef.ofPush2( ACTID_DEBUG, //
-      "setAlert", "Set alarm alert", ICONID_ALERT_ACKNOWLEDGE //
+  private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck1( ACTID_MUTE_ALL, //
+      STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
   );
 
   private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
@@ -105,8 +105,8 @@ public class AlertRtPanel
       defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
-      // defineSeparator();
-      // defineAction( ACDEF_DEBUG, this::doDebug, this::isDebug );
+      defineSeparator();
+      defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
       // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
@@ -149,15 +149,12 @@ public class AlertRtPanel
       }
     }
 
-    void doDebug2() {
-      ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
-      IList<ISkAlarm> allAlarms = alarmService().listAlarms();
-      for( ISkAlarm alarm : allAlarms ) {
-        alarm.sendAcknowledge( author.userSkid(), "Debug acknowledge" );
-      }
+    void doMuteAll() {
+      // turn off sound
+      updateSoundAlarm();
     }
 
-    boolean isDebug() {
+    boolean isMuteAll() {
       return true;
     }
   }
@@ -364,7 +361,6 @@ public class AlertRtPanel
   private final AspLocal asp = new AspLocal();
 
   private MultiPaneComponentModown<SkEvent> componentModown;
-  private IM5CollectionPanel<SkEvent>       eventsPanel;
 
   private SoundAlarmManager soundAlarmManager;
 
@@ -560,29 +556,24 @@ public class AlertRtPanel
     return coreApi().getService( ISkAlarmService.SERVICE_ID );
   }
 
-  // private void updateActionsState() {
-  // for( String actId : asp.listHandledActionIds() ) {
-  // toolbar.setActionEnabled( actId, asp.isActionEnabled( actId ) );
-  // toolbar.setActionChecked( actId, asp.isActionChecked( actId ) );
-  // }
-  // }
-
   /**
    * Updating the status of the sound alarm, i.s. turning on, turning off.
    */
   private void updateSoundAlarm() {
     SoundAlarmType type = SoundAlarmType.NONE;
-    for( SkEvent event : items() ) {
-      ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
-      if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
-        if( type != SoundAlarmType.WARNING ) {
-          type = SoundAlarmType.WARNING;
+    if( !componentModown.toolbar().isActionChecked( ACTID_MUTE_ALL ) ) {
+      for( SkEvent event : items() ) {
+        ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
+        if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
+          if( type != SoundAlarmType.WARNING ) {
+            type = SoundAlarmType.WARNING;
+          }
         }
-      }
-      else {
-        if( alarm.severity() == ESkAlarmSeverity.CRITICAL ) {
-          type = SoundAlarmType.CRITICAL;
-          break;
+        else {
+          if( alarm.severity() == ESkAlarmSeverity.CRITICAL ) {
+            type = SoundAlarmType.CRITICAL;
+            break;
+          }
         }
       }
     }
@@ -595,20 +586,29 @@ public class AlertRtPanel
   private void initializeAlertEvents() {
     IList<ISkAlarm> allAlarms = alarmService().listAlarms();
     // The events, sortabled by timestamp.
-    IMapEdit<Long, SkEvent> alertEvents = new ElemMap<>();
+    IListEdit<SkEvent> alertListEvents = new ElemArrayList<>();
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
         long now = System.currentTimeMillis();
         long begingTime = now - (24 * 60 * 60 * 1000);
         IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
         ITimedList<SkEvent> events = alarm.getHistory( interval );
-        SkEvent lastEvent = events.last();
-        if( lastEvent != null ) {
-          alertEvents.put( lastEvent.timestamp(), lastEvent );
+        for( int i = events.size() - 1; i >= 0; i-- ) {
+          SkEvent event = events.get( i );
+          if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
+            alertListEvents.add( event );
+          }
         }
+        // SkEvent lastEvent = events.last();
+        // if( lastEvent != null ) {
+        // alertListEvents.add( lastEvent );
+        // }
       }
     }
-    for( SkEvent event : alertEvents ) {
+    IListReorderer<SkEvent> orderedEvents = new ListReorderer<>( alertListEvents );
+    orderedEvents.sort( SkEvent::compareTo ); // The events, sortabled by timestamp.
+
+    for( SkEvent event : orderedEvents.list() ) {
       ((IListEdit<SkEvent>)items()).insert( 0, event );
     }
     refresh();

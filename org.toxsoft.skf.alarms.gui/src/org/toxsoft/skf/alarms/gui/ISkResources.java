@@ -43,15 +43,17 @@ public interface ISkResources {
   String DLG_C_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
   String DLG_T_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
 
-  String STR_L_ALARM_REASON      = Messages.getString( "STR_L_ALARM_REASON" );      //$NON-NLS-1$
-  String STR_N_ALARM_ACKNOWLEDGE = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
-  String STR_D_ALARM_ACKNOWLEDGE = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" ); //$NON-NLS-1$
-  String STR_N_ALARM_CHECK_ALL   = Messages.getString( "STR_N_ALARM_CHECK_ALL" );   //$NON-NLS-1$
-  String STR_D_ALARM_CHECK_ALL   = Messages.getString( "STR_D_ALARM_CHECK_ALL" );   //$NON-NLS-1$
-  String STR_N_ALARM_UNCHECK_ALL = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" ); //$NON-NLS-1$
-  String STR_D_ALARM_UNCHECK_ALL = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" ); //$NON-NLS-1$
-  String STR_N_EVENT_TIME        = Messages.getString( "STR_N_EVENT_TIME" );        //$NON-NLS-1$
-  String STR_D_EVENT_TIME        = Messages.getString( "STR_D_EVENT_TIME" );        //$NON-NLS-1$
+  String STR_L_ALARM_REASON      = Messages.getString( "STR_L_ALARM_REASON" );       //$NON-NLS-1$
+  String STR_N_ALARM_ACKNOWLEDGE = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" );  //$NON-NLS-1$
+  String STR_D_ALARM_ACKNOWLEDGE = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" );  //$NON-NLS-1$
+  String STR_N_ALARM_CHECK_ALL   = Messages.getString( "STR_N_ALARM_CHECK_ALL" );    //$NON-NLS-1$
+  String STR_D_ALARM_CHECK_ALL   = Messages.getString( "STR_D_ALARM_CHECK_ALL" );    //$NON-NLS-1$
+  String STR_N_ALARM_UNCHECK_ALL = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" );  //$NON-NLS-1$
+  String STR_D_ALARM_UNCHECK_ALL = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" );  //$NON-NLS-1$
+  String STR_N_MUTE_ALL          = "выключить звук";
+  String STR_D_MUTE_ALL          = "отключить все звуковые сообщения панели алармов";
+  String STR_N_EVENT_TIME        = Messages.getString( "STR_N_EVENT_TIME" );         //$NON-NLS-1$
+  String STR_D_EVENT_TIME        = Messages.getString( "STR_D_EVENT_TIME" );         //$NON-NLS-1$
 
   String STR_N_ALARM_NAME = Messages.getString( "STR_N_ALARM_NAME" ); //$NON-NLS-1$
   String STR_D_ALARM_NAME = Messages.getString( "STR_D_ALARM_NAME" ); //$NON-NLS-1$
