@@ -35,6 +35,7 @@ import org.toxsoft.core.tsgui.utils.layout.*;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
+import org.toxsoft.core.tslib.bricks.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
@@ -63,7 +64,7 @@ import org.toxsoft.uskat.core.connection.*;
  */
 public class AlertRtPanel
     extends AbstractSkLazyControl
-    implements IAlertRtPanel, ISkAlertListener {
+    implements IAlertRtPanel, ISkAlertListener, IRealTimeSensitive {
 
   private static final String ACTID_CONFIRM            = "confirm";    //$NON-NLS-1$
   private static final String ACTID_ALERTS_CHECK_ALL   = "checkAll";   //$NON-NLS-1$
@@ -91,6 +92,16 @@ public class AlertRtPanel
   private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
       "setAcknowledge", "Set alarm acknowledge", ICONID_ALERT_ACKNOWLEDGE //
   );
+
+  /**
+   * time interval for temporary muting
+   */
+  private static final long MUTE_ALL_INTERVAL_MSEC = 1 * 60 * 1000;
+
+  /**
+   * timestamp of user mute all
+   */
+  long muteAllTimestamp = -1;
 
   /**
    * Handles user actions.
@@ -142,15 +153,12 @@ public class AlertRtPanel
       return !componentModown.tree().checks().listCheckedItems( true ).isEmpty();
     }
 
-    void doDebug() {
-      IList<ISkAlarm> allAlarms = alarmService().listAlarms();
-      for( ISkAlarm alarm : allAlarms ) {
-        alarm.setAlert();
-      }
-    }
-
     void doMuteAll() {
       // turn off sound
+      if( toolbar.isActionChecked( ACTID_MUTE_ALL ) ) {
+        // fix time button pressed
+        muteAllTimestamp = System.currentTimeMillis();
+      }
       updateSoundAlarm();
     }
 
@@ -377,7 +385,7 @@ public class AlertRtPanel
     super( aContext );
     // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
-
+    guiTimersService().slowTimers().addListener( this );
     soundAlarmManager = (SoundAlarmManager)aContext.find( SoundAlarmManager.CONTEXT_ID );
   }
 
@@ -633,5 +641,20 @@ public class AlertRtPanel
       }
     }
     return null;
+  }
+
+  @Override
+  public void whenRealTimePassed( long aRtTime ) {
+    if( muteAllTimestamp < 0 ) {
+      // nothing todo
+      return;
+    }
+
+    long passed = aRtTime - muteAllTimestamp;
+    if( passed > MUTE_ALL_INTERVAL_MSEC ) {
+      toolbar.setActionChecked( ACTID_MUTE_ALL, false );
+      updateSoundAlarm();
+      muteAllTimestamp = -1;
+    }
   }
 }
