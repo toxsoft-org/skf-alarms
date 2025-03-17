@@ -96,7 +96,7 @@ public class AlertRtPanel
   /**
    * time interval for temporary muting
    */
-  private static final long MUTE_ALL_INTERVAL_MSEC = 1 * 60 * 1000;
+  private static final long MUTE_ALL_INTERVAL_MSEC = 5 * 60 * 1000;
 
   /**
    * timestamp of user mute all
