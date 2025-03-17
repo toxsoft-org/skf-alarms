@@ -84,9 +84,9 @@ public class AlertRtPanel
       STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
   );
 
-  // private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck2( ACTID_MUTE_ALL, //
-  // STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
-  // );
+  private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck2( ACTID_MUTE_ALL, //
+      STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
+  );
 
   private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
       "setAcknowledge", "Set alarm acknowledge", ICONID_ALERT_ACKNOWLEDGE //
@@ -106,7 +106,7 @@ public class AlertRtPanel
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
-      // defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
+      defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
       // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
@@ -363,6 +363,7 @@ public class AlertRtPanel
   private MultiPaneComponentModown<SkEvent> componentModown;
 
   private SoundAlarmManager soundAlarmManager;
+  private TsToolbar         toolbar;
 
   /**
    * Constructor.
@@ -500,7 +501,7 @@ public class AlertRtPanel
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     ctx.params().addAll( tsContext().params() ); // !!!
 
-    TsToolbar toolbar = TsToolbar.create( board, ctx, asp.listAllActionDefs() );
+    toolbar = TsToolbar.create( board, ctx, asp.listAllActionDefs() );
     toolbar.getControl().setLayoutData( BorderLayout.NORTH );
     toolbar.addListener( asp );
 
@@ -560,8 +561,11 @@ public class AlertRtPanel
    * Updating the status of the sound alarm, i.s. turning on, turning off.
    */
   private void updateSoundAlarm() {
+    if( toolbar.hasAction( ACTID_MUTE_ALL ) && toolbar.isActionChecked( ACTID_MUTE_ALL ) ) {
+      soundAlarmManager.setType( SoundAlarmType.NONE );
+      return;
+    }
     SoundAlarmType type = SoundAlarmType.NONE;
-    // if( !componentModown.toolbar().isActionChecked( ACTID_MUTE_ALL ) ) {
     for( SkEvent event : items() ) {
       ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
       if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
@@ -576,7 +580,6 @@ public class AlertRtPanel
         }
       }
     }
-    // }
     soundAlarmManager.setType( type );
   }
 
