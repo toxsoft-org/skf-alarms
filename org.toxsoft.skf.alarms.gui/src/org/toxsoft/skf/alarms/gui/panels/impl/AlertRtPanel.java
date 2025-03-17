@@ -84,9 +84,9 @@ public class AlertRtPanel
       STR_N_ALARM_UNCHECK_ALL, STR_N_ALARM_UNCHECK_ALL, ICONID_ALERTS_UNCHECK_ALL //
   );
 
-  private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck1( ACTID_MUTE_ALL, //
-      STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
-  );
+  // private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck2( ACTID_MUTE_ALL, //
+  // STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
+  // );
 
   private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
       "setAcknowledge", "Set alarm acknowledge", ICONID_ALERT_ACKNOWLEDGE //
@@ -106,7 +106,7 @@ public class AlertRtPanel
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
-      defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
+      // defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
       // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
     }
 
@@ -561,22 +561,22 @@ public class AlertRtPanel
    */
   private void updateSoundAlarm() {
     SoundAlarmType type = SoundAlarmType.NONE;
-    if( !componentModown.toolbar().isActionChecked( ACTID_MUTE_ALL ) ) {
-      for( SkEvent event : items() ) {
-        ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
-        if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
-          if( type != SoundAlarmType.WARNING ) {
-            type = SoundAlarmType.WARNING;
-          }
+    // if( !componentModown.toolbar().isActionChecked( ACTID_MUTE_ALL ) ) {
+    for( SkEvent event : items() ) {
+      ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
+      if( alarm.severity() == ESkAlarmSeverity.WARNING ) {
+        if( type != SoundAlarmType.WARNING ) {
+          type = SoundAlarmType.WARNING;
         }
-        else {
-          if( alarm.severity() == ESkAlarmSeverity.CRITICAL ) {
-            type = SoundAlarmType.CRITICAL;
-            break;
-          }
+      }
+      else {
+        if( alarm.severity() == ESkAlarmSeverity.CRITICAL ) {
+          type = SoundAlarmType.CRITICAL;
+          break;
         }
       }
     }
+    // }
     soundAlarmManager.setType( type );
   }
 
