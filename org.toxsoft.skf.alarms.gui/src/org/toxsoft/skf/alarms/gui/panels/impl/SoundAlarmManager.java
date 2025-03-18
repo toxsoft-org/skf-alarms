@@ -11,7 +11,11 @@ public class SoundAlarmManager {
   private SoundPlayer    currentPlayer  = null;
   private SoundPlayer    warningPlayer  = null;
   private SoundPlayer    criticalPlayer = null;
+  private boolean        muted          = false;
 
+  /**
+   * sound player context ID
+   */
   public static final String CONTEXT_ID = "SoundAlarmManager"; //$NON-NLS-1$
 
   /**
@@ -40,6 +44,7 @@ public class SoundAlarmManager {
    */
   public void setType( SoundAlarmType aType ) {
     if( type == aType ) {
+      // nothing to do
       return;
     }
     if( currentPlayer != null ) {
@@ -50,7 +55,30 @@ public class SoundAlarmManager {
     if( type != SoundAlarmType.NONE ) {
       // Включаем новый тип сигнализации.
       currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
-      currentPlayer.start();
+      if( !muted ) {
+        currentPlayer.start();
+      }
+    }
+  }
+
+  /**
+   * Mute/unmute players
+   * <p>
+   *
+   * @param aMuteFlag - true - turn all sounds off.
+   */
+  public void setMuted( boolean aMuteFlag ) {
+    muted = aMuteFlag;
+    if( muted ) {
+      currentPlayer.stop();
+    }
+    else {
+      // restore sound
+      if( type != SoundAlarmType.NONE ) {
+        // Включаем новый тип сигнализации.
+        currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
+        currentPlayer.start();
+      }
     }
   }
 }

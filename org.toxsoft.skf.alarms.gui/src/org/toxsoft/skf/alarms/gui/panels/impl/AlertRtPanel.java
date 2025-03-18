@@ -154,11 +154,12 @@ public class AlertRtPanel
     }
 
     void doMuteAll() {
-      // turn off sound
       if( toolbar.isActionChecked( ACTID_MUTE_ALL ) ) {
         // fix time button pressed
         muteAllTimestamp = System.currentTimeMillis();
       }
+      // turn off|on sound
+      soundAlarmManager.setMuted( toolbar.isActionChecked( ACTID_MUTE_ALL ) );
       updateSoundAlarm();
     }
 
@@ -263,7 +264,6 @@ public class AlertRtPanel
             long begingTime = now - (1 * 24 * 60 * 60 * 1000L);
             IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
             ITimedList<SkEvent> events = alarm.getHistory( interval );
-            alarm.getHistory( interval );
             // get last event
             for( int i = events.size() - 1; i >= 0; i-- ) {
               SkEvent lastEvent = events.get( i );
@@ -569,10 +569,6 @@ public class AlertRtPanel
    * Updating the status of the sound alarm, i.s. turning on, turning off.
    */
   private void updateSoundAlarm() {
-    if( toolbar.hasAction( ACTID_MUTE_ALL ) && toolbar.isActionChecked( ACTID_MUTE_ALL ) ) {
-      soundAlarmManager.setType( SoundAlarmType.NONE );
-      return;
-    }
     SoundAlarmType type = SoundAlarmType.NONE;
     for( SkEvent event : items() ) {
       ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
@@ -653,7 +649,9 @@ public class AlertRtPanel
     long passed = aRtTime - muteAllTimestamp;
     if( passed > MUTE_ALL_INTERVAL_MSEC ) {
       toolbar.setActionChecked( ACTID_MUTE_ALL, false );
+      // turn on sound
       updateSoundAlarm();
+      soundAlarmManager.setMuted( toolbar.isActionChecked( ACTID_MUTE_ALL ) );
       muteAllTimestamp = -1;
     }
   }
