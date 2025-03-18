@@ -660,6 +660,7 @@ public class AlertRtPanel
       updateSoundAlarm();
       soundAlarmManager.setMuted( toolbar.isActionChecked( ACTID_MUTE_ALL ) );
       muteAllTimestamp = -1;
+      guiTimersService().slowTimers().removeListener( AlertRtPanel.this );
     }
   }
 }
