@@ -8,6 +8,7 @@ import org.toxsoft.skf.alarms.gui.panels.impl.*;
  *
  * @author hazard157
  */
+@SuppressWarnings( { "nls", "javadoc" } )
 public interface ISkResources {
 
   String STR_DO_IT   = Messages.getString( "STR_DO_IT" );   //$NON-NLS-1$
@@ -111,5 +112,10 @@ public interface ISkResources {
 
   String STR_ACCESS_ALARM_VALUES_EDITOR   = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR" );   //$NON-NLS-1$
   String STR_ACCESS_ALARM_VALUES_EDITOR_D = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR_D" ); //$NON-NLS-1$
+
+  String STR_QUERIENG_ALARM_HISTORY       = "Запрос истории алармов";
+  String STR_PREPARE_ALARMS_HISTORY_QUERY = "Подготовка запроса истории алармов";
+  String STR_PREPARE_ALARMS_HISTORY_VIEW  = "Подготовка отображения истории алармов. Количество: %d";
+  String ERR_QUERY_ALARM_HISTORY_FAILED   = "Ошибка получения алармов.\nПричина: %s";
 
 }
