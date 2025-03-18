@@ -656,6 +656,8 @@ public class AlertRtPanel
         SkEvent event = events.get( i );
         if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
           alertListEvents.add( event );
+          // find last, then break
+          break;
         }
       }
     }
