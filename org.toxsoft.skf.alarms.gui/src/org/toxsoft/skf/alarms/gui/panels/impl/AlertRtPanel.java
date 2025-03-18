@@ -155,8 +155,15 @@ public class AlertRtPanel
 
     void doMuteAll() {
       if( toolbar.isActionChecked( ACTID_MUTE_ALL ) ) {
+        // button just checked by user
         // fix time button pressed
         muteAllTimestamp = System.currentTimeMillis();
+        guiTimersService().slowTimers().addListener( AlertRtPanel.this );
+      }
+      else {
+        // button just unchecked by user
+        muteAllTimestamp = -1;
+        guiTimersService().slowTimers().removeListener( AlertRtPanel.this );
       }
       // turn off|on sound
       soundAlarmManager.setMuted( toolbar.isActionChecked( ACTID_MUTE_ALL ) );
@@ -385,7 +392,6 @@ public class AlertRtPanel
     super( aContext );
     // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
-    guiTimersService().slowTimers().addListener( this );
     soundAlarmManager = (SoundAlarmManager)aContext.find( SoundAlarmManager.CONTEXT_ID );
   }
 
@@ -394,6 +400,7 @@ public class AlertRtPanel
     soundAlarmManager.setType( SoundAlarmType.NONE );
 
     alarmService().removeAlertListener( this );
+    guiTimersService().slowTimers().removeListener( this );
     super.doDispose();
   }
 
