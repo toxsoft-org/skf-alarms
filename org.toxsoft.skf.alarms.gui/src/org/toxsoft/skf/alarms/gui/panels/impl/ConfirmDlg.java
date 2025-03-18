@@ -33,6 +33,7 @@ public class ConfirmDlg {
       l1.setText( aLabelText );
       text1 = new Text( this, SWT.BORDER );
       text1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      text1.setText( STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT );
       text1.addModifyListener( notificationModifyListener );
     }
 
@@ -83,7 +84,7 @@ public class ConfirmDlg {
   public static final String enterComment( ITsGuiContext aContext, ITsValidator<String> aValidator ) {
     TsNullArgumentRtException.checkNulls( aContext, aValidator );
     TsDialogInfo dialogInfo = new TsDialogInfo( aContext, DLG_C_ALARM_ACKNOWLEDGE, DLG_T_ALARM_ACKNOWLEDGE );
-    dialogInfo.setMinSizeShellRelative( 10, 10 );
+    dialogInfo.setMinSizeShellRelative( 12, 7 );
     return enterComment( dialogInfo, aValidator );
   }
 
