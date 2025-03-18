@@ -17,23 +17,23 @@ public interface ISkResources {
   /**
    * {@link SkMessageInfoM5Model}
    */
-  String STR_N_FDEF_FMT_STR = "format string";
-  String STR_D_FDEF_FMT_STR = "format string for use in OptionSetUtils#format(String, IOptionSet)";
-  String STR_N_USED_UGWIES  = "used Ugwi";
-  String STR_D_USED_UGWIES  = "used Ugwi for alarm message";
+  String STR_N_FDEF_FMT_STR = Messages.getString("STR_N_FDEF_FMT_STR"); //$NON-NLS-1$
+  String STR_D_FDEF_FMT_STR = Messages.getString("STR_D_FDEF_FMT_STR"); //$NON-NLS-1$
+  String STR_N_USED_UGWIES  = Messages.getString("STR_N_USED_UGWIES"); //$NON-NLS-1$
+  String STR_D_USED_UGWIES  = Messages.getString("STR_D_USED_UGWIES"); //$NON-NLS-1$
 
   /**
    * {@link UsedUgwi4MessageInfoM5Model}
    */
-  String STR_N_IDPATH    = "idPath";
-  String STR_D_IDPATH    = "key in Map to link Ugwi ";
-  String STR_N_USED_UGWI = "used Ugwi";
-  String STR_D_USED_UGWI = "Ugwi assotiated with key in Map";
+  String STR_N_IDPATH    = Messages.getString("STR_N_IDPATH"); //$NON-NLS-1$
+  String STR_D_IDPATH    = Messages.getString("STR_D_IDPATH"); //$NON-NLS-1$
+  String STR_N_USED_UGWI = Messages.getString("STR_N_USED_UGWI"); //$NON-NLS-1$
+  String STR_D_USED_UGWI = Messages.getString("STR_D_USED_UGWI"); //$NON-NLS-1$
 
-  String STR_N_EV_GWID      = "Event Gwid";
-  String STR_D_EV_GWID      = "Green world id события";
-  String STR_N_EVENT_PARAMS = "Params of event";
-  String STR_D_EVENT_PARAMS = "Параметры события";
+  String STR_N_EV_GWID      = Messages.getString("STR_N_EV_GWID"); //$NON-NLS-1$
+  String STR_D_EV_GWID      = Messages.getString("STR_D_EV_GWID"); //$NON-NLS-1$
+  String STR_N_EVENT_PARAMS = Messages.getString("STR_N_EVENT_PARAMS"); //$NON-NLS-1$
+  String STR_D_EVENT_PARAMS = Messages.getString("STR_D_EVENT_PARAMS"); //$NON-NLS-1$
 
   /**
    * {@link ConfirmDlg}
@@ -46,14 +46,14 @@ public interface ISkResources {
 
   String STR_L_ALARM_REASON                 = Messages.getString( "STR_L_ALARM_REASON" );                  //$NON-NLS-1$
   String STR_N_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" );             //$NON-NLS-1$
-  String STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT = "Информацию принял, подтверждаю.";
+  String STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT = Messages.getString("STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT"); //$NON-NLS-1$
   String STR_D_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" );             //$NON-NLS-1$
   String STR_N_ALARM_CHECK_ALL              = Messages.getString( "STR_N_ALARM_CHECK_ALL" );               //$NON-NLS-1$
   String STR_D_ALARM_CHECK_ALL              = Messages.getString( "STR_D_ALARM_CHECK_ALL" );               //$NON-NLS-1$
   String STR_N_ALARM_UNCHECK_ALL            = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" );             //$NON-NLS-1$
   String STR_D_ALARM_UNCHECK_ALL            = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" );             //$NON-NLS-1$
-  String STR_N_MUTE_ALL                     = "выключить звук на 5 минут";
-  String STR_D_MUTE_ALL                     = "На 5 минут отключить все звуковые сообщения панели алармов";
+  String STR_N_MUTE_ALL                     = Messages.getString("STR_N_MUTE_ALL"); //$NON-NLS-1$
+  String STR_D_MUTE_ALL                     = Messages.getString("STR_D_MUTE_ALL"); //$NON-NLS-1$
   String STR_N_EVENT_TIME                   = Messages.getString( "STR_N_EVENT_TIME" );                    //$NON-NLS-1$
   String STR_D_EVENT_TIME                   = Messages.getString( "STR_D_EVENT_TIME" );                    //$NON-NLS-1$
 
@@ -114,9 +114,9 @@ public interface ISkResources {
   String STR_ACCESS_ALARM_VALUES_EDITOR   = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR" );   //$NON-NLS-1$
   String STR_ACCESS_ALARM_VALUES_EDITOR_D = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR_D" ); //$NON-NLS-1$
 
-  String STR_QUERIENG_ALARM_HISTORY       = "Запрос истории алармов";
-  String STR_PREPARE_ALARMS_HISTORY_QUERY = "Подготовка запроса истории алармов";
-  String STR_PREPARE_ALARMS_HISTORY_VIEW  = "Подготовка отображения истории алармов. Количество: %d";
-  String ERR_QUERY_ALARM_HISTORY_FAILED   = "Ошибка получения алармов.\nПричина: %s";
+  String STR_QUERIENG_ALARM_HISTORY       = Messages.getString("STR_QUERIENG_ALARM_HISTORY"); //$NON-NLS-1$
+  String STR_PREPARE_ALARMS_HISTORY_QUERY = Messages.getString("STR_PREPARE_ALARMS_HISTORY_QUERY"); //$NON-NLS-1$
+  String STR_PREPARE_ALARMS_HISTORY_VIEW  = Messages.getString("STR_PREPARE_ALARMS_HISTORY_VIEW"); //$NON-NLS-1$
+  String ERR_QUERY_ALARM_HISTORY_FAILED   = Messages.getString("ERR_QUERY_ALARM_HISTORY_FAILED"); //$NON-NLS-1$
 
 }
