@@ -44,6 +44,7 @@ import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
+import org.toxsoft.core.tslib.coll.primtypes.impl.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
@@ -597,26 +598,64 @@ public class AlertRtPanel
   /**
    * Initializing alert event.
    */
+  // private void initializeAlertEvents() {
+  // IList<ISkAlarm> allAlarms = alarmService().listAlarms();
+  // // The events, sortabled by timestamp.
+  // IListEdit<SkEvent> alertListEvents = new ElemArrayList<>();
+  // for( ISkAlarm alarm : allAlarms ) {
+  // if( alarm.isAlert() ) {
+  // long now = System.currentTimeMillis();
+  // long begingTime = now - (24 * 60 * 60 * 1000);
+  // IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
+  // ITimedList<SkEvent> events = alarm.getHistory( interval );
+  // for( int i = events.size() - 1; i >= 0; i-- ) {
+  // SkEvent event = events.get( i );
+  // if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
+  // alertListEvents.add( event );
+  // }
+  // }
+  // // SkEvent lastEvent = events.last();
+  // // if( lastEvent != null ) {
+  // // alertListEvents.add( lastEvent );
+  // // }
+  // }
+  // }
+  // IListReorderer<SkEvent> orderedEvents = new ListReorderer<>( alertListEvents );
+  // orderedEvents.sort( SkEvent::compareTo ); // The events, sortabled by timestamp.
+  //
+  // for( SkEvent event : orderedEvents.list() ) {
+  // ((IListEdit<SkEvent>)items()).insert( 0, event );
+  // }
+  // refresh();
+  // updateSoundAlarm();
+  // }
+
+  /**
+   * Initializing alert event.
+   */
   private void initializeAlertEvents() {
     IList<ISkAlarm> allAlarms = alarmService().listAlarms();
     // The events, sortabled by timestamp.
     IListEdit<SkEvent> alertListEvents = new ElemArrayList<>();
+    IStringListEdit alertedAlarmIds = new StringArrayList();
     for( ISkAlarm alarm : allAlarms ) {
       if( alarm.isAlert() ) {
-        long now = System.currentTimeMillis();
-        long begingTime = now - (24 * 60 * 60 * 1000);
-        IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
-        ITimedList<SkEvent> events = alarm.getHistory( interval );
-        for( int i = events.size() - 1; i >= 0; i-- ) {
-          SkEvent event = events.get( i );
-          if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
-            alertListEvents.add( event );
-          }
+        alertedAlarmIds.add( alarm.skid().strid() );
+      }
+    }
+    long now = System.currentTimeMillis();
+    long begingTime = now - (24 * 60 * 60 * 1000);
+    IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
+    // request batch
+    IStringMap<ITimedList<SkEvent>> evHistory =
+        AlarmsGuiUtils.getAlarmHistory( tsContext().get( Shell.class ), coreApi(), alertedAlarmIds, interval );
+    for( String alarmId : alertedAlarmIds ) {
+      ITimedList<SkEvent> events = evHistory.getByKey( alarmId );
+      for( int i = events.size() - 1; i >= 0; i-- ) {
+        SkEvent event = events.get( i );
+        if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
+          alertListEvents.add( event );
         }
-        // SkEvent lastEvent = events.last();
-        // if( lastEvent != null ) {
-        // alertListEvents.add( lastEvent );
-        // }
       }
     }
     IListReorderer<SkEvent> orderedEvents = new ListReorderer<>( alertListEvents );
