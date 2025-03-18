@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.*;
 import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.dialogs.datarec.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
-import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 
 /**
@@ -46,7 +45,7 @@ public class ConfirmDlg {
 
     @Override
     protected void doSetDataRecord( String aData ) {
-      String s = aData != null ? aData : TsLibUtils.EMPTY_STRING;
+      String s = aData != null ? aData : STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT;
       text1.setText( s );
     }
 
@@ -84,7 +83,7 @@ public class ConfirmDlg {
   public static final String enterComment( ITsGuiContext aContext, ITsValidator<String> aValidator ) {
     TsNullArgumentRtException.checkNulls( aContext, aValidator );
     TsDialogInfo dialogInfo = new TsDialogInfo( aContext, DLG_C_ALARM_ACKNOWLEDGE, DLG_T_ALARM_ACKNOWLEDGE );
-    dialogInfo.setMinSizeShellRelative( 12, 7 );
+    dialogInfo.setMaxSizeShellRelative( 12, 20 );
     return enterComment( dialogInfo, aValidator );
   }
 
