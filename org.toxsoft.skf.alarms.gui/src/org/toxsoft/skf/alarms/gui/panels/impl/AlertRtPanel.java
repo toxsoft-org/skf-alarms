@@ -649,7 +649,8 @@ public class AlertRtPanel
     // request batch
     IStringMap<ITimedList<SkEvent>> evHistory =
         AlarmsGuiUtils.getAlarmHistory( tsContext().get( Shell.class ), coreApi(), alertedAlarmIds, interval );
-    for( String alarmId : alertedAlarmIds ) {
+    // IStringMap<ITimedList<SkEvent>> evHistory = IStringMap.EMPTY;
+    for( String alarmId : evHistory.keys() ) {
       ITimedList<SkEvent> events = evHistory.getByKey( alarmId );
       for( int i = events.size() - 1; i >= 0; i-- ) {
         SkEvent event = events.get( i );

@@ -51,7 +51,7 @@ public class AlarmsGuiUtils {
     TsNullArgumentRtException.checkNulls( aCoreApi, aAlarmIds, aInterval );
     GwidList gwids = new GwidList();
     for( String alarmId : aAlarmIds ) {
-      gwids.add( Gwid.createEvent( alarmId, Gwid.STR_MULTI_ID ) );
+      gwids.add( Gwid.createEvent( ISkAlarmConstants.CLSID_ALARM, alarmId, Gwid.STR_MULTI_ID ) );
     }
     // Исполнитель запросов в одном потоке
     ITsThreadExecutor threadExecutor = SkThreadExecutorService.getExecutor( aCoreApi );
