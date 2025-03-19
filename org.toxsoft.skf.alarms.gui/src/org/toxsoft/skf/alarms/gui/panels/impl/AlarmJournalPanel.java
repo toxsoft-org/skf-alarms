@@ -96,10 +96,6 @@ public class AlarmJournalPanel
     public static final String AID_ACKNOWLEDGE_COMMENT  = "EventAcknowledgeComment"; //$NON-NLS-1$
     public static final String AID_ACKNOWLEDGE_AUTHOR   = "EventAcknowledgeAuthor";  //$NON-NLS-1$
 
-    private static final ImageDescriptor imgDescrNone =
-        AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); //$NON-NLS-1$
-    private static final Image           noneImage    = imgDescrNone.createImage();
-
     private static final ImageDescriptor imgDescrWarning =
         AbstractUIPlugin.imageDescriptorFromPlugin( Activator.PLUGIN_ID, "icons/is16x16/warningSeverityAlarm.png" ); //$NON-NLS-1$
     private static final Image           warningImage    = imgDescrWarning.createImage();
@@ -500,8 +496,6 @@ public class AlarmJournalPanel
   private static final String timestampFormatString = "dd.MM.yy HH:mm:ss"; //$NON-NLS-1$
 
   private static final DateFormat timestampFormat = new SimpleDateFormat( timestampFormatString );
-
-  private final AspLocal asp = new AspLocal();
 
   private DateTime startTime  = null;
   private DateTime startDate  = null;

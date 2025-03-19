@@ -72,7 +72,6 @@ public class AlertRtPanel
   private static final String ACTID_ALERTS_UNCHECK_ALL = "uncheckAll"; //$NON-NLS-1$
 
   private static final String ACTID_MUTE_ALL = "muteAll"; //$NON-NLS-1$
-  private static final String ACTID_DEBUG2   = "debug2";  //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_CONFIRM = TsActionDef.ofPush2( ACTID_CONFIRM, //
       STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
@@ -88,10 +87,6 @@ public class AlertRtPanel
 
   private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck2( ACTID_MUTE_ALL, //
       STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
-  );
-
-  private static final ITsActionDef ACDEF_DEBUG2 = TsActionDef.ofPush2( ACTID_DEBUG2, //
-      "setAcknowledge", "Set alarm acknowledge", ICONID_ALERT_ACKNOWLEDGE //
   );
 
   /**
@@ -118,8 +113,7 @@ public class AlertRtPanel
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
-      defineAction( ACDEF_MUTE_ALL, this::doMuteAll, this::isMuteAll );
-      // defineAction( ACDEF_DEBUG2, this::doDebug2, this::isDebug );
+      defineAction( ACDEF_MUTE_ALL, this::doMuteAll, IBooleanState.ALWAYS_TRUE );
     }
 
     void doCheckAll() {
@@ -171,9 +165,6 @@ public class AlertRtPanel
       updateSoundAlarm();
     }
 
-    boolean isMuteAll() {
-      return true;
-    }
   }
 
   class InnerModel
@@ -374,7 +365,7 @@ public class AlertRtPanel
     }
   }
 
-  private final AspLocal asp = new AspLocal();
+  private final AspLocal aspLocal = new AspLocal();
 
   private MultiPaneComponentModown<SkEvent> componentModown;
 
@@ -517,9 +508,9 @@ public class AlertRtPanel
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     ctx.params().addAll( tsContext().params() ); // !!!
 
-    toolbar = TsToolbar.create( board, ctx, asp.listAllActionDefs() );
+    toolbar = TsToolbar.create( board, ctx, aspLocal.listAllActionDefs() );
     toolbar.getControl().setLayoutData( BorderLayout.NORTH );
-    toolbar.addListener( asp );
+    toolbar.addListener( aspLocal );
 
     // Using temporary model.
     InnerModel model = new InnerModel( skConn() );
@@ -540,17 +531,25 @@ public class AlertRtPanel
 
     componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm );
     componentModown.setEditable( false );
-    // eventsPanel = new M5CollectionPanelMpcModownWrapper<>( componentModown, false );
 
     componentModown.createControl( board );
-    // eventsPanel.createControl( board );
 
     // Initializing width of columns.
     initializeColumnsWidth();
 
     initializeAlertEvents();
 
+    aspLocal.actionsStateEventer().addListener( src -> updateActionsState() );
+    updateActionsState();
+
     return board;
+  }
+
+  private void updateActionsState() {
+    for( String aid : aspLocal.listHandledActionIds() ) {
+      toolbar.setActionEnabled( aid, aspLocal.isActionEnabled( aid ) );
+      toolbar.setActionChecked( aid, aspLocal.isActionChecked( aid ) );
+    }
   }
 
   /**
@@ -594,41 +593,6 @@ public class AlertRtPanel
     }
     soundAlarmManager.setType( type );
   }
-
-  /**
-   * Initializing alert event.
-   */
-  // private void initializeAlertEvents() {
-  // IList<ISkAlarm> allAlarms = alarmService().listAlarms();
-  // // The events, sortabled by timestamp.
-  // IListEdit<SkEvent> alertListEvents = new ElemArrayList<>();
-  // for( ISkAlarm alarm : allAlarms ) {
-  // if( alarm.isAlert() ) {
-  // long now = System.currentTimeMillis();
-  // long begingTime = now - (24 * 60 * 60 * 1000);
-  // IQueryInterval interval = new QueryInterval( EQueryIntervalType.OSOE, begingTime, now );
-  // ITimedList<SkEvent> events = alarm.getHistory( interval );
-  // for( int i = events.size() - 1; i >= 0; i-- ) {
-  // SkEvent event = events.get( i );
-  // if( event.eventGwid().propId().equals( ISkAlarmConstants.EVID_ALERT ) ) {
-  // alertListEvents.add( event );
-  // }
-  // }
-  // // SkEvent lastEvent = events.last();
-  // // if( lastEvent != null ) {
-  // // alertListEvents.add( lastEvent );
-  // // }
-  // }
-  // }
-  // IListReorderer<SkEvent> orderedEvents = new ListReorderer<>( alertListEvents );
-  // orderedEvents.sort( SkEvent::compareTo ); // The events, sortabled by timestamp.
-  //
-  // for( SkEvent event : orderedEvents.list() ) {
-  // ((IListEdit<SkEvent>)items()).insert( 0, event );
-  // }
-  // refresh();
-  // updateSoundAlarm();
-  // }
 
   /**
    * Initializing alert event.

@@ -483,10 +483,10 @@ public class AlarmRtPanel
     }
   }
 
-  private AspLocal asp;
+  private AspLocal  aspLocal;
+  private TsToolbar toolbar;
 
   private MultiPaneComponentModown<ISkAlarm> componentModown;
-  private IM5CollectionPanel<ISkAlarm>       alarmsPanel;
 
   private boolean paused = false;
 
@@ -497,12 +497,17 @@ public class AlarmRtPanel
     public boolean isMuted;
   }
 
-  private IMapEdit<String, AlarmData> alarmsDatas = new ElemMap<String, AlarmData>();
+  private IMapEdit<String, AlarmData> alarmsDatas = new ElemMap<>();
 
+  /**
+   * Constructor.
+   *
+   * @param aContext - app context
+   */
   public AlarmRtPanel( ITsGuiContext aContext ) {
     super( aContext );
 
-    asp = new AspLocal();
+    aspLocal = new AspLocal();
 
     // Listen to the alert/acknowledge events.
     alarmService().addAlertListener( this );
@@ -528,9 +533,9 @@ public class AlarmRtPanel
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     ctx.params().addAll( tsContext().params() ); // !!!
 
-    TsToolbar toolbar = TsToolbar.create( board, ctx, asp.listAllActionDefs() );
+    toolbar = TsToolbar.create( board, ctx, aspLocal.listAllActionDefs() );
     toolbar.getControl().setLayoutData( BorderLayout.NORTH );
-    toolbar.addListener( asp );
+    toolbar.addListener( aspLocal );
 
     // Using temporary model.
     InnerM5Model model = new InnerM5Model( skConn() );
@@ -564,7 +569,17 @@ public class AlarmRtPanel
 
     guiTimersService().slowTimers().addListener( this );
 
+    aspLocal.actionsStateEventer().addListener( src -> updateActionsState() );
+    updateActionsState();
+
     return board;
+  }
+
+  private void updateActionsState() {
+    for( String aid : aspLocal.listHandledActionIds() ) {
+      toolbar.setActionEnabled( aid, aspLocal.isActionEnabled( aid ) );
+      toolbar.setActionChecked( aid, aspLocal.isActionChecked( aid ) );
+    }
   }
 
   // ------------------------------------------------------------------------------------
