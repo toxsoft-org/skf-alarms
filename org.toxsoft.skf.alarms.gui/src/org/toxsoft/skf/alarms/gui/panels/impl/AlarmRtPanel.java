@@ -570,6 +570,8 @@ public class AlarmRtPanel
     guiTimersService().slowTimers().addListener( this );
 
     aspLocal.actionsStateEventer().addListener( src -> updateActionsState() );
+    componentModown.tree().checks().checksChangeEventer().addListener( src -> updateActionsState() );
+
     updateActionsState();
 
     return board;
