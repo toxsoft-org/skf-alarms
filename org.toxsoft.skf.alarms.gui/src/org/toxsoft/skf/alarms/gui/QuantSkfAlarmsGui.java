@@ -23,7 +23,7 @@ public class QuantSkfAlarmsGui
     extends AbstractQuant
     implements ISkCoreExternalHandler {
 
-  private SoundAlarmManager soundAlarmManager;
+  private SoundAlarmManager soundAlarmManager = null;
 
   /**
    * Constructor.
@@ -56,7 +56,9 @@ public class QuantSkfAlarmsGui
 
   @Override
   protected void doCloseWin( MWindow aWindow ) {
-    soundAlarmManager.setType( SoundAlarmType.NONE );
+    if( soundAlarmManager != null ) {
+      soundAlarmManager.setType( SoundAlarmType.NONE );
+    }
   }
 
   @Override
