@@ -402,6 +402,7 @@ public class AlertRtPanel
     if( aSource.state().isActive() ) {
       initializeAlertEvents();
     }
+    updateActionsState();
   }
 
   @Override
