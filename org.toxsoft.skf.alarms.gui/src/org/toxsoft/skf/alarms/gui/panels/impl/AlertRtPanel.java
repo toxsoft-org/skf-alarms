@@ -392,15 +392,14 @@ public class AlertRtPanel
   }
 
   private void whenConnStateChanged( ISkConnection aSource, ESkConnState aOldState ) {
-    ESkConnState state = aSource.state();
     // lost connection
-    if( aOldState.isOpen() && !state.isOpen() ) {
+    if( aOldState.isActive() ) {
       ((IListEdit<SkEvent>)items()).clear();
       componentModown.tree().refresh();
       updateSoundAlarm();
     }
     // when connection becomes open
-    if( state.isOpen() && state.isOpen() != aOldState.isOpen() ) {
+    if( aSource.state().isActive() ) {
       initializeAlertEvents();
     }
   }
