@@ -8,6 +8,7 @@ import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.gui.ISkResources.*;
 import static org.toxsoft.skf.alarms.gui.ISkfAlarmsGuiConstants.*;
 import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
+import static org.toxsoft.uskat.core.gui.ISkCoreGuiConstants.*;
 
 import java.text.*;
 import java.util.*;
@@ -385,12 +386,31 @@ public class AlertRtPanel
     // listen to the alert/acknowledge events
     alarmService().addAlertListener( this );
     soundAlarmManager = (SoundAlarmManager)aContext.find( SoundAlarmManager.CONTEXT_ID );
+    ISkConnection skConn = skConnCtx( tsContext() );
+    skConn.addConnectionListener( this::whenConnStateChanged );
+
+  }
+
+  private void whenConnStateChanged( ISkConnection aSource, ESkConnState aOldState ) {
+    ESkConnState state = aSource.state();
+    // lost connection
+    if( aOldState.isOpen() && !state.isOpen() ) {
+      ((IListEdit<SkEvent>)items()).clear();
+      componentModown.tree().refresh();
+      updateSoundAlarm();
+    }
+    // when connection becomes open
+    if( state.isOpen() && state.isOpen() != aOldState.isOpen() ) {
+      initializeAlertEvents();
+    }
   }
 
   @Override
   protected void doDispose() {
     soundAlarmManager.setType( SoundAlarmType.NONE );
 
+    ISkConnection skConn = skConnCtx( tsContext() );
+    skConn.removeConnectionListener( this::whenConnStateChanged );
     alarmService().removeAlertListener( this );
     guiTimersService().slowTimers().removeListener( this );
     super.doDispose();
