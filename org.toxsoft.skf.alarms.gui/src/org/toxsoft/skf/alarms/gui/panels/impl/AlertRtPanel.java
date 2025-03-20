@@ -123,6 +123,13 @@ public class AlertRtPanel
 
     void doUnCheckAll() {
       componentModown.tree().checks().setAllItemsCheckState( false );
+
+      // TODO: 2025-03-21 mvk for debug/test +++
+      ((IListEdit<SkEvent>)items()).clear();
+      componentModown.tree().refresh();
+      updateSoundAlarm();
+      initializeAlertEvents();
+      updateActionsState();
     }
 
     void doAcknowledge() {
