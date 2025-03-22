@@ -69,7 +69,7 @@ public class SoundAlarmManager {
    */
   public void setMuted( boolean aMuteFlag ) {
     muted = aMuteFlag;
-    if( muted ) {
+    if( muted && currentPlayer != null ) {
       currentPlayer.stop();
     }
     else {
