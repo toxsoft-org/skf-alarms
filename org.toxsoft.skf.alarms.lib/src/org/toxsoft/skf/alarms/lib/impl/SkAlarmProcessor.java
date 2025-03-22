@@ -177,6 +177,7 @@ public class SkAlarmProcessor
   // ICooperativeMultiTaskable
   //
 
+  @SuppressWarnings( "boxing" )
   @Override
   public void doJob() {
     if( stopped ) {
@@ -192,6 +193,9 @@ public class SkAlarmProcessor
       boolean isAlert = alarm.isAlert();
       try {
         boolean condCheckState = alit.alertChecker.checkCondition();
+        if( isAlert ) {
+          logger.info( FMT_LOG_ALERT_ALARM_STATE, alarmId, isAlert, isMute, condCheckState );
+        }
         /**
          * Alert generation condition:<br>
          * - generation is not muted;<br>
