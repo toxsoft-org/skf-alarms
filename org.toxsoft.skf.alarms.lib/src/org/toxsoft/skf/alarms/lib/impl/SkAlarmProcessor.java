@@ -186,6 +186,7 @@ public class SkAlarmProcessor
     long time = System.currentTimeMillis();
     SkEventList llEvents = null;
     // process all alarms
+    int index = 0;
     for( String alarmId : alarmItems.keys() ) {
       AlarmItem alit = alarmItems.getByKey( alarmId );
       ISkAlarm alarm = alit.alarm;
@@ -194,7 +195,7 @@ public class SkAlarmProcessor
       try {
         boolean condCheckState = alit.alertChecker.checkCondition();
         if( isAlert ) {
-          logger.info( FMT_LOG_ALERT_ALARM_STATE, alarmId, isAlert, isMute, condCheckState );
+          logger.info( FMT_LOG_ALERT_ALARM_STATE, ++index, alarmId, isAlert, isMute, condCheckState );
         }
         /**
          * Alert generation condition:<br>
