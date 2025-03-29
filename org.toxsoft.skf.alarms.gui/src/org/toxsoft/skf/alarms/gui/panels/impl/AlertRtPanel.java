@@ -576,6 +576,10 @@ public class AlertRtPanel
 
   private void updateActionsState() {
     for( String aid : aspLocal.listHandledActionIds() ) {
+      if( aid.equals( ACTID_ALERTS_UNCHECK_ALL ) ) {
+        // always enabled (for refresh alarm action)
+        continue;
+      }
       toolbar.setActionEnabled( aid, aspLocal.isActionEnabled( aid ) );
       toolbar.setActionChecked( aid, aspLocal.isActionChecked( aid ) );
     }
