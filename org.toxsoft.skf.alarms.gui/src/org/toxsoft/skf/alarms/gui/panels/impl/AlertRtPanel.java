@@ -110,7 +110,7 @@ public class AlertRtPanel
 
     public AspLocal() {
       defineAction( ACDEF_ALERTS_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
-      defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
+      defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, IBooleanState.ALWAYS_TRUE );
       defineSeparator();
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
