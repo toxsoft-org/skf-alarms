@@ -7,11 +7,11 @@ package org.toxsoft.skf.alarms.gui.panels.impl;
  */
 public class SoundAlarmManager {
 
-  private SoundAlarmType type           = SoundAlarmType.NONE;
-  private SoundPlayer    currentPlayer  = null;
-  private SoundPlayer    warningPlayer  = null;
-  private SoundPlayer    criticalPlayer = null;
-  private boolean        muted          = false;
+  private SoundAlarmType    type          = SoundAlarmType.NONE;
+  private SoundPlayer       currentPlayer = null;
+  private final SoundPlayer warningPlayer;
+  private final SoundPlayer criticalPlayer;
+  private boolean           muted         = false;
 
   /**
    * sound player context ID
@@ -20,10 +20,19 @@ public class SoundAlarmManager {
 
   /**
    * Constructor.
+   *
+   * @param isWarnNoSound when true no play when warning
    */
-  public SoundAlarmManager() {
-    warningPlayer = new SoundPlayer( "sound/warning.wav" ); //$NON-NLS-1$
-    criticalPlayer = new SoundPlayer( "sound/train.wav" ); //$NON-NLS-1$
+  public SoundAlarmManager( boolean isWarnNoSound ) {
+    if( isWarnNoSound ) {
+      warningPlayer = null;
+    }
+    else {
+      warningPlayer = new SoundPlayer( "sound/warning.wav" ); //$NON-NLS-1$
+    }
+    // old version
+    // criticalPlayer = new SoundPlayer( "sound/train.wav" ); //$NON-NLS-1$
+    criticalPlayer = new SoundPlayer( "sound/alarm-critical.wav" ); //$NON-NLS-1$
   }
 
   /**
@@ -47,17 +56,27 @@ public class SoundAlarmManager {
       // nothing to do
       return;
     }
-    if( currentPlayer != null ) {
-      // Отлючаем старый тип сигнализации.
-      currentPlayer.stop();
-    }
+    // Отлючаем старый тип сигнализации.
+    stopPlay();
     type = aType;
     if( type != SoundAlarmType.NONE ) {
       // Включаем новый тип сигнализации.
       currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
       if( !muted ) {
-        currentPlayer.start();
+        startPlay();
       }
+    }
+  }
+
+  private void startPlay() {
+    if( currentPlayer != null ) {
+      currentPlayer.start();
+    }
+  }
+
+  private void stopPlay() {
+    if( currentPlayer != null ) {
+      currentPlayer.stop();
     }
   }
 
@@ -69,15 +88,15 @@ public class SoundAlarmManager {
    */
   public void setMuted( boolean aMuteFlag ) {
     muted = aMuteFlag;
-    if( muted && currentPlayer != null ) {
-      currentPlayer.stop();
+    if( muted ) {
+      stopPlay();
     }
     else {
       // restore sound
       if( type != SoundAlarmType.NONE ) {
         // Включаем новый тип сигнализации.
         currentPlayer = (type == SoundAlarmType.WARNING ? warningPlayer : criticalPlayer);
-        currentPlayer.start();
+        startPlay();
       }
     }
   }

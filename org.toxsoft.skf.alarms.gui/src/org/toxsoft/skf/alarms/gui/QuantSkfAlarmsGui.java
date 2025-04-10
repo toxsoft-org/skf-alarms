@@ -7,7 +7,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.*;
 import org.toxsoft.core.tsgui.bricks.quant.*;
 import org.toxsoft.core.tslib.utils.valobj.*;
 import org.toxsoft.skf.alarms.gui.km5.*;
-import org.toxsoft.skf.alarms.gui.panels.impl.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.uskat.core.api.*;
 import org.toxsoft.uskat.core.devapi.*;
@@ -23,7 +22,7 @@ public class QuantSkfAlarmsGui
     extends AbstractQuant
     implements ISkCoreExternalHandler {
 
-  private SoundAlarmManager soundAlarmManager = null;
+  // private SoundAlarmManager soundAlarmManager = null;
 
   /**
    * Constructor.
@@ -49,16 +48,16 @@ public class QuantSkfAlarmsGui
   @Override
   protected void doInitWin( IEclipseContext aWinContext ) {
     ISkfAlarmsGuiConstants.init( aWinContext );
-    soundAlarmManager = new SoundAlarmManager();
-
-    aWinContext.set( SoundAlarmManager.CONTEXT_ID, soundAlarmManager );
+    // move init sound code to project specific Quant
+    // soundAlarmManager = new SoundAlarmManager();
+    // aWinContext.set( SoundAlarmManager.CONTEXT_ID, soundAlarmManager );
   }
 
   @Override
   protected void doCloseWin( MWindow aWindow ) {
-    if( soundAlarmManager != null ) {
-      soundAlarmManager.setType( SoundAlarmType.NONE );
-    }
+    // if( soundAlarmManager != null ) {
+    // soundAlarmManager.setType( SoundAlarmType.NONE );
+    // }
   }
 
   @Override
