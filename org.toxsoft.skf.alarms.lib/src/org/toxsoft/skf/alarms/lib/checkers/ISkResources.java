@@ -27,10 +27,17 @@ interface ISkResources {
   String STR_RTDVC_ATTR_GWID   = Messages.getString( "STR_RTDVC_ATTR_GWID" );   //$NON-NLS-1$
   String STR_RTDVC_ATTR_GWID_D = Messages.getString( "STR_RTDVC_ATTR_GWID_D" ); //$NON-NLS-1$
 
+  /**
+   * {@link AlertCheckerRtDataGtZero}
+   */
+  String STR_RTDATA_GT_ZERO   = "RtData value == true";                                      //$NON-NLS-1$
+  String STR_RTDATA_GT_ZERO_D = "RtData value > 0 (numeric type) or value == true (boolean)";//$NON-NLS-1$
+
   // ------------------------------------------------------------------------------------
   // Log messages, no need to localize
 
   String FMT_WARN_CANT_OPEN_READ_RTD_CHANNEL = "Can not open read current RTdata channel for GWID '%s'"; //$NON-NLS-1$
   String FMT_WARN_CANT_FIND_ATTR             = "Can find attribute for GWID '%s'";                       //$NON-NLS-1$
+  String FMT_ERR_INVALID_RRI_ATTR_TYPE       = "Invalid type for that checker '%s'";                     //$NON-NLS-1$
 
 }

@@ -24,6 +24,7 @@ public class SkfAlarmUtils {
     ITsCheckerTopicManager<ISkCoreApi> tm = alarmService.getAlarmCheckersTopicManager();
     tm.registerType( new AlertCheckerRtdataVsConstType() );
     tm.registerType( new AlertCheckerRtdataVsAttrType() );
+    tm.registerType( new AlertCheckerRtDataGtZero() );
   };
 
   /**
