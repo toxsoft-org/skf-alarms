@@ -31,8 +31,8 @@ public class SoundAlarmManager {
       warningPlayer = new SoundPlayer( "sound/warning.wav" ); //$NON-NLS-1$
     }
     // old version
-    // criticalPlayer = new SoundPlayer( "sound/train.wav" ); //$NON-NLS-1$
-    criticalPlayer = new SoundPlayer( "sound/alarm-critical.wav" ); //$NON-NLS-1$
+    criticalPlayer = new SoundPlayer( "sound/train.wav" ); //$NON-NLS-1$
+    // criticalPlayer = new SoundPlayer( "sound/alarm-critical.wav" ); //$NON-NLS-1$
   }
 
   /**

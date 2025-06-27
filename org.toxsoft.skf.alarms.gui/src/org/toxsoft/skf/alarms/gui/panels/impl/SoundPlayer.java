@@ -62,8 +62,10 @@ public class SoundPlayer
    */
   public void start() {
     stopped = false;
-    clip.setFramePosition( 0 );
-    clip.start();
+    if( clip != null ) {
+      clip.setFramePosition( 0 );
+      clip.start();
+    }
   }
 
   /**
@@ -71,7 +73,9 @@ public class SoundPlayer
    */
   public void stop() {
     stopped = true;
-    clip.stop();
+    if( clip != null ) {
+      clip.stop();
+    }
   }
 
   // ------------------------------------------------------------------------------------
@@ -97,6 +101,10 @@ public class SoundPlayer
   private void init() {
     try {
       clip = (Clip)AudioSystem.getLine( new Line.Info( Clip.class ) );
+      if( clip == null ) {
+        LoggerUtils.errorLogger().error( "Audio clip = null" );
+        return;
+      }
       clip.addLineListener( event -> {
         if( event.getType() == LineEvent.Type.STOP ) {
           if( !stopped ) {
