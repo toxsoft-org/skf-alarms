@@ -143,7 +143,14 @@ public class AlertRtPanel
           SkEvent event = checkedEvents.get( i );
           // Getting object of alarm from event.
           ISkAlarm alarm = alarmService().findAlarm( event.eventGwid().strid() );
-          alarm.sendAcknowledge( author.userSkid(), comment );
+          // dima 10.07.25
+          if( !alarm.isAlert() ) {
+            // в другом потоке уже почистили, выкинем из списка
+            onAcknowledge( event );
+          }
+          else {
+            alarm.sendAcknowledge( author.userSkid(), comment );
+          }
         }
       }
     }
