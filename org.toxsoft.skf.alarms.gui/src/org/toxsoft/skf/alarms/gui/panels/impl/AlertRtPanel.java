@@ -36,6 +36,7 @@ import org.toxsoft.core.tsgui.utils.layout.*;
 import org.toxsoft.core.tsgui.valed.controls.av.*;
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
+import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.*;
 import org.toxsoft.core.tslib.bricks.events.change.*;
 import org.toxsoft.core.tslib.bricks.time.*;
@@ -46,6 +47,7 @@ import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
+import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
@@ -72,7 +74,8 @@ public class AlertRtPanel
   private static final String ACTID_ALERTS_CHECK_ALL   = "checkAll";   //$NON-NLS-1$
   private static final String ACTID_ALERTS_UNCHECK_ALL = "uncheckAll"; //$NON-NLS-1$
 
-  private static final String ACTID_MUTE_ALL = "muteAll"; //$NON-NLS-1$
+  private static final String ACTID_MUTE_ALL   = "muteAll";    //$NON-NLS-1$
+  private static final String ACTID_LL_CONFIRM = "ll_confirm"; //$NON-NLS-1$
 
   private static final ITsActionDef ACDEF_CONFIRM = TsActionDef.ofPush2( ACTID_CONFIRM, //
       STR_N_ALARM_ACKNOWLEDGE, STR_D_ALARM_ACKNOWLEDGE, ICONID_ALERTS_CHECK_GREEN //
@@ -88,6 +91,10 @@ public class AlertRtPanel
 
   private static final ITsActionDef ACDEF_MUTE_ALL = TsActionDef.ofCheck2( ACTID_MUTE_ALL, //
       STR_N_MUTE_ALL, STR_N_MUTE_ALL, ICONID_ALARM_MUTED_ALL //
+  );
+
+  private static final ITsActionDef ACDEF_LL_CONFIRM = TsActionDef.ofCheck2( ACTID_LL_CONFIRM, //
+      STR_N_LL_CONFIRM, STR_D_LL_CONFIRM, ICONID_ALERT_LL_ACKNOWLEDGE //
   );
 
   /**
@@ -115,6 +122,8 @@ public class AlertRtPanel
       defineAction( ACDEF_CONFIRM, this::doAcknowledge, this::canAcknowledge );
       defineSeparator();
       defineAction( ACDEF_MUTE_ALL, this::doMuteAll, IBooleanState.ALWAYS_TRUE );
+      defineSeparator();
+      defineAction( ACDEF_LL_CONFIRM, this::doLLConfirm, IBooleanState.ALWAYS_TRUE );
     }
 
     void doCheckAll() {
@@ -180,6 +189,17 @@ public class AlertRtPanel
       updateSoundAlarm();
     }
 
+    void doLLConfirm() {
+      //
+      Gwid cmdGwid = Gwid.createCmd( "CtrlSystem", "TKA1_OS", "cmdSetQuit" );
+      OptionSet cmdArgs = new OptionSet();
+      cmdArgs.setValue( "value", AvUtils.avBool( true ) );
+      coreApi().cmdService().sendCommand( cmdGwid, new Skid( ISkUser.CLASS_ID, "root" ), cmdArgs );
+      cmdGwid = Gwid.createCmd( "CtrlSystem", "TKA2_OS", "cmdSetQuit" );
+      coreApi().cmdService().sendCommand( cmdGwid, new Skid( ISkUser.CLASS_ID, "root" ), cmdArgs );
+      cmdGwid = Gwid.createCmd( "CtrlSystem", "TKA3_OS", "cmdSetQuit" );
+      coreApi().cmdService().sendCommand( cmdGwid, new Skid( ISkUser.CLASS_ID, "root" ), cmdArgs );
+    }
   }
 
   class InnerModel

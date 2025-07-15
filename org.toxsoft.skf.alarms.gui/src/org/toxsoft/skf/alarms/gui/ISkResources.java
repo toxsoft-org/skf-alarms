@@ -17,23 +17,23 @@ public interface ISkResources {
   /**
    * {@link SkMessageInfoM5Model}
    */
-  String STR_N_FDEF_FMT_STR = Messages.getString("STR_N_FDEF_FMT_STR"); //$NON-NLS-1$
-  String STR_D_FDEF_FMT_STR = Messages.getString("STR_D_FDEF_FMT_STR"); //$NON-NLS-1$
-  String STR_N_USED_UGWIES  = Messages.getString("STR_N_USED_UGWIES"); //$NON-NLS-1$
-  String STR_D_USED_UGWIES  = Messages.getString("STR_D_USED_UGWIES"); //$NON-NLS-1$
+  String STR_N_FDEF_FMT_STR = Messages.getString( "STR_N_FDEF_FMT_STR" ); //$NON-NLS-1$
+  String STR_D_FDEF_FMT_STR = Messages.getString( "STR_D_FDEF_FMT_STR" ); //$NON-NLS-1$
+  String STR_N_USED_UGWIES  = Messages.getString( "STR_N_USED_UGWIES" );  //$NON-NLS-1$
+  String STR_D_USED_UGWIES  = Messages.getString( "STR_D_USED_UGWIES" );  //$NON-NLS-1$
 
   /**
    * {@link UsedUgwi4MessageInfoM5Model}
    */
-  String STR_N_IDPATH    = Messages.getString("STR_N_IDPATH"); //$NON-NLS-1$
-  String STR_D_IDPATH    = Messages.getString("STR_D_IDPATH"); //$NON-NLS-1$
-  String STR_N_USED_UGWI = Messages.getString("STR_N_USED_UGWI"); //$NON-NLS-1$
-  String STR_D_USED_UGWI = Messages.getString("STR_D_USED_UGWI"); //$NON-NLS-1$
+  String STR_N_IDPATH    = Messages.getString( "STR_N_IDPATH" );    //$NON-NLS-1$
+  String STR_D_IDPATH    = Messages.getString( "STR_D_IDPATH" );    //$NON-NLS-1$
+  String STR_N_USED_UGWI = Messages.getString( "STR_N_USED_UGWI" ); //$NON-NLS-1$
+  String STR_D_USED_UGWI = Messages.getString( "STR_D_USED_UGWI" ); //$NON-NLS-1$
 
-  String STR_N_EV_GWID      = Messages.getString("STR_N_EV_GWID"); //$NON-NLS-1$
-  String STR_D_EV_GWID      = Messages.getString("STR_D_EV_GWID"); //$NON-NLS-1$
-  String STR_N_EVENT_PARAMS = Messages.getString("STR_N_EVENT_PARAMS"); //$NON-NLS-1$
-  String STR_D_EVENT_PARAMS = Messages.getString("STR_D_EVENT_PARAMS"); //$NON-NLS-1$
+  String STR_N_EV_GWID      = Messages.getString( "STR_N_EV_GWID" );      //$NON-NLS-1$
+  String STR_D_EV_GWID      = Messages.getString( "STR_D_EV_GWID" );      //$NON-NLS-1$
+  String STR_N_EVENT_PARAMS = Messages.getString( "STR_N_EVENT_PARAMS" ); //$NON-NLS-1$
+  String STR_D_EVENT_PARAMS = Messages.getString( "STR_D_EVENT_PARAMS" ); //$NON-NLS-1$
 
   /**
    * {@link ConfirmDlg}
@@ -44,18 +44,20 @@ public interface ISkResources {
   String DLG_C_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
   String DLG_T_ALARM_REASON      = Messages.getString( "DLG_C_ALARM_REASON" );      //$NON-NLS-1$
 
-  String STR_L_ALARM_REASON                 = Messages.getString( "STR_L_ALARM_REASON" );                  //$NON-NLS-1$
-  String STR_N_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" );             //$NON-NLS-1$
-  String STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT = Messages.getString("STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT"); //$NON-NLS-1$
-  String STR_D_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" );             //$NON-NLS-1$
-  String STR_N_ALARM_CHECK_ALL              = Messages.getString( "STR_N_ALARM_CHECK_ALL" );               //$NON-NLS-1$
-  String STR_D_ALARM_CHECK_ALL              = Messages.getString( "STR_D_ALARM_CHECK_ALL" );               //$NON-NLS-1$
-  String STR_N_ALARM_UNCHECK_ALL            = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" );             //$NON-NLS-1$
-  String STR_D_ALARM_UNCHECK_ALL            = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" );             //$NON-NLS-1$
-  String STR_N_MUTE_ALL                     = Messages.getString("STR_N_MUTE_ALL"); //$NON-NLS-1$
-  String STR_D_MUTE_ALL                     = Messages.getString("STR_D_MUTE_ALL"); //$NON-NLS-1$
-  String STR_N_EVENT_TIME                   = Messages.getString( "STR_N_EVENT_TIME" );                    //$NON-NLS-1$
-  String STR_D_EVENT_TIME                   = Messages.getString( "STR_D_EVENT_TIME" );                    //$NON-NLS-1$
+  String STR_L_ALARM_REASON                 = Messages.getString( "STR_L_ALARM_REASON" );                 //$NON-NLS-1$
+  String STR_N_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_N_ALARM_ACKNOWLEDGE" );            //$NON-NLS-1$
+  String STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT = Messages.getString( "STR_ALARM_ACKNOWLEDGE_DFLT_COMMENT" ); //$NON-NLS-1$
+  String STR_D_ALARM_ACKNOWLEDGE            = Messages.getString( "STR_D_ALARM_ACKNOWLEDGE" );            //$NON-NLS-1$
+  String STR_N_ALARM_CHECK_ALL              = Messages.getString( "STR_N_ALARM_CHECK_ALL" );              //$NON-NLS-1$
+  String STR_D_ALARM_CHECK_ALL              = Messages.getString( "STR_D_ALARM_CHECK_ALL" );              //$NON-NLS-1$
+  String STR_N_ALARM_UNCHECK_ALL            = Messages.getString( "STR_N_ALARM_UNCHECK_ALL" );            //$NON-NLS-1$
+  String STR_D_ALARM_UNCHECK_ALL            = Messages.getString( "STR_D_ALARM_UNCHECK_ALL" );            //$NON-NLS-1$
+  String STR_N_MUTE_ALL                     = Messages.getString( "STR_N_MUTE_ALL" );                     //$NON-NLS-1$
+  String STR_D_MUTE_ALL                     = Messages.getString( "STR_D_MUTE_ALL" );                     //$NON-NLS-1$
+  String STR_N_EVENT_TIME                   = Messages.getString( "STR_N_EVENT_TIME" );                   //$NON-NLS-1$
+  String STR_D_EVENT_TIME                   = Messages.getString( "STR_D_EVENT_TIME" );                   //$NON-NLS-1$
+  String STR_N_LL_CONFIRM                   = "сброс ошибок на контроллерах";
+  String STR_D_LL_CONFIRM                   = "сброс ошибок на контроллерах";
 
   String STR_N_ALARM_NAME = Messages.getString( "STR_N_ALARM_NAME" ); //$NON-NLS-1$
   String STR_D_ALARM_NAME = Messages.getString( "STR_D_ALARM_NAME" ); //$NON-NLS-1$
@@ -114,9 +116,9 @@ public interface ISkResources {
   String STR_ACCESS_ALARM_VALUES_EDITOR   = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR" );   //$NON-NLS-1$
   String STR_ACCESS_ALARM_VALUES_EDITOR_D = Messages.getString( "STR_ACCESS_ALARM_VALUES_EDITOR_D" ); //$NON-NLS-1$
 
-  String STR_QUERIENG_ALARM_HISTORY       = Messages.getString("STR_QUERIENG_ALARM_HISTORY"); //$NON-NLS-1$
-  String STR_PREPARE_ALARMS_HISTORY_QUERY = Messages.getString("STR_PREPARE_ALARMS_HISTORY_QUERY"); //$NON-NLS-1$
-  String STR_PREPARE_ALARMS_HISTORY_VIEW  = Messages.getString("STR_PREPARE_ALARMS_HISTORY_VIEW"); //$NON-NLS-1$
-  String ERR_QUERY_ALARM_HISTORY_FAILED   = Messages.getString("ERR_QUERY_ALARM_HISTORY_FAILED"); //$NON-NLS-1$
+  String STR_QUERIENG_ALARM_HISTORY       = Messages.getString( "STR_QUERIENG_ALARM_HISTORY" );       //$NON-NLS-1$
+  String STR_PREPARE_ALARMS_HISTORY_QUERY = Messages.getString( "STR_PREPARE_ALARMS_HISTORY_QUERY" ); //$NON-NLS-1$
+  String STR_PREPARE_ALARMS_HISTORY_VIEW  = Messages.getString( "STR_PREPARE_ALARMS_HISTORY_VIEW" );  //$NON-NLS-1$
+  String ERR_QUERY_ALARM_HISTORY_FAILED   = Messages.getString( "ERR_QUERY_ALARM_HISTORY_FAILED" );   //$NON-NLS-1$
 
 }

@@ -18,18 +18,19 @@ public interface ISkfAlarmsGuiConstants {
   // ------------------------------------------------------------------------------------
   // Icons
 
-  String PREFIX_OF_ICON_FIELD_NAME = "ICONID_";           //$NON-NLS-1$
-  String ICONID_ALARM_INFO         = "alarm-info";        //$NON-NLS-1$
-  String ICONID_APP_ALARM_EDITOR   = "app-alarms-editor"; //$NON-NLS-1$
-  String ICONID_ALARM_INFOS_LIST   = "alarm-infos-list";  //$NON-NLS-1$
-  String ICONID_ALERT_INFO         = "alert-info";        //$NON-NLS-1$
-  String ICONID_ALERT_INFOS_LIST   = "alert-infos-list";  //$NON-NLS-1$
-  String ICONID_ALERT_ACKNOWLEDGE  = "check_green";       //$NON-NLS-1$
-  String ICONID_ALERTS_CHECK_GREEN = "check_green";       //$NON-NLS-1$
-  String ICONID_ALERTS_CHECK_ALL   = "check_all_on";      //$NON-NLS-1$
-  String ICONID_ALERTS_UNCHECK_ALL = "check_all_off";     //$NON-NLS-1$
-  String ICONID_ALARM_MUTED_ALL    = "rupor-none";        //$NON-NLS-1$
-  String ICONID_ALARM_UNMUTED_ALL  = "rupor";             //$NON-NLS-1$
+  String PREFIX_OF_ICON_FIELD_NAME   = "ICONID_";           //$NON-NLS-1$
+  String ICONID_ALARM_INFO           = "alarm-info";        //$NON-NLS-1$
+  String ICONID_APP_ALARM_EDITOR     = "app-alarms-editor"; //$NON-NLS-1$
+  String ICONID_ALARM_INFOS_LIST     = "alarm-infos-list";  //$NON-NLS-1$
+  String ICONID_ALERT_INFO           = "alert-info";        //$NON-NLS-1$
+  String ICONID_ALERT_INFOS_LIST     = "alert-infos-list";  //$NON-NLS-1$
+  String ICONID_ALERT_ACKNOWLEDGE    = "check_green";       //$NON-NLS-1$
+  String ICONID_ALERTS_CHECK_GREEN   = "check_green";       //$NON-NLS-1$
+  String ICONID_ALERTS_CHECK_ALL     = "check_all_on";      //$NON-NLS-1$
+  String ICONID_ALERTS_UNCHECK_ALL   = "check_all_off";     //$NON-NLS-1$
+  String ICONID_ALARM_MUTED_ALL      = "rupor-none";        //$NON-NLS-1$
+  String ICONID_ALARM_UNMUTED_ALL    = "rupor";             //$NON-NLS-1$
+  String ICONID_ALERT_LL_ACKNOWLEDGE = "alert-acknowledge"; //$NON-NLS-1$
 
   /**
    * Constants registration.
