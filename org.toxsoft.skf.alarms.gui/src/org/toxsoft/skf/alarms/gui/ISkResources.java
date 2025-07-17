@@ -56,8 +56,8 @@ public interface ISkResources {
   String STR_D_MUTE_ALL                     = Messages.getString( "STR_D_MUTE_ALL" );                     //$NON-NLS-1$
   String STR_N_EVENT_TIME                   = Messages.getString( "STR_N_EVENT_TIME" );                   //$NON-NLS-1$
   String STR_D_EVENT_TIME                   = Messages.getString( "STR_D_EVENT_TIME" );                   //$NON-NLS-1$
-  String STR_N_LL_CONFIRM                   = "сброс ошибок на контроллерах";
-  String STR_D_LL_CONFIRM                   = "сброс ошибок на контроллерах";
+  String STR_N_LL_CONFIRM                   = "квитирование всех ТКА";
+  String STR_D_LL_CONFIRM                   = "квитирование всех ТКА";
 
   String STR_N_ALARM_NAME = Messages.getString( "STR_N_ALARM_NAME" ); //$NON-NLS-1$
   String STR_D_ALARM_NAME = Messages.getString( "STR_D_ALARM_NAME" ); //$NON-NLS-1$
