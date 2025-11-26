@@ -34,8 +34,6 @@ public interface ISkAlarmSharedResources {
   String STR_ALERT_MESSAGE_D       = Messages.getString( "STR_ALERT_MESSAGE_D" );       //$NON-NLS-1$
   String STR_EV_ALERT              = Messages.getString( "STR_EV_ALERT" );              //$NON-NLS-1$
   String STR_EV_ALERT_D            = Messages.getString( "STR_EV_ALERT_D" );            //$NON-NLS-1$
-  String STR_ACK_COMMNET           = Messages.getString( "STR_ACK_COMMNET" );           //$NON-NLS-1$
-  String STR_ACK_COMMNET_D         = Messages.getString( "STR_ACK_COMMNET_D" );         //$NON-NLS-1$
   String STR_EV_ACKNOWLEDGE        = Messages.getString( "STR_EV_ACKNOWLEDGE" );        //$NON-NLS-1$
   String STR_EV_ACKNOWLEDGE_D      = Messages.getString( "STR_EV_ACKNOWLEDGE_D" );      //$NON-NLS-1$
   String STR_MUTE_AUTHOR_GWID      = Messages.getString( "STR_MUTE_AUTHOR_GWID" );      //$NON-NLS-1$

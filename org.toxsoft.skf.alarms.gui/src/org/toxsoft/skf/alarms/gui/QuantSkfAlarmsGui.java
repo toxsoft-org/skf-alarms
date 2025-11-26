@@ -4,12 +4,25 @@ import static org.toxsoft.skf.alarms.lib.ISkAlarmConstants.*;
 
 import org.eclipse.e4.core.contexts.*;
 import org.eclipse.e4.ui.model.application.ui.basic.*;
+import org.toxsoft.core.tsgui.bricks.ctx.*;
 import org.toxsoft.core.tsgui.bricks.quant.*;
+import org.toxsoft.core.tslib.av.*;
+import org.toxsoft.core.tslib.av.impl.*;
+import org.toxsoft.core.tslib.av.metainfo.*;
+import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.utils.valobj.*;
 import org.toxsoft.skf.alarms.gui.km5.*;
+import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.skf.alarms.lib.impl.*;
 import org.toxsoft.uskat.core.api.*;
+import org.toxsoft.uskat.core.api.evserv.*;
+import org.toxsoft.uskat.core.api.objserv.*;
+import org.toxsoft.uskat.core.api.sysdescr.*;
+import org.toxsoft.uskat.core.api.sysdescr.dto.*;
+import org.toxsoft.uskat.core.api.users.*;
+import org.toxsoft.uskat.core.connection.*;
 import org.toxsoft.uskat.core.devapi.*;
+import org.toxsoft.uskat.core.gui.conn.*;
 import org.toxsoft.uskat.core.gui.km5.*;
 import org.toxsoft.uskat.core.impl.*;
 
@@ -66,4 +79,5 @@ public class QuantSkfAlarmsGui
     aCoreApi.userService().abilityManager().defineKind( ABKIND_ALARMS );
     aCoreApi.userService().abilityManager().defineAbility( ABILITY_EDIT_ALARMS );
   }
+
 }

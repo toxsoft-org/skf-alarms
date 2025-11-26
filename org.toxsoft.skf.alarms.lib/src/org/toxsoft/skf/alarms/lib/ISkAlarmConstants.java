@@ -145,8 +145,8 @@ public interface ISkAlarmConstants {
               TSID_DEFAULT_VALUE, avValobj( Gwid.createObj( Skid.NONE ) ) //
           ), //
           DataDef.create( EVPRMID_ACK_COMMNET, STRING, //
-              TSID_NAME, STR_ACK_COMMNET, //
-              TSID_DESCRIPTION, STR_ACK_COMMNET_D, //
+              TSID_NAME, STR_ACK_COMMENT, //
+              TSID_DESCRIPTION, STR_ACK_COMMENT_D, //
               TSID_DEFAULT_VALUE, AV_STR_EMPTY //
           ) //
       ), //
