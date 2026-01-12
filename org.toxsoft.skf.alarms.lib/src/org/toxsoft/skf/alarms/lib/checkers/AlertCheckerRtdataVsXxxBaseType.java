@@ -39,8 +39,6 @@ abstract public class AlertCheckerRtdataVsXxxBaseType
       TSID_NAME, STR_RTDVC_RTDATA_GWID, //
       TSID_DESCRIPTION, STR_RTDVC_RTDATA_GWID_D, //
       TSID_KEEPER_ID, Gwid.KEEPER_ID, //
-      // dima 03.01.26 patch build error
-      // TSLIB_VCC_EDITOR_FACTORY_NAME, SKCGC_VALED_AV_CONCRETE_GWID_EDITOR_NAME, //
       TSLIB_VCC_EDITOR_FACTORY_NAME, SKCGC_VALED_AV_CONCRETE_GWID_EDITOR_NAME, //
       SKCGC_VALED_CONCRETE_GWID_EDITOR_NAME_OPID_GWID_KIND, avValobj( EGwidKind.GW_RTDATA ), //
       TSID_DEFAULT_VALUE, avValobj( Gwid.createRtdata( IStridable.NONE_ID, IStridable.NONE_ID, IStridable.NONE_ID ) ), //
