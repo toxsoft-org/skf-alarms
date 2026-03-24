@@ -26,6 +26,7 @@ import org.toxsoft.core.tsgui.m5.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.*;
 import org.toxsoft.core.tsgui.m5.gui.mpc.impl.*;
 import org.toxsoft.core.tsgui.m5.gui.panels.*;
+import org.toxsoft.core.tsgui.m5.gui.panels.impl.*;
 import org.toxsoft.core.tsgui.m5.model.*;
 import org.toxsoft.core.tsgui.m5.model.impl.*;
 import org.toxsoft.core.tsgui.panels.toolbar.*;
@@ -35,6 +36,7 @@ import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.impl.*;
 import org.toxsoft.core.tslib.av.metainfo.*;
 import org.toxsoft.core.tslib.bricks.*;
+import org.toxsoft.core.tslib.bricks.filter.*;
 import org.toxsoft.core.tslib.bricks.time.*;
 import org.toxsoft.core.tslib.bricks.time.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
@@ -42,12 +44,15 @@ import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.impl.*;
 import org.toxsoft.core.tslib.math.cond.*;
 import org.toxsoft.core.tslib.utils.*;
+import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.alarms.gui.*;
 import org.toxsoft.skf.alarms.gui.incub.*;
 import org.toxsoft.skf.alarms.gui.km5.*;
 import org.toxsoft.skf.alarms.gui.panels.*;
 import org.toxsoft.skf.alarms.lib.*;
 import org.toxsoft.uskat.core.api.evserv.*;
+import org.toxsoft.uskat.core.api.sysdescr.*;
+import org.toxsoft.uskat.core.api.sysdescr.dto.*;
 import org.toxsoft.uskat.core.api.users.*;
 import org.toxsoft.uskat.core.connection.*;
 import org.toxsoft.uskat.core.gui.km5.*;
@@ -89,69 +94,74 @@ public class AlarmRtPanel
   /**
    * Handles user actions.
    */
-  class AspLocal
-      extends MethodPerActionTsActionSetProvider {
-
-    public AspLocal() {
-      defineAction( ACDEF_ALERTS_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
-      defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
-      defineSeparator();
-      defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::isCheckedNotEmpty );
-      defineSeparator();
-      defineAction( ACDEF_MUTED, this::doMuted, this::isCheckedNotEmpty );
-      defineAction( ACDEF_UNMUTED, this::doUnmuted, this::isCheckedNotEmpty );
-    }
-
-    void doCheckAll() {
-      componentModown.tree().checks().setAllItemsCheckState( true );
-    }
-
-    void doUnCheckAll() {
-      componentModown.tree().checks().setAllItemsCheckState( false );
-    }
-
-    boolean isNotEmpty() {
-      return !componentModown.tree().items().isEmpty();
-    }
-
-    void doAcknowledge() {
-      ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
-      String comment = ConfirmDlg.enterComment( tsContext(), commentValidator );
-      if( comment != null ) { // Сomment is required.
-        ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
-        IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
-        for( int i = 0; i < checkedAlarms.size(); i++ ) {
-          ISkAlarm alarm = checkedAlarms.get( i );
-          alarm.sendAcknowledge( author.userSkid(), comment );
-        }
-      }
-    }
-
-    void doMuted() {
-      ITsValidator<String> validator = aValue -> ValidationResult.SUCCESS;
-      String reason = ConfirmDlg.enterReason( tsContext(), validator );
-      if( reason != null ) {
-        ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
-        IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
-        for( int i = 0; i < checkedAlarms.size(); i++ ) {
-          ISkAlarm alarm = checkedAlarms.get( i );
-          alarm.muteAlert( author.userSkid(), reason );
-        }
-      }
-    }
-
-    void doUnmuted() {
-      IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
-      for( int i = 0; i < checkedAlarms.size(); i++ ) {
-        ISkAlarm alarm = checkedAlarms.get( i );
-        alarm.unmuteAlert();
-      }
-    }
-
-    boolean isCheckedNotEmpty() {
-      return !componentModown.tree().checks().listCheckedItems( true ).isEmpty();
-    }
-  }
+  // class AspLocal
+  // extends MethodPerActionTsActionSetProvider {
+  //
+  // public AspLocal() {
+  // defineAction( ACDEF_ALERTS_CHECK_ALL, this::doCheckAll, this::isNotEmpty );
+  // defineAction( ACDEF_ALERTS_UNCHECK_ALL, this::doUnCheckAll, this::isNotEmpty );
+  // defineSeparator();
+  // defineAction( ACDEF_ACKNOWLEDGE, this::doAcknowledge, this::isCheckedNotEmpty );
+  // defineSeparator();
+  // defineAction( ACDEF_MUTED, this::doMuted, this::isCheckedNotEmpty );
+  // defineAction( ACDEF_UNMUTED, this::doUnmuted, this::isCheckedNotEmpty );
+  // }
+  //
+  // void doCheckAll() {
+  // componentModown.tree().checks().setAllItemsCheckState( true );
+  // }
+  //
+  // void doUnCheckAll() {
+  // componentModown.tree().checks().setAllItemsCheckState( false );
+  // }
+  //
+  // boolean isNotEmpty() {
+  // return !componentModown.tree().items().isEmpty();
+  // }
+  //
+  // void doAcknowledge() {
+  // ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
+  // String comment = ConfirmDlg.enterComment( tsContext(), commentValidator );
+  // if( comment != null ) { // Сomment is required.
+  // ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+  // // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+  // IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+  // for( int i = 0; i < checkedAlarms.size(); i++ ) {
+  // ISkAlarm alarm = checkedAlarms.get( i );
+  // alarm.sendAcknowledge( author.userSkid(), comment );
+  // }
+  // }
+  // }
+  //
+  // void doMuted() {
+  // ITsValidator<String> validator = aValue -> ValidationResult.SUCCESS;
+  // String reason = ConfirmDlg.enterReason( tsContext(), validator );
+  // if( reason != null ) {
+  // ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+  // // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+  // IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+  // for( int i = 0; i < checkedAlarms.size(); i++ ) {
+  // ISkAlarm alarm = checkedAlarms.get( i );
+  // alarm.muteAlert( author.userSkid(), reason );
+  // }
+  // }
+  // }
+  //
+  // void doUnmuted() {
+  // // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+  // IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+  // for( int i = 0; i < checkedAlarms.size(); i++ ) {
+  // ISkAlarm alarm = checkedAlarms.get( i );
+  // alarm.unmuteAlert();
+  // }
+  // }
+  //
+  // boolean isCheckedNotEmpty() {
+  // // return !componentModown.tree().checks().listCheckedItems( true ).isEmpty();
+  // return alarmsPropsPanel.checkSupport().listCheckedItems( true ).isEmpty();
+  //
+  // }
+  // }
 
   class InnerM5Model
       extends KM5ModelBasic<ISkAlarm> {
@@ -396,18 +406,92 @@ public class AlarmRtPanel
       addFieldDefs( STRID, ALARM_NAME, ALARM_DESCRIPTION, ALARM_SEVERITY, ALARM_ISALERT, ALARM_ISMUTED,
           ALARM_MUTEREASON, ALARM_MESSAGE_INFO, ALARM_ALERT_CONDITION );
 
-      // setPanelCreator( new M5DefaultPanelCreator<>() {
-      //
-      // @Override
-      // protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
-      // IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
-      // OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_FALSE );
-      // OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
-      // MultiPaneComponentModown<ISkAlarm> mpc =
-      // new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager );
-      // return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
-      // }
-      // } );
+      setPanelCreator( new M5DefaultPanelCreator<>() {
+
+        @Override
+        protected IM5CollectionPanel<ISkAlarm> doCreateCollEditPanel( ITsGuiContext aContext,
+            IM5ItemsProvider<ISkAlarm> aItemsProvider, IM5LifecycleManager<ISkAlarm> aLifecycleManager ) {
+          IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( aContext.params(), AV_FALSE );
+          IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( aContext.params(), AV_TRUE );
+          MultiPaneComponentModown<ISkAlarm> mpc =
+              // new SkAlarmMpc( aContext, model(), aItemsProvider, aLifecycleManager ) {
+              new MultiPaneComponentModown<>( aContext, model(), aItemsProvider, aLifecycleManager ) {
+
+                @Override
+                protected ITsToolbar doCreateToolbar( @SuppressWarnings( "hiding" ) ITsGuiContext aContext,
+                    String aName, EIconSize aIconSize, IListEdit<ITsActionDef> aActs ) {
+                  aActs.add( ITsStdActionDefs.ACDEF_SEPARATOR );
+                  aActs.add( ACDEF_ACKNOWLEDGE );
+                  aActs.add( ITsStdActionDefs.ACDEF_SEPARATOR );
+                  aActs.add( ACDEF_MUTED );
+                  aActs.add( ACDEF_UNMUTED );
+
+                  return super.doCreateToolbar( aContext, aName, aIconSize, aActs );
+                }
+
+                @Override
+                protected void doProcessAction( String aActionId ) {
+
+                  switch( aActionId ) {
+                    case ACTID_ACKNOWLEDGE: {
+                      doAcknowledge();
+                      break;
+                    }
+                    case ACTID_MUTED: {
+                      doMuted();
+                      break;
+                    }
+                    case ACTID_UNMUTED: {
+                      doUnmuted();
+                      break;
+                    }
+                    default:
+                      throw new TsNotAllEnumsUsedRtException( aActionId );
+                  }
+                }
+
+                private void doUnmuted() {
+                  // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+                  IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+                  for( int i = 0; i < checkedAlarms.size(); i++ ) {
+                    ISkAlarm alarm = checkedAlarms.get( i );
+                    alarm.unmuteAlert();
+                  }
+                }
+
+                private void doMuted() {
+                  ITsValidator<String> validator = aValue -> ValidationResult.SUCCESS;
+                  String reason = ConfirmDlg.enterReason( tsContext(), validator );
+                  if( reason != null ) {
+                    ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+                    // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+                    IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+                    for( int i = 0; i < checkedAlarms.size(); i++ ) {
+                      ISkAlarm alarm = checkedAlarms.get( i );
+                      alarm.muteAlert( author.userSkid(), reason );
+                    }
+                  }
+                }
+
+                private void doAcknowledge() {
+                  ITsValidator<String> commentValidator = aValue -> ValidationResult.SUCCESS;
+                  String comment = ConfirmDlg.enterComment( tsContext(), commentValidator );
+                  if( comment != null ) { // Сomment is required.
+                    ISkLoggedUserInfo author = skConn().coreApi().getCurrentUserInfo();
+                    // IList<ISkAlarm> checkedAlarms = componentModown.tree().checks().listCheckedItems( true );
+                    IList<ISkAlarm> checkedAlarms = alarmsPropsPanel.checkSupport().listCheckedItems( true );
+                    for( int i = 0; i < checkedAlarms.size(); i++ ) {
+                      ISkAlarm alarm = checkedAlarms.get( i );
+                      alarm.sendAcknowledge( author.userSkid(), comment );
+                    }
+                  }
+                }
+
+              };
+          return new M5CollectionPanelMpcModownWrapper<>( mpc, false );
+        }
+
+      } );
 
     }
 
@@ -415,6 +499,7 @@ public class AlarmRtPanel
     protected IM5LifecycleManager<ISkAlarm> doCreateLifecycleManager( Object aMaster ) {
       return new InnerM5LifecycleManager( this, ISkConnection.class.cast( aMaster ) );
     }
+
   }
 
   class InnerM5LifecycleManager
@@ -467,7 +552,9 @@ public class AlarmRtPanel
       tabFolder.setSelection( 0 );
 
       // Taking the existing detail panel.
-      detailPanel = componentModown.model().panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() ) );
+      // detailPanel = componentModown.model().panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() )
+      // );
+      detailPanel = model.panelCreator().createEntityDetailsPanel( new TsGuiContext( tsContext() ) );
       detailPanel.createControl( tabFolder );
       tabItem.setControl( detailPanel.getControl() );
 
@@ -483,10 +570,11 @@ public class AlarmRtPanel
     }
   }
 
-  private AspLocal  aspLocal;
-  private TsToolbar toolbar;
+  // private AspLocal aspLocal;
+  // private TsToolbar toolbar;
 
-  private MultiPaneComponentModown<ISkAlarm> componentModown;
+  // private MultiPaneComponentModown<ISkAlarm> componentModown;
+  private IM5CollectionPanel<ISkAlarm> alarmsPropsPanel;
 
   private boolean paused = false;
 
@@ -498,6 +586,7 @@ public class AlarmRtPanel
   }
 
   private IMapEdit<String, AlarmData> alarmsDatas = new ElemMap<>();
+  private InnerM5Model                model;
 
   /**
    * Constructor.
@@ -507,7 +596,7 @@ public class AlarmRtPanel
   public AlarmRtPanel( ITsGuiContext aContext ) {
     super( aContext );
 
-    aspLocal = new AspLocal();
+    // aspLocal = new AspLocal();
 
     // Listen to the alert/acknowledge events.
     alarmService().addAlertListener( this );
@@ -533,56 +622,65 @@ public class AlarmRtPanel
     ITsGuiContext ctx = new TsGuiContext( tsContext() );
     ctx.params().addAll( tsContext().params() ); // !!!
 
-    toolbar = TsToolbar.create( board, ctx, aspLocal.listAllActionDefs() );
-    toolbar.getControl().setLayoutData( BorderLayout.NORTH );
-    toolbar.addListener( aspLocal );
+    // toolbar = TsToolbar.create( board, ctx, aspLocal.listAllActionDefs() );
+    // toolbar.getControl().setLayoutData( BorderLayout.NORTH );
+    // toolbar.addListener( aspLocal );
 
     // Using temporary model.
-    InnerM5Model model = new InnerM5Model( skConn() );
+    model = new InnerM5Model( skConn() );
     m5().initTemporaryModel( model );
     // IM5Model<ISkAlarm> model = m5().getModel( ISkAlarmConstants.CLSID_ALARM, ISkAlarm.class );
 
     IM5LifecycleManager<ISkAlarm> lm = new InnerM5LifecycleManager( model, skConn() );
     // IM5LifecycleManager<ISkAlarm> lm = new SkAlarmM5LifecycleManager( model, skConn() );
 
-    IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_TOOLBAR.setValue( ctx.params(), AV_TRUE );
+    // dima 20.03.26 прячем никому не нужную панель
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_DETAILS_PANE_HIDDEN.setValue( ctx.params(), AV_TRUE );
+    IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_HIDE_PANES.setValue( ctx.params(), AV_TRUE );
+
     IMultiPaneComponentConstants.OPDEF_DETAILS_PANE_PLACE.setValue( ctx.params(),
         avValobj( EBorderLayoutPlacement.SOUTH ) );
     IMultiPaneComponentConstants.OPDEF_IS_COLUMN_HEADER.setValue( ctx.params(), AV_TRUE );
-    IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
+    // IMultiPaneComponentConstants.OPDEF_IS_SUMMARY_PANE.setValue( ctx.params(), AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_SUPPORTS_CHECKS.setValue( ctx.params(), AvUtils.AV_TRUE );
     IMultiPaneComponentConstants.OPDEF_IS_ACTIONS_CRUD.setValue( ctx.params(), AvUtils.AV_FALSE );
+    IMultiPaneComponentConstants.OPDEF_IS_ADD_COPY_ACTION.setValue( ctx.params(), AvUtils.AV_FALSE );
+
     IMultiPaneComponentConstants.OPDEF_IS_FILTER_PANE.setValue( ctx.params(), AvUtils.AV_TRUE );
     // Reset the default action on dbl click.
     IMultiPaneComponentConstants.OPDEF_DBLCLICK_ACTION_ID.setValue( ctx.params(), AvUtils.AV_STR_EMPTY );
 
-    componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm ) {
-
-      @Override
-      protected IMpcDetailsPane<ISkAlarm> doCreateDetailsPane() {
-        InnerPane innerPane = new InnerPane( this );
-        return innerPane;
-      }
-    };
-    componentModown.createControl( board );
-    componentModown.addTsDoubleClickListener( ( aSource, aSelectedItem ) -> {} );
+    // componentModown = new MultiPaneComponentModown<>( ctx, model, lm.itemsProvider(), lm ) {
+    //
+    // @Override
+    // protected IMpcDetailsPane<ISkAlarm> doCreateDetailsPane() {
+    // InnerPane innerPane = new InnerPane( this );
+    // return innerPane;
+    // }
+    // };
+    // componentModown.createControl( board );
+    // componentModown.addTsDoubleClickListener( ( aSource, aSelectedItem ) -> {} );
+    alarmsPropsPanel = model.panelCreator().createCollEditPanel( ctx, lm.itemsProvider(), lm );
+    alarmsPropsPanel.createControl( board );
 
     guiTimersService().slowTimers().addListener( this );
 
-    aspLocal.actionsStateEventer().addListener( src -> updateActionsState() );
-    componentModown.tree().checks().checksChangeEventer().addListener( src -> updateActionsState() );
+    // aspLocal.actionsStateEventer().addListener( src -> updateActionsState() );
+    // componentModown.tree().checks().checksChangeEventer().addListener( src -> updateActionsState() );
 
-    updateActionsState();
+    // updateActionsState();
 
     return board;
   }
 
-  private void updateActionsState() {
-    for( String aid : aspLocal.listHandledActionIds() ) {
-      toolbar.setActionEnabled( aid, aspLocal.isActionEnabled( aid ) );
-      toolbar.setActionChecked( aid, aspLocal.isActionChecked( aid ) );
-    }
-  }
+  // private void updateActionsState() {
+  // for( String aid : aspLocal.listHandledActionIds() ) {
+  // toolbar.setActionEnabled( aid, aspLocal.isActionEnabled( aid ) );
+  // toolbar.setActionChecked( aid, aspLocal.isActionChecked( aid ) );
+  // }
+  // }
 
   // ------------------------------------------------------------------------------------
   // IAlarmRtPanel
@@ -607,12 +705,14 @@ public class AlarmRtPanel
 
   @Override
   public void onAlert( SkEvent aEvent ) {
-    componentModown.tree().refresh();
+    // componentModown.tree().refresh();
+    alarmsPropsPanel.refresh();
   }
 
   @Override
   public void onAcknowledge( SkEvent aEvent ) {
-    componentModown.tree().refresh();
+    // componentModown.tree().refresh();
+    alarmsPropsPanel.refresh();
   }
 
   // ------------------------------------------------------------------------------------
@@ -635,8 +735,10 @@ public class AlarmRtPanel
 
   private void update() {
     boolean needRefresh = false;
-    for( int i = 0; i < componentModown.tree().items().size(); i++ ) {
-      ISkAlarm alarm = componentModown.tree().items().get( i );
+    // for( int i = 0; i < componentModown.tree().items().size(); i++ ) {
+    // ISkAlarm alarm = componentModown.tree().items().get( i );
+    for( int i = 0; i < alarmsPropsPanel.items().size(); i++ ) {
+      ISkAlarm alarm = alarmsPropsPanel.items().get( i );
 
       boolean isAlert = alarm.isAlert();
       boolean isMuted = alarm.isMuted();
@@ -661,7 +763,8 @@ public class AlarmRtPanel
       }
     }
     if( needRefresh ) {
-      componentModown.tree().refresh();
+      // componentModown.tree().refresh();
+      alarmsPropsPanel.refresh();
     }
   }
 
