@@ -3,7 +3,6 @@ package org.toxsoft.skf.alarms.skatlet;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.alarms.skatlet.ISkResources.*;
 
-import org.toxsoft.core.log4j.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.ctx.*;
 import org.toxsoft.core.tslib.bricks.ctx.impl.*;
@@ -45,7 +44,7 @@ public class SkAlarmsSkatlet
     connection = createConnection( getClass().getSimpleName(), new TsContext() );
     ISkCoreApi coreApi = connection.coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
-    alarmProcessor = new SkAlarmProcessor( coreApi, LoggerWrapper.getLogger( SkAlarmProcessor.class ) );
+    alarmProcessor = new SkAlarmProcessor( coreApi, logger() );
     return ValidationResult.SUCCESS;
   }
 
