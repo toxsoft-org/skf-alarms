@@ -67,7 +67,7 @@ class SkAlarm
   public boolean isAlert() {
     IAtomicValue val = readRtdataIfOpen( RTDID_IS_ALERT );
     if( val == null ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
+      LoggerUtils.warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
       return false;
     }
     return val.isAssigned() ? val.asBool() : false;
@@ -85,7 +85,7 @@ class SkAlarm
       coreApi().eventService().fireEvent( alertEvent );
     }
     else {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
+      LoggerUtils.warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_ALERT );
     }
   }
 
@@ -104,7 +104,7 @@ class SkAlarm
   public boolean isMuted() {
     IAtomicValue val = readRtdataIfOpen( RTDID_IS_MUTED );
     if( val == null ) {
-      LoggerUtils.errorLogger().warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_MUTED );
+      LoggerUtils.warning( FMT_LOG_WARN_CLOSED_RTDATA_CHANNEL, RTDID_IS_MUTED );
       return false;
     }
     return val.isAssigned() ? val.asBool() : false;

@@ -86,7 +86,7 @@ public class SkAlarmProcessor
    * @param aCoreApi {@link ISkCoreApi} - the USkat to be processed
    */
   public SkAlarmProcessor( ISkCoreApi aCoreApi ) {
-    this( aCoreApi, LoggerUtils.defaultLogger() );
+    this( aCoreApi, LoggerUtils.getLogger( SkAlarmProcessor.class ) );
   }
 
   /**

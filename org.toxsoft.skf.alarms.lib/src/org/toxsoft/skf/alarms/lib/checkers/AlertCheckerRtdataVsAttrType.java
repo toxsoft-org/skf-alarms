@@ -71,7 +71,7 @@ public class AlertCheckerRtdataVsAttrType
         init = true;
       }
       else {
-        LoggerUtils.errorLogger().warning( FMT_WARN_CANT_FIND_ATTR, attrGwid.canonicalString() );
+        LoggerUtils.warning( FMT_WARN_CANT_FIND_ATTR, attrGwid.canonicalString() );
       }
     }
 

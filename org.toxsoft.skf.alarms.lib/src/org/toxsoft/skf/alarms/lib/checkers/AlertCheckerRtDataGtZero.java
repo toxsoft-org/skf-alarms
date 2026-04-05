@@ -72,7 +72,7 @@ public class AlertCheckerRtDataGtZero
           coreApi().rtdService().createReadCurrDataChannels( new GwidList( rtdGwid ) );
       channel = chMap.values().first(); // open channel or null
       if( channel == null ) {
-        LoggerUtils.errorLogger().warning( FMT_WARN_CANT_OPEN_READ_RTD_CHANNEL, rtdGwid.canonicalString() );
+        LoggerUtils.warning( FMT_WARN_CANT_OPEN_READ_RTD_CHANNEL, rtdGwid.canonicalString() );
       }
       init = true;
     }

@@ -43,7 +43,7 @@ public class SoundPlayer
       init();
     }
     catch( Throwable ex ) {
-      LoggerUtils.errorLogger().error( ex );
+      LoggerUtils.error( ex );
     }
     finally {
       try {
@@ -52,7 +52,7 @@ public class SoundPlayer
         }
       }
       catch( Throwable ex ) {
-        LoggerUtils.errorLogger().error( ex );
+        LoggerUtils.error( ex );
       }
     }
   }
@@ -89,7 +89,7 @@ public class SoundPlayer
       inputStream.close();
     }
     catch( Throwable ex ) {
-      LoggerUtils.errorLogger().error( ex );
+      LoggerUtils.error( ex );
     }
     clip.close();
   }
@@ -102,7 +102,7 @@ public class SoundPlayer
     try {
       clip = (Clip)AudioSystem.getLine( new Line.Info( Clip.class ) );
       if( clip == null ) {
-        LoggerUtils.errorLogger().error( "Audio clip = null" );
+        LoggerUtils.error( "Audio clip = null" );
         return;
       }
       clip.addLineListener( event -> {
@@ -113,7 +113,7 @@ public class SoundPlayer
               clip.start();
             }
             catch( Throwable ex ) {
-              LoggerUtils.errorLogger().error( ex );
+              LoggerUtils.error( ex );
             }
           }
         }
@@ -121,7 +121,7 @@ public class SoundPlayer
       clip.open( inputStream );
     }
     catch( Throwable ex ) {
-      LoggerUtils.errorLogger().error( ex );
+      LoggerUtils.error( ex );
     }
   }
 
