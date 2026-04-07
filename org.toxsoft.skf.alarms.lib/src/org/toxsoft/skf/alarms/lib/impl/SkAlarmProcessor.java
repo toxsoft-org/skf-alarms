@@ -84,21 +84,12 @@ public class SkAlarmProcessor
    * Constructor.
    *
    * @param aCoreApi {@link ISkCoreApi} - the USkat to be processed
+   * @throws TsNullArgumentRtException arg = null
    */
   public SkAlarmProcessor( ISkCoreApi aCoreApi ) {
-    this( aCoreApi, LoggerUtils.getLogger( SkAlarmProcessor.class ) );
-  }
-
-  /**
-   * Constructor.
-   *
-   * @param aCoreApi {@link ISkCoreApi} - the USkat to be processed
-   * @param aLogger {@link ILogger} - logger
-   */
-  public SkAlarmProcessor( ISkCoreApi aCoreApi, ILogger aLogger ) {
     TsNullArgumentRtException.checkNull( aCoreApi );
     coreApi = aCoreApi;
-    logger = aLogger;
+    logger = LoggerUtils.getLogger( SkAlarmProcessor.class );
   }
 
   // ------------------------------------------------------------------------------------
@@ -195,7 +186,7 @@ public class SkAlarmProcessor
       try {
         boolean condCheckState = alit.alertChecker.checkCondition();
         if( isAlert ) {
-          logger.info( FMT_LOG_ALERT_ALARM_STATE, ++index, alarmId, isAlert, isMute, condCheckState );
+          logger.debug( FMT_LOG_ALERT_ALARM_STATE, ++index, alarmId, isAlert, isMute, condCheckState );
         }
         /**
          * Alert generation condition:<br>

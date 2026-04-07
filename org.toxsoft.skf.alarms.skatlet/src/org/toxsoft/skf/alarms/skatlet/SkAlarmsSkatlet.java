@@ -44,7 +44,7 @@ public class SkAlarmsSkatlet
     connection = createConnection( getClass().getSimpleName(), new TsContext() );
     ISkCoreApi coreApi = connection.coreApi();
     threadExecutor = SkThreadExecutorService.getExecutor( coreApi );
-    alarmProcessor = new SkAlarmProcessor( coreApi, logger() );
+    alarmProcessor = new SkAlarmProcessor( coreApi );
     return ValidationResult.SUCCESS;
   }
 
